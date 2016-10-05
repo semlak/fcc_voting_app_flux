@@ -1,0 +1,19 @@
+extends layout
+
+block content
+	#appData(data-app-data=(appData|| '{}'))
+	#app
+	//- if (!user)
+	//- 	a(href="/login") Login
+	//- 	br
+	//- 	a(Href="/register") Register
+	//- if (user)
+	//- 	//- allow user to create poll
+	//- 	//- h4 You are currently logged in as #{user.username}
+	//- .container.well#pollListing
+	//- //- 	a(href="/logout") Logout
+	//- script(src='/javascripts/Chart.bundle.min.js')
+
+
+
+	//- script(src='/javascripts/main.jsx' type='text/babel')

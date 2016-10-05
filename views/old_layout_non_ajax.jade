@@ -1,0 +1,47 @@
+//- for navbar, I referred to this site:
+//- http://webdesign.tutsplus.com/tutorials/baking-bootstrap-snippets-with-jade--cms-22798
+
+
+
+doctype html
+html
+  head
+    title= title
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    link(href='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css', rel='stylesheet', media='screen')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    if (error && error.length > 0)
+      br
+      h4.error-msg= error
+      br
+    //- navbar
+    nav.navbar.navbar-default( role='navigation')
+      .navbar-header
+        button.navbar-toggle.collapsed(type='button', data-toggle="collapse", data-target="#navbar-inverse", aria-expanded="false", aria-controls="navbar")
+          span.sr-only Toggle navigation
+          span.icon-bar
+          span.icon-bar
+          span.icon-bar
+        a.navbar-brand(href="#") Voting App
+
+      #navbar-inverse.collapse.navbar-collapse
+        ul.nav.navbar-nav
+          li.active: a(href="/") Home
+          li: a(href="#about") About
+          if (!user)
+            li#loginLI: a(href="/login") Login
+            li#registerLI: a(href='/register') Register
+
+          if (user)
+            - var userlink = /users/ + user.username
+            //- console.log('userlink is ' + userlink)
+            //- li: a(href=userlink) Logged in as #{user.username}
+            li#usernameLI: a(href=userlink) #{user.username}
+            li#logoutLI: a(href='/logout') Logout
+
+    block content
+
+  script(src='http://code.jquery.com/jquery.js')
+  script(src='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js')
+  script(src='/javascripts/main.js')

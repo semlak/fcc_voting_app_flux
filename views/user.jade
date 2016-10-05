@@ -1,0 +1,114 @@
+extends layout
+
+
+block content
+	.container.well
+		// - console.log("user to render is ", userToRender)
+		if (userToRender)
+			.poll.well
+				h1 User Profile Page
+				- if (user.role == 'admin' || user.username == userToRender.username)
+					.row
+						.col-md-2
+							p Username:
+						.col-md-5
+							p#username-field #{userToRender.username}
+						.col-md-5
+							input.form-control#new-username-field(type='text', placeholder='Enter new username')
+					.row
+						.col-md-2
+							p fullname:
+						.col-md-5
+							p#fullname-field #{userToRender.fullname}
+						.col-md-5
+							input.form-control#new-fullname-field(type='text', placeholder='Enter new fullname')
+					.row
+						.col-md-2
+							p email:
+						.col-md-5
+							p#email-field #{userToRender.email}
+						.col-md-5
+							input.form-control#new-email-field(type='text', placeholder='Enter new email')
+					.row
+						.col-md-2
+							p role:
+						.col-md-5
+							p#role-field #{userToRender.role}
+						.col-md-5
+							input.form-control#new-role-field(type='text', placeholder='Enter new role')
+					.row.form-group#update-group
+						.col-md-3
+							button.btn.btn-default(type='button' id='update-role-button') Update User Attributes
+						.col-md-9
+							.form-control-feedback#update-feedback
+
+					br
+					.row.form-group#password-group
+						.col-md-12
+							.col-md-2
+								p Password
+							.col-md-5
+								input.form-control.password#new-password-field(type='password', placeholder='Enter new password')
+							.col-md-5
+								input.form-control.password#confirm-password-field(type='password', placeholder='Confirm new password')
+						.col-md-3
+							button.btn.btn-default(type='button' id='update-password-button') Update Password
+						.col-md-9
+							.form-control-feedback#password-feedback
+				-else
+					.row
+						.col-md-2
+							p Username:
+						.col-md-5
+							p#username-field #{userToRender.username}
+
+					.row
+						.col-md-2
+							p fullname:
+						.col-md-5
+							p#fullname-field #{userToRender.fullname}
+
+					.row
+						.col-md-2
+							p email:
+						.col-md-5
+							p#email-field #{userToRender.email}
+					.row
+						.col-md-2
+							p role:
+						.col-md-5
+							p#role-field #{userToRender.role}
+
+
+				//- p Other Info eventually...
+				.row
+					.col-md-12
+						a(href='/users/') Back to All Users
+			p Current User: #{user.username}
+
+		//- else
+		//- 	h1 No user to render
+		if (usernames)
+			h1 User Profiles:
+				.poll.well
+					ul
+						for username in usernames
+							- var userlink = /users/ + username
+							// - console.log('userlink is ' + userlink)
+							li: a(href=userlink) #{username}
+			p Current User: #{user.username}
+							//- li: a(href=userlink) #{user.username}
+		//- else
+
+		//- p.lead Register to use our sample app for passport authentication
+		//- br
+		//- form(role='form', action='/register', method='post', style='max-width: 300px')
+		//- 	.form-group
+		//- 		input.form-control(type='text', name='username', placeholder='Enter Username')
+		//- 	.form-group
+		//- 		input.form-control(type='password', name='password', placeholder='Password')
+		//- 	button.btn.btn-default(type='submit') Submit
+		//- 	=" "
+		//- 	a(href='/')
+		//- 		button.btn.btn-primary(type='button') Cancel
+	script(src='/javascripts/user.jsx' type='text/babel')

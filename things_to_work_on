@@ -1,0 +1,55 @@
+When trying to delete a poll, if it doesn't work, display message (presumably in the same delete box).
+	-This happens if you login, and then restart the server so that you are no longer authenticated, and then try to delete the poll
+	-The client thinks it is able to delete the poll, but the server won't do it unless user is authenticated. Maybe if I get the server
+	to remember a logged in user, this will be fixed. But say the server has an error, I want the gui to display something.
+
+When deleting a poll:
+	-show progress for deleting poll. Could test by having client or server delay response.
+	-Show a message on the redirected page indicating the poll has been deleted. Could offer undo option (I currently would not be able to support this, just say "'undo feature' not currently supported")
+
+Handle situation where poll user is viewing is deleted by another client (our user's client would need to do a refresh, but then would either get confused or redirect to pollListing without user understanding why. Would be nice to give option to user to re-create poll).
+
+
+I've done this. There might still be some cleaning up to do. The FullPoll and NewPollForm pass an initial_new_answer_option, which certainly shouldn't be part of the state their states and might be unnessary.
+Move the new_answer_option state back into the answer_option_box. Currently it is part of the FullPoll and NewPollForm states.
+	-As for adding the answer option, still have the FullPoll and NewPollForm components handle, I think (But, I could move this to answer_option_box)
+
+Get app to remember logged in users between restarts. (Cookie/authentication token?)
+
+Add OAuth support. Other users wouldn't want to create login, presumably. I wouldn't want to either, except for testing.
+
+Think about adding auto refreshes to the poll state. I would like it to not happen when the client is inactive, and then when detects user action to refresh.
+
+Add about page.
+	-Include basic user story requirements.
+	-Include user story requirements I added.
+		-An authenticated user can delete a poll that they created (by clicking a delete button on the FullPoll view).
+		-Any user can vote once for a poll, whether they are authenticated or now.
+		-A user can only vote once for a poll.
+		-I added: An administrative user can vote an unlimited number of times for a poll. This is primarily for testing.
+		-When user deletes a poll, the user is redirected back to the poll listing page (with the poll listing page displaying a message that poll has been deleted). Note, the poll is permanently deleted on the server. Should probably add active/inactive attribute to poll model, this would allow undo of deleted poll. Inactive polls would presumably not show up on poll list.
+		-When user is viewing a full poll, the user can vote (if the user has not previously voted), whether or they are authenticated.
+		-When user is viewing any full poll, the user can click the "Share Poll" button, which will open a modal providing the url to the poll and a button that will automatically copy the url to the client's clipboard.
+	-Describe overall requirements I created (separate page, maybe)
+		-Include more user stories.
+	-Describe how somebody can run the tests I've created.
+	-Include link to a good flux architecture site, one that describes WEB API, and a small diagram or at least text explanation of my
+		UserClick/Action -> PollActionCreator -> WebAPIUtils -> ServerActionCreator -> PollDispatcher -> PollStore -> CHANGE emitted by PollStore -> ComponentUpdate
+	-links to other projects I used, such as react-bootstrap, recharts (http://recharts.org/), mongoose, passport
+	-Give brief overview of each react component I created.
+
+Make pollList display at homePage.
+	-Find way to make it clear that HomePage link on NavBar displays poll listing. This is one of reasons why I haven't moved it.
+
+Currently, a new vote or new answer_option or new_poll receives all raw_polls and dispatches the POLL_RECEIVE_RAW_POLLS signal. I would like to only use the POLL_RECEIVE_RAW_POLLS signal when getting all polls (the initial load and refreshes). Part of the reason this has seemed reasonable is because I don't have the app do its own refreshes.
+	-Voting for a poll could just send all votes for that poll, like I had before. I just need to work on an PollUpdate action and store function
+	-Adding an answer_option to an existing poll could just send all answer options, same as for voting (use poll update function).
+	-Creating a poll, again, just add to existing poll set if not present (use a create function).
+
+If user attempts to vote on poll they have already voted on, display an alert. My old non-flux app did this.
+
+Fix update to chart when a new_answer_option is added. I can't tell if this is error in my code.
+
+Chart updates on many actions that shouldn't really affect it. When animation is on, it's really annoying (so I turned it off).
+	-Could try to turn animation on and off, so that when it is first generated or on a vote, it looks cool, but doesn't get annoying. Example, on initial poll load, render chart with animation. Then after chart is mounted, re-render with animation off.
+	-Could figure out why it regenerates all the time. Happens on login, the share_poll modal or delete_poll modals opened and closed, ...
