@@ -68,7 +68,7 @@ export default React.createClass({
 		this.setState(newParam)
 	},
 	render: function() {
-		console.log("rendering RegistrationForm")
+		// console.log("rendering RegistrationForm")
 		return (
 			<div className="registration_form">
 				<div className="modal-body">

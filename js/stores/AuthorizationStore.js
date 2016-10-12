@@ -24,7 +24,7 @@ var _usersByUsername = {};
 
 
 function addUsers(rawUsers) {
-  console.log('in UserStore., addUsers.  adding raw users to _users, rawUsers are', rawUsers)
+  // console.log('in UserStore., addUsers.  adding raw users to _users, rawUsers are', rawUsers)
   rawUsers.forEach(function(user) {
     user.id = user._id
     if (!_users[user.id]) {
@@ -32,11 +32,10 @@ function addUsers(rawUsers) {
       _usersByUsername[user.username] = _users[user.id]
     }
   });
-  console.log('in userStore. _users are now ', _users)
+  // console.log('in userStore. _users are now ', _users)
 }
 
 
-// _users['123'] = {id: '123', username: 'Xena', password: 'blah', fullname: 'Xena: Warrior Princess'}
 
   /**
    * Create user
@@ -60,7 +59,7 @@ function create(user) {
     _usersByUsername[user.username] = _users[id]
   }
   else {
-    console.log('error creating user. Either username or password was blank')
+    // console.log('error creating user. Either username or password was blank')
   }
 }
 
@@ -178,7 +177,7 @@ var UserStore = assign({}, EventEmitter.prototype, {
 
         }
         else {
-            console.log('Request failed.  Returned status of ' + xhr.status);
+            // console.log('Request failed.  Returned status of ' + xhr.status);
         }
     }.bind(this);
 
@@ -325,7 +324,7 @@ UserStore.dispatchToken = AppDispatcher.register(function(action) {
       }
       if (user.username == '' || user.password == '') {
         //this allows user.fullname to be empty
-        console.log('error creating user')
+        // console.log('error creating user')
       }
       else {
         create(user)
@@ -373,7 +372,7 @@ UserStore.dispatchToken = AppDispatcher.register(function(action) {
       break;
 
     case UserConstants.USER_RECEIVE_RAW_USERS:
-      console.log("\n\nreceived 'RECEIVE_RAW_USERS' action signal")
+      // console.log("\n\nreceived 'RECEIVE_RAW_USERS' action signal")
       addUsers(action.rawUsers);
       // AppDispatcher.waitFor([ThreadStore.dispatchToken]);
       // _markAllInThreadRead(ThreadStore.getCurrentID());

@@ -20,8 +20,8 @@ module.exports = {
             // var data =
             var rawUsers = JSON.parse(xhr.responseText).users
             var currentUser = JSON.parse(xhr.responseText).user
-            console.log('req.user is ', currentUser)
-            console.log('firing UserServerActionCreators.receiveAll')
+            // console.log('req.user is ', currentUser)
+            // console.log('firing UserServerActionCreators.receiveAll')
             // console.log('raw users are ', rawUsers)
             UserServerActionCreators.receiveAll(rawUsers);
             UserServerActionCreators.setAuthenticatedUserState(currentUser);
@@ -50,8 +50,8 @@ module.exports = {
 
     xhr.onload = function() {
         if (xhr.status === 200) {
-          console.log('Submitted Registration ajax xhr! xhr.responseText is' + xhr.responseText);
-          // should receive a new list of users.
+          // console.log('Submitted Registration ajax xhr! xhr.responseText is' + xhr.responseText);
+          // should receive a new list of users, or update to add newly_created user to current list of users
           // UserServerActionCreators.receiveAll(rawUsers);
 
         }
@@ -73,7 +73,7 @@ module.exports = {
 
     xhr.onload = function() {
         if (xhr.status === 200) {
-            console.log('Successfully received reponse from user.login xhr. xhr.responseText is' + xhr.responseText);
+            // console.log('Successfully received reponse from user.login xhr. xhr.responseText is' + xhr.responseText);
             var rawLoginResponse = JSON.parse(xhr.responseText)
             UserServerActionCreators.setAuthenticatedUserState(rawLoginResponse.user);
 
@@ -95,7 +95,7 @@ module.exports = {
 
     xhr.onload = function() {
         if (xhr.status === 200) {
-            console.log('Successfully received reponse from user.logout xhr. xhr. The responseText is' + xhr.responseText);
+            // console.log('Successfully received reponse from user.logout xhr. xhr. The responseText is' + xhr.responseText);
             var rawLoginResponse = JSON.parse(xhr.responseText)
             UserServerActionCreators.setAuthenticatedUserState({});
         }

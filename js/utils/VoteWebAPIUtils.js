@@ -25,7 +25,7 @@ module.exports = {
             // console.log('xhr is ', xhr)
             // var data =
             var rawVotes = JSON.parse(xhr.responseText).votes
-            console.log('received raw votedata from server. firing VoteServerActionCreators.receiveAll')
+            // console.log('received raw votedata from server. firing VoteServerActionCreators.receiveAll')
             // console.log('raw votes are ', rawVotes)
             VoteServerActionCreators.receiveAll(rawVotes);
         }
@@ -50,8 +50,9 @@ module.exports = {
     xhr.onload = function() {
         if (xhr.status === 200) {
           var responseJSON = JSON.parse(xhr.responseText);
-          console.log('Submitted Vote creation request via ajax xhr! xhr.responseText is' + responseJSON);
+          // console.log('Submitted Vote creation request via ajax xhr! xhr.responseText is', responseJSON);
           if (responseJSON.votes == null || responseJSON.votes.length == 0) {
+            VoteServerActionCreators.createVoteFailed(data.poll_id, responseJSON.message || "Vote failed.");
             //ideally, launch modal with responseJSON.message as text.
           }
           // should receive new array of votes for this poll
@@ -61,7 +62,9 @@ module.exports = {
 
         }
         else {
-          console.log('Registration xrh request failed.  Returned status is ' + xhr.status);
+          VoteServerActionCreators.createVoteFailed(data.poll_id, "Vote failed.");
+          // console.log('Registration xrh request failed.  Returned status is ' + xhr.status);
+          // console.log("full xhr content is:", xhr);
         }
     }.bind(this);
 

@@ -216,11 +216,11 @@ router.delete('/polls/:poll_id',  function(req, res, next) {
 			Poll.remove({_id: poll_id}, function(err) {
 				if (err) {
 					console.log(err)
-					res.json(err)
+					res.status(403).json(err);
 				}
 				else {
 					console.log('poll with id ' + poll_id + ' deleted successfully, user was ' + req.user.username)
-					res.status(200).json({user: reqUserInfo(req.user)})
+					res.status(200).json({user: reqUserInfo(req.user)});
 				}
 			})
 		}

@@ -22,12 +22,12 @@ export default React.createClass({
 	},
 
 	close: function() {
-		console.log('closing modal')
+		// console.log('closing modal')
 		this.setState({ showModal: false });
 	},
 
 	open:function() {
-		console.log('opening modal')
+		// console.log('opening modal')
 		this.setState({ showModal: true });
 	},
 
@@ -57,7 +57,7 @@ export default React.createClass({
 
 	render: function() {
 		// var usermenu = <UserMenu user={this.props.user} />
-		console.log("rendering NavBar, state is ", this.state)
+		// console.log("rendering NavBar, state is ", this.state)
 		// var rightNavbarListItems = function() {[<div/>]}
 		var rightNavbarListItems = function() {
 			if (this.state.currentUser == null || this.state.currentUser.username == null) {
@@ -131,7 +131,7 @@ export default React.createClass({
 
 		if (currentUser.username == null && this.state.currentUser.username != null) {
 			// this should only occur when user has logged out
-			console.log('\n\n\n\nthis.props', this.props)
+			// console.log('\n\n\n\nthis.props', this.props)
 			// console.log('Router.browserHistory is', Router.browserHistory)
 			if (this.props.pathname == 'new_poll' || this.props.pathname  == 'login' || this.props.pathname == 'register')
 			Router.browserHistory.push('/');

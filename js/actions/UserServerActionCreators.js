@@ -16,7 +16,7 @@ var UserConstants = require('../constants/UserConstants');
 module.exports = {
 
   receiveAll: function(rawUsers) {
-    console.log('in UserServerActionCreators, received the receiveAll signal. dispatching the USER_RECEIVE_RAW_USERS signal, rawUsers are ', rawUsers)
+    // console.log('in UserServerActionCreators, received the receiveAll signal. dispatching the USER_RECEIVE_RAW_USERS signal, rawUsers are ', rawUsers)
     AppDispatcher.dispatch({
       actionType: UserConstants.USER_RECEIVE_RAW_USERS,
       rawUsers: rawUsers

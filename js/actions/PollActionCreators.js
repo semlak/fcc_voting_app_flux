@@ -13,7 +13,7 @@ var PollActionCreators = {
           The owner is the user_id. The author could be the user's fullname, username, or any other text they choose.
    */
   create: function(/*object*/ poll) {
-    console.log("in PollActionCreators.create, poll is ", poll);
+    // console.log("in PollActionCreators.create, poll is ", poll);
     // AppDispatcher.dispatch({
     //   actionType: PollConstants.POLL_CREATE,
     //   id: poll.id || poll._id,
@@ -99,7 +99,7 @@ var PollActionCreators = {
    */
   destroy: function(id) {
     //note: this will also destroy any votes associated with the poll (handled by server logic)
-    console.log("in destroy function of PollActionCreators");
+    // console.log("in destroy function of PollActionCreators");
     var cb = null;
     PollWebAPIUtils.destroy(id, cb)
 

@@ -25,7 +25,7 @@ module.exports = {
     xhr.onload = function() {
         if (xhr.status === 200) {
             var rawPolls = JSON.parse(xhr.responseText).polls
-            console.log('received raw polldata from server. firing PollServerActionCreators.receiveAll')
+            // console.log('received raw polldata from server. firing PollServerActionCreators.receiveAll')
             // console.log('raw polls are ', rawPolls)
             PollServerActionCreators.receiveAll(rawPolls);
         }
@@ -38,7 +38,7 @@ module.exports = {
   },
 
   createPoll: function(data, cb) {
-    console.log("in PollWebAPIUtils.createPoll, data is ", data);
+    // console.log("in PollWebAPIUtils.createPoll, data is ", data);
 
     //data contains poll.author, poll.owner, question, answer_options[], id (temporary)
     var xhr = new XMLHttpRequest();
@@ -50,7 +50,7 @@ module.exports = {
     xhr.onload = function() {
         if (xhr.status === 200) {
           var responseJSON = JSON.parse(xhr.responseText);
-          console.log('Submitted Poll creation request via ajax xhr! xhr.responseText:', responseJSON);
+          // console.log('Submitted Poll creation request via ajax xhr! xhr.responseText:', responseJSON);
           if (responseJSON.message != null ) {
             //ideally, launch modal with responseJSON.message as text.
           }
@@ -64,7 +64,7 @@ module.exports = {
 
         }
         else {
-          console.log('Registration xrh request failed.  Returned status is ' + xhr.status);
+          // console.log('Registration xrh request failed.  Returned status is ' + xhr.status);
         }
     }.bind(this);
 
@@ -82,7 +82,7 @@ module.exports = {
     xhr.onload = function() {
         if (xhr.status === 200) {
           var responseJSON = JSON.parse(xhr.responseText);
-          console.log('Submitted Poll answer_option creation request via ajax xhr! xhr.responseText is:', responseJSON);
+          // console.log('Submitted Poll answer_option creation request via ajax xhr! xhr.responseText is:', responseJSON);
           if (responseJSON.message != null) {
             //ideally, launch modal with responseJSON.message as text.
           }
@@ -93,7 +93,7 @@ module.exports = {
           }
         }
         else {
-          console.log('Registration xrh request failed.  Returned status is ' + xhr.status);
+          // console.log('Registration xrh request failed.  Returned status is ' + xhr.status);
         }
     }.bind(this);
 
@@ -102,7 +102,7 @@ module.exports = {
 
   destroy: function(id, cb) {
     var poll_id = id;
-    console.log("attempting to delete poll with id", poll_id)
+    // console.log("attempting to delete poll with id", poll_id)
     var xhr = new XMLHttpRequest();
     xhr.open('DELETE', pollsURL + "/" + poll_id);
     xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
@@ -111,9 +111,10 @@ module.exports = {
     xhr.onload = function() {
         if (xhr.status === 200) {
           var responseJSON = JSON.parse(xhr.responseText);
-          console.log('Submitted Poll DELETE request via ajax xhr! xhr.responseText is:', responseJSON);
+          // console.log('Submitted Poll DELETE request via ajax xhr! xhr.responseText is:', responseJSON);
           if (responseJSON.message != null) {
             //ideally, launch modal with responseJSON.message as text.
+            PollServerActionCreators.handleDeletedPollFail(poll_id);
           }
           else {
             // if succesful, response will be simply an object with the user
@@ -129,7 +130,9 @@ module.exports = {
           // PollWebAPIUtils.getAllPolls();
         }
         else {
-          console.log('Registration xrh request failed.  Returned status is ' + xhr.status);
+          PollServerActionCreators.handleDeletedPollFail(poll_id);
+          // console.log('Registration xrh request failed.  Full xhr object:', xhr);
+          //message is xhr.statusText
         }
     }.bind(this);
 

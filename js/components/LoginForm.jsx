@@ -49,7 +49,7 @@ export default React.createClass({
 		this.setState(newParam)
 	},
 	render: function() {
-		console.log("rendering LoginForm")
+		// console.log("rendering LoginForm")
 		return (
 			<div className="sign_in_form" onClick={this.handleClick} >
 				<div className="modal-body" onClick={this.handleClick} >

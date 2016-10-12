@@ -35,7 +35,7 @@ export default React.createClass({
 		// this just sets a default author value, but the user can change it (it does not have to match account data)
 		var currentUser = UserStore.getAuthenticatedUser();
 		var author = currentUser.fullname || currentUser.username || '';
-		console.log("author is ", author);
+		// console.log("author is ", author);
 		return {
 			currentUser: currentUser,
 			author: author,
@@ -135,7 +135,7 @@ export default React.createClass({
 		});
 	},
 	onPollSubmit: function(newPoll) {
-		console.log("in onPollSubmit, newPoll is ", newPoll)
+		// console.log("in onPollSubmit, newPoll is ", newPoll)
 		//newPoll should be an object contain author (string), owner (user.id), question (string), answer_options (String[])
 		PollActionCreators.create(newPoll);
 
@@ -252,14 +252,14 @@ export default React.createClass({
 	},
 
 	_onUserChange: function() {
-		console.log("in _onUserChange of NewPollForm component");
+		// console.log("in _onUserChange of NewPollForm component");
 		var currentUser = UserStore.getAuthenticatedUser();
 		if (currentUser != this.state.currentUser) {
 			var newState = {currentUser: currentUser}
 			if (this.state.author == '') {
 				newState.author = currentUser.fullname || currentUser.username || '';
 			}
-			console.log("setting the following variables in setState:", newState);
+			// console.log("setting the following variables in setState:", newState);
 			this.setState(newState);
 		}
 	},

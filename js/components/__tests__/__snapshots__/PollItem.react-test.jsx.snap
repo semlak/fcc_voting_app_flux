@@ -4,17 +4,16 @@ exports[`Poll has an author and a question 1`] = `
   id="poll_1"
   onClick={[Function bound handlePollSelect]}>
   <div
-    className="pollAuthor">
+    className="pollAuthor poll-label">
     Poll Author: 
-    <span
-      className="pollAuthor">
+    <span>
       Xena
     </span>
   </div>
-  <div>
+  <div
+    className="pollQuestion poll-label">
     Poll Question: 
-    <span
-      className="pollQuestion">
+    <span>
       How cute is Xena?
     </span>
   </div>

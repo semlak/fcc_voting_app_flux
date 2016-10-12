@@ -24,7 +24,7 @@ var VoteActionCreators = {
     //   poll_id: poll_id,
     //   owner: vote.owner || null
     // });
-    console.log("fired create action from VoteActionCreators")
+    // console.log("fired create action from VoteActionCreators")
     var data = {
       id: vote.id || vote._id || null,
       index: vote.index,
@@ -33,7 +33,7 @@ var VoteActionCreators = {
       owner: vote.owner || null
     }
     var cb = null;
-    console.log("VoteWebAPIUtils:", VoteWebAPIUtils);
+    // console.log("VoteWebAPIUtils:", VoteWebAPIUtils);
     VoteWebAPIUtils.create(data, cb)
     // UserWebAPIUtils.login(username, password);
 

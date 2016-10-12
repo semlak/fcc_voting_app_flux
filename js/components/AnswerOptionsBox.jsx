@@ -30,7 +30,7 @@ var AnswerOption = React.createClass({
 		if (this.props.poll_id != null) {
 			data.poll_id = this.props.poll_id;
 			//fire vote action
-			console.log("firing vote action creator from AnswerOption");
+			// console.log("firing vote action creator from AnswerOption");
 			VoteActionCreators.create(data);
 		}
 
@@ -40,7 +40,7 @@ var AnswerOption = React.createClass({
 		}
 
 		else {
-			console.log("problem submitting vote");
+			// console.log("problem submitting vote");
 		}
 
 	},
@@ -161,7 +161,7 @@ var AnswerOptionsList = React.createClass({
 
 var NewAnswerOptionForm = React.createClass({
 	getInitialState: function() {
-		console.log("in getInitialState for AnswerOptionsBox")
+		// console.log("in getInitialState for AnswerOptionsBox")
 		return {
 			new_answer_option: this.props.initial_new_answer_option,
 			form_feedback: this.props.form_feedback
@@ -179,7 +179,7 @@ var NewAnswerOptionForm = React.createClass({
 		this.setState(newState);
 	},
 	componentWillReceiveProps: function(nextProps) {
-		console.log("in 'componentWillReceiveProps' of AnswerOptionsBox. nextProps: ", nextProps)
+		// console.log("in 'componentWillReceiveProps' of AnswerOptionsBox. nextProps: ", nextProps)
 		var newState = {};
 		newState.form_feedback = nextProps.form_feedback
 
@@ -242,7 +242,7 @@ var NewAnswerOptionForm = React.createClass({
 var AnswerOptionsBox = React.createClass({
 	//this is the updated AnswerOptionsBox that uses the separate NewAnswerOptionForm component rather than builds its own newAnswerOptionForm
 	getInitialState: function() {
-		console.log("in getInitialState for AnswerOptionsBox")
+		// console.log("in getInitialState for AnswerOptionsBox")
 		return {
 			new_answer_option: this.props.initial_new_answer_option,
 			form_feedback: this.props.form_feedback
@@ -262,7 +262,7 @@ var AnswerOptionsBox = React.createClass({
 		this.setState(newState);
 	},
 	componentWillReceiveProps: function(nextProps) {
-		console.log("in 'componentWillReceiveProps' of AnswerOptionsBox. nextProps: ", nextProps)
+		// console.log("in 'componentWillReceiveProps' of AnswerOptionsBox. nextProps: ", nextProps)
 		var newState = {};
 		newState.form_feedback = nextProps.form_feedback
 
@@ -282,7 +282,7 @@ var AnswerOptionsBox = React.createClass({
 	},
 
 	render: function() {
-		console.log("rendering AnswerOptionsBoxNew, props are ", this.props)
+		// console.log("rendering AnswerOptionsBoxNew, props are ", this.props)
 
 		// var validationState = this.state.form_feedback == null ? null : "error";
 		// var validationMessage = this.state.form_feedback == null ? "" : this.state.form_feedback.message;

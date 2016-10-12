@@ -12,12 +12,14 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var EventEmitter = require('events').EventEmitter;
 var PollConstants = require('../constants/PollConstants');
+var VoteConstants = require('../constants/VoteConstants');
 var assign = require('object-assign');
 var PollUtils = require('../utils/PollUtils')
 
 var CHANGE_EVENT = 'change';
 var CREATED_EVENT = 'create';
 var DESTROY_EVENT = 'destroy'
+var VOTE_CREATED_EVENT = 'vote_create'
 
 // var _polls = {};
 var _polls = {}
@@ -96,11 +98,9 @@ function updatePollSet(rawPolls) {
     }
     if (updateMade) { updatesNeeded = true}
   })
-  console.log("after checking for updated polls, updatesNeeded is ", updatesNeeded)
+  // console.log("after checking for updated polls, updatesNeeded is ", updatesNeeded)
   return updatesNeeded
 }
-
-// _polls['123'] = {id: '123', pollname: 'Xena', password: 'blah', fullname: 'Xena: Warrior Princess', role: 'poll'}
 
   /**
    * Create poll
@@ -117,7 +117,7 @@ function create(poll) {
 
   }
   else {
-    console.log('error creating poll. Either pollname or password was blank')
+    // console.log('error creating poll. Either pollname or password was blank')
   }
 }
 
@@ -214,8 +214,12 @@ var PollStore = assign({}, EventEmitter.prototype, {
     this.emit(CREATED_EVENT, new_poll_id)
   },
 
-  emitDestroy: function(poll_id) {
-    this.emit(DESTROY_EVENT, poll_id)
+  emitDestroy: function(poll_id, success) {
+    this.emit(DESTROY_EVENT, poll_id, success)
+  },
+
+  emitVoteCreated: function(poll_id, success, message) {
+    this.emit(VOTE_CREATED_EVENT, poll_id, success, message)
   },
 
   /**
@@ -258,6 +262,20 @@ var PollStore = assign({}, EventEmitter.prototype, {
     this.removeListener(DESTROY_EVENT, callback);
   },
 
+  addVoteCreatedListener: function(callback) {
+    this.on(VOTE_CREATED_EVENT, callback);
+  },
+
+  /**
+   * @param {function} callback
+   */
+  removeVoteCreatedListener: function(callback) {
+    this.removeListener(VOTE_CREATED_EVENT, callback);
+  },
+
+
+
+
   getPollsURL: function() {
     return _pollsURL;
   }
@@ -273,7 +291,7 @@ PollStore.dispatchToken = AppDispatcher.register(function(action) {
         poll[key] = poll[key].trim()
       }
       if (poll.author == '' || poll.question == '') {
-        console.log('error creating poll')
+        // console.log('error creating poll')
       }
       else {
         create(poll)
@@ -297,15 +315,20 @@ PollStore.dispatchToken = AppDispatcher.register(function(action) {
     //   break;
 
     case PollConstants.POLL_DESTROY:
-      console.log("in PollStore, received POLL_DESTROY dispatch signal");
+      // console.log("in PollStore, received POLL_DESTROY dispatch signal");
       destroy(action.id);
       PollStore.emitChange();
       //action.id is the id of poll that is destroyed.
-      PollStore.emitDestroy(action.id)
+      PollStore.emitDestroy(action.id, true)
+      break;
+
+    case PollConstants.POLL_DESTROY_FAIL:
+      // console.log("in PollStore, received POLL_DESTROY_FAIL dispatch signal");
+      PollStore.emitDestroy(action.id, false)
       break;
 
     case PollConstants.POLL_RECEIVE_RAW_POLLS:
-      console.log("\n\nIn PollStore, dispatch receiving. received 'RECEIVE_RAW_POLLS' action signal, rawPolls are", action.rawPolls)
+      // console.log("\n\nIn PollStore, dispatch receiving. received 'RECEIVE_RAW_POLLS' action signal, rawPolls are", action.rawPolls)
       var updatesMade = updatePollSet(action.rawPolls);
       // AppDispatcher.waitFor([ThreadStore.dispatchToken]);
       // _markAllInThreadRead(ThreadStore.getCurrentID());
@@ -319,7 +342,7 @@ PollStore.dispatchToken = AppDispatcher.register(function(action) {
       break;
 
     case PollConstants.POLL_RECEIVE_RAW_CREATED_POLL:
-      console.log("\n\nIn PollStore, dispatch receiving. received 'POLL_RECEIVE_RAW_CREATED_POLL' action signal, rawPolls are", action.rawPolls)
+      // console.log("\n\nIn PollStore, dispatch receiving. received 'POLL_RECEIVE_RAW_CREATED_POLL' action signal, rawPolls are", action.rawPolls)
       var updatesMade = updatePollSet(action.rawPolls);
       // AppDispatcher.waitFor([ThreadStore.dispatchToken]);
       // _markAllInThreadRead(ThreadStore.getCurrentID());
@@ -328,13 +351,21 @@ PollStore.dispatchToken = AppDispatcher.register(function(action) {
       // also, the addpoll function only adds poll if they are not already in _polls. It does not update their data if it has changed.
       // add, it does not remove polls from _polls that are no longer registered.
       if (updatesMade) {
-        console.log("emitting CREATED_EVENT signal from POLL_RECEIVE_RAW_CREATED_POLL case")
+        // console.log("emitting CREATED_EVENT signal from POLL_RECEIVE_RAW_CREATED_POLL case")
         PollStore.emitCreated(action.new_poll_id);
-        console.log("emitting CHANGE_EVENT signal from POLL_RECEIVE_RAW_CREATED_POLL case")
+        // console.log("emitting CHANGE_EVENT signal from POLL_RECEIVE_RAW_CREATED_POLL case")
         PollStore.emitChange();
       }
 
       break;
+
+    case VoteConstants.VOTE_CREATE_FAIL:
+      // console.log("\n\nIn PollStore, dispatch receiving. received 'VOTE_CREATE_FAIL' action signal")
+      PollStore.emitVoteCreated(action.poll_id, false, action.message)
+      break;
+
+
+
 
 
     default:

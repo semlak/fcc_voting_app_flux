@@ -119,7 +119,7 @@ export default React.createClass({
 		// var poll = PollStore.getPollById(this.props.params.poll_id);
 		var poll = this.state.poll;
 
-		console.log('rendering PollChart')
+		// console.log('rendering PollChart')
 
 		// var currentUserIsPollOwner = (this.state.currentUser == null || this.state.currentUser.username == null) ? false : (this.state.currentUser.id == this.state.poll.owner)
 		// console.log('\n\n\ncurrentUserIsPollOwner is', currentUserIsPollOwner)

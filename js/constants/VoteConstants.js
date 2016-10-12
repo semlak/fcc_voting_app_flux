@@ -6,6 +6,7 @@ var keyMirror = require('keymirror');
 
 module.exports = keyMirror({
   VOTE_CREATE: null,
+  VOTE_CREATE_FAIL: null,
   VOTE_UPDATE: null,
   VOTE_SUBMIT: null,
   VOTE_RECEIVE_RAW_CREATED_VOTE: null,

@@ -18,6 +18,7 @@ describe('Poll', function() {
   });
 
   it('has an author and a question', () => {
+    // Note: Xena is my cat. I use her for examples.
     var poll = {author: 'Xena', question: 'How cute is Xena?', answer_options: [], _id: 1, votes: []}
     const component = renderer.create(
       <Poll poll={poll} key={poll._id} id={poll._id} handlePollSelect={null} />
@@ -28,7 +29,7 @@ describe('Poll', function() {
     // console.log("tree.children:", tree.children);
     expect(tree.children.length).toBe(2);
 
-    expect(tree.children[0].props.className).toBe("pollAuthor");
+    expect(tree.children[0].props.className).toBe("pollAuthor poll-label");
     expect(tree.children[0].children.length).toBe(2);
     expect(tree.children[0].children[0]).toBe("Poll Author: ");
     expect(tree.children[0].children[1].children[0]).toBe("Xena");
@@ -39,8 +40,8 @@ describe('Poll', function() {
 
     // console.log("tree.children[1]:", tree.children[1]);
 
-    var a = 1;
-    expect(a).toBe(1)
+    // var a = 1;
+    // expect(a).toBe(1)
 
     // manually trigger the callback
     // tree.props.onMouseEnter();

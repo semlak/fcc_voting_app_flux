@@ -20,7 +20,7 @@ import Navbar from './Navbar'
 export default React.createClass({
 
 	render: function() {
-		console.log('this.props is', this.props)
+		// console.log('this.props is', this.props)
 		return (
 			<div>
 				<Navbar location={this.props.location.pathname}/>

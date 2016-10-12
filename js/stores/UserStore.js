@@ -118,8 +118,6 @@ function updateUserSet(rawUsers) {
   return updatesNeeded
 }
 
-// _users['123'] = {id: '123', username: 'Xena', password: 'blah', fullname: 'Xena: Warrior Princess', role: 'user'}
-
   /**
    * Create user
    * @param  {object} user, containing a username, password,  fullname, role.
@@ -146,7 +144,7 @@ function create(user) {
     _usersByUsername[user.username] = _users[id]
   }
   else {
-    console.log('error creating user. Either username or password was blank, or username already taken')
+    // console.log('error creating user. Either username or password was blank, or username already taken')
   }
 }
 
@@ -202,8 +200,8 @@ function destroy(id) {
 //     }
 //   }
 // }
-console.log("hey");
-  console.log("user url is ",  UserConstants.USER_URL);
+// console.log("hey");
+  // console.log("user url is ",  UserConstants.USER_URL);
 
 var UserStore = assign({}, EventEmitter.prototype, {
 
@@ -228,7 +226,7 @@ var UserStore = assign({}, EventEmitter.prototype, {
   getAll: function() {
     // var users = this.getAllUsersFromServer
     // _users = users
-  console.log("user url is ",  UserConstants.USER_URL);
+  // console.log("user url is ",  UserConstants.USER_URL);
 
     return _users;
   },
@@ -240,7 +238,7 @@ var UserStore = assign({}, EventEmitter.prototype, {
   },
 
   getAuthenticatedUser: function() {
-    console.log("in 'getAuthenticatedUser' of UserStore. _authenticatedUser is", _authenticatedUser)
+    // console.log("in 'getAuthenticatedUser' of UserStore. _authenticatedUser is", _authenticatedUser)
     return _authenticatedUser;
   },
 
@@ -293,7 +291,7 @@ UserStore.dispatchToken = AppDispatcher.register(function(action) {
       }
       if (user.username == '' || user.password == '') {
         //this allows user.fullname and or role to be empty
-        console.log('error creating user')
+        // console.log('error creating user')
       }
       else {
         create(user)
@@ -344,7 +342,7 @@ UserStore.dispatchToken = AppDispatcher.register(function(action) {
 
     case UserConstants.USER_SET_AUTHENTICATED_USER_STATE:
       // triggered after user successfully logged.
-      console.log("\n\nIn UserStore, dispatch receiving. received 'USER_SET_AUTHENTICATED_USER_STATE' action signal, rawUser is", action.rawUser)
+      // console.log("\n\nIn UserStore, dispatch receiving. received 'USER_SET_AUTHENTICATED_USER_STATE' action signal, rawUser is", action.rawUser)
       if (action.rawUser == null || action.rawUser == undefined || action.rawUser.username == null) {
         if (_authenticatedUser != {}) {
           _authenticatedUser = {};
@@ -355,7 +353,7 @@ UserStore.dispatchToken = AppDispatcher.register(function(action) {
         _authenticatedUser = action.rawUser
         UserStore.emitChange();
       }
-      console.log('_authenticatedUser is now', _authenticatedUser)
+      // console.log('_authenticatedUser is now', _authenticatedUser)
 
       break;
 
