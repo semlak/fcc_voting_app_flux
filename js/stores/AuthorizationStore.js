@@ -9,7 +9,7 @@
  * UserStore
  */
 
-var UserDispatcher = require('../dispatcher/UserDispatcher');
+var AppDispatcher = require('../dispatcher/AppDispatcher');
 var EventEmitter = require('events').EventEmitter;
 var UserConstants = require('../constants/UserConstants');
 var assign = require('object-assign');
@@ -316,7 +316,7 @@ var UserStore = assign({}, EventEmitter.prototype, {
 });
 
 // Register callback to handle all updates
-UserStore.dispatchToken = UserDispatcher.register(function(action) {
+UserStore.dispatchToken = AppDispatcher.register(function(action) {
   switch(action.actionType) {
     case UserConstants.USER_CREATE:
       var user = action.user;
@@ -375,7 +375,7 @@ UserStore.dispatchToken = UserDispatcher.register(function(action) {
     case UserConstants.USER_RECEIVE_RAW_USERS:
       console.log("\n\nreceived 'RECEIVE_RAW_USERS' action signal")
       addUsers(action.rawUsers);
-      // UserDispatcher.waitFor([ThreadStore.dispatchToken]);
+      // AppDispatcher.waitFor([ThreadStore.dispatchToken]);
       // _markAllInThreadRead(ThreadStore.getCurrentID());
       UserStore.emitChange();
       break;

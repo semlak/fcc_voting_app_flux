@@ -9,7 +9,7 @@
  * UserStore
  */
 
-var UserDispatcher = require('../dispatcher/UserDispatcher');
+var AppDispatcher = require('../dispatcher/AppDispatcher');
 var EventEmitter = require('events').EventEmitter;
 var UserConstants = require('../constants/UserConstants');
 var assign = require('object-assign');
@@ -268,14 +268,14 @@ var UserStore = assign({}, EventEmitter.prototype, {
 });
 
 // Register callback to handle all updates
-UserStore.dispatchToken = UserDispatcher.register(function(action) {
-  // console.log('UserDispatcher firing. action is ' , action)
+UserStore.dispatchToken = AppDispatcher.register(function(action) {
+  // console.log('AppDispatcher firing. action is ' , action)
   switch(action.actionType) {
     case UserConstants.USER_RECEIVE_RAW_USERS:
       // the action that actually received the list of users fired, resulting in this call from the dispatcher
       // console.log("\n\nIn UserStore, dispatch receiving. received 'USER_RECEIVE_RAW_USERS' action signal, rawUsers are", action.rawUsers)
       var updatesMade = updateUserSet(action.rawUsers);
-      // UserDispatcher.waitFor([ThreadStore.dispatchToken]);
+      // AppDispatcher.waitFor([ThreadStore.dispatchToken]);
       // _markAllInThreadRead(ThreadStore.getCurrentID());
 
       // ideally, would only fire this if there is a change to the users

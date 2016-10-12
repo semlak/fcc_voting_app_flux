@@ -2,7 +2,7 @@
 PollActionCreators
  */
 
-var PollDispatcher = require('../dispatcher/PollDispatcher');
+var AppDispatcher = require('../dispatcher/AppDispatcher');
 var PollConstants = require('../constants/PollConstants');
 var PollWebAPIUtils = require('../utils/PollWebAPIUtils');
 
@@ -14,7 +14,7 @@ var PollActionCreators = {
    */
   create: function(/*object*/ poll) {
     console.log("in PollActionCreators.create, poll is ", poll);
-    // PollDispatcher.dispatch({
+    // AppDispatcher.dispatch({
     //   actionType: PollConstants.POLL_CREATE,
     //   id: poll.id || poll._id,
     //   owner: poll.owner,
@@ -41,7 +41,7 @@ var PollActionCreators = {
    * @param  {object} pollUpdates:  object containing possible updates (pollname, password, and/or fullname, role)
    */
   update: function(id, /*object*/ pollUpdates) {
-    PollDispatcher.dispatch({
+    AppDispatcher.dispatch({
       actionType: PollConstants.POLL_UPDATE,
       id: id,
       pollUpdates: pollUpdates
@@ -63,7 +63,7 @@ var PollActionCreators = {
 
   getAllFromServer: function() {
     // console.log('in PollActionCreators, getallFromServer. Dispatching POLL_GET_ALL_FROM_SERVER')
-    // PollDispatcher.dispatch({
+    // AppDispatcher.dispatch({
     //   actionType: PollConstants.POLL_GET_ALL_FROM_SERVER
     // });
     var cb = null;
@@ -79,7 +79,7 @@ var PollActionCreators = {
   //       PollConstants.POLL_UNDO_COMPLETE :
   //       PollConstants.POLL_COMPLETE;
 
-  //   PollDispatcher.dispatch({
+  //   AppDispatcher.dispatch({
   //     actionType: actionType,
   //     id: id
   //   });
@@ -89,7 +89,7 @@ var PollActionCreators = {
    * Mark all Polls as complete
    */
   // toggleCompleteAll: function() {
-  //   PollDispatcher.dispatch({
+  //   AppDispatcher.dispatch({
   //     actionType: PollConstants.POLL_TOGGLE_COMPLETE_ALL
   //   });
   // },
@@ -103,7 +103,7 @@ var PollActionCreators = {
     var cb = null;
     PollWebAPIUtils.destroy(id, cb)
 
-    // PollDispatcher.dispatch({
+    // AppDispatcher.dispatch({
     //   actionType: PollConstants.POLL_DESTROY,
     //   id: id
     // });
@@ -114,7 +114,7 @@ var PollActionCreators = {
    * Delete all the completed Polls
    */
   // destroyCompleted: function() {
-  //   PollDispatcher.dispatch({
+  //   AppDispatcher.dispatch({
   //     actionType: PollConstants.POLL_DESTROY_COMPLETED
   //   });
   // }

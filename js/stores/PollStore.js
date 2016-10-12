@@ -9,7 +9,7 @@
  * PollStore
  */
 
-var PollDispatcher = require('../dispatcher/PollDispatcher');
+var AppDispatcher = require('../dispatcher/AppDispatcher');
 var EventEmitter = require('events').EventEmitter;
 var PollConstants = require('../constants/PollConstants');
 var assign = require('object-assign');
@@ -264,7 +264,7 @@ var PollStore = assign({}, EventEmitter.prototype, {
 });
 
 // Register callback to handle all updates
-PollStore.dispatchToken = PollDispatcher.register(function(action) {
+PollStore.dispatchToken = AppDispatcher.register(function(action) {
   switch(action.actionType) {
     //this case is currently not used. POLL_RECEIVE_RAW_CREATED_POLL is used instead (called by PollServerActionCreators).
     case PollConstants.POLL_CREATE:
@@ -307,7 +307,7 @@ PollStore.dispatchToken = PollDispatcher.register(function(action) {
     case PollConstants.POLL_RECEIVE_RAW_POLLS:
       console.log("\n\nIn PollStore, dispatch receiving. received 'RECEIVE_RAW_POLLS' action signal, rawPolls are", action.rawPolls)
       var updatesMade = updatePollSet(action.rawPolls);
-      // PollDispatcher.waitFor([ThreadStore.dispatchToken]);
+      // AppDispatcher.waitFor([ThreadStore.dispatchToken]);
       // _markAllInThreadRead(ThreadStore.getCurrentID());
 
       // ideally, would only fire this if there is a change to the polls
@@ -321,7 +321,7 @@ PollStore.dispatchToken = PollDispatcher.register(function(action) {
     case PollConstants.POLL_RECEIVE_RAW_CREATED_POLL:
       console.log("\n\nIn PollStore, dispatch receiving. received 'POLL_RECEIVE_RAW_CREATED_POLL' action signal, rawPolls are", action.rawPolls)
       var updatesMade = updatePollSet(action.rawPolls);
-      // PollDispatcher.waitFor([ThreadStore.dispatchToken]);
+      // AppDispatcher.waitFor([ThreadStore.dispatchToken]);
       // _markAllInThreadRead(ThreadStore.getCurrentID());
 
       // ideally, would only fire this if there is a change to the polls

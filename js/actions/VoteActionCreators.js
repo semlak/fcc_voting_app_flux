@@ -2,7 +2,7 @@
 
  */
 
-var VoteDispatcher = require('../dispatcher/VoteDispatcher');
+var AppDispatcher = require('../dispatcher/AppDispatcher');
 var VoteConstants = require('../constants/VoteConstants');
 var VoteWebAPIUtils = require('../utils/VoteWebAPIUtils');
 
@@ -16,7 +16,7 @@ var VoteActionCreators = {
 
 
   create: function(/*object*/ vote) {
-    // VoteDispatcher.dispatch({
+    // AppDispatcher.dispatch({
     //   actionType: VoteConstants.VOTE_CREATE,
     //   id: vote.id || vote._id || null,
     //   index: index,
@@ -46,7 +46,7 @@ var VoteActionCreators = {
    * @param  {object} voteUpdates:  object containing possible updates (votename, password, and/or fullname, role)
    */
   update: function(id, /*object*/ voteUpdates) {
-    VoteDispatcher.dispatch({
+    AppDispatcher.dispatch({
       actionType: VoteConstants.VOTE_UPDATE,
       id: id,
       voteUpdates: voteUpdates
@@ -55,7 +55,7 @@ var VoteActionCreators = {
 
   getAllFromServer: function() {
     // console.log('in VoteActionCreators, getallFromServer. Dispatching VOTE_GET_ALL_FROM_SERVER')
-    VoteDispatcher.dispatch({
+    AppDispatcher.dispatch({
       actionType: VoteConstants.VOTE_GET_ALL_FROM_SERVER
     });
   },
@@ -65,7 +65,7 @@ var VoteActionCreators = {
    * @param  {string} id
    */
   destroy: function(id) {
-    VoteDispatcher.dispatch({
+    AppDispatcher.dispatch({
       actionType: VoteConstants.VOTE_DESTROY,
       id: id
     });

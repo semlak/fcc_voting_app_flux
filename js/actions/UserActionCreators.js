@@ -2,7 +2,7 @@
 
  */
 
-var UserDispatcher = require('../dispatcher/UserDispatcher');
+var AppDispatcher = require('../dispatcher/AppDispatcher');
 var UserConstants = require('../constants/UserConstants');
 import UserWebAPIUtils from '../utils/UserWebAPIUtils'
 
@@ -13,7 +13,7 @@ var UserActionCreators = {
           The password will be hashed on the server. password will not be stored in plaintext after creation
    */
   create: function(/*object*/ user) {
-    UserDispatcher.dispatch({
+    AppDispatcher.dispatch({
       actionType: UserConstants.USER_CREATE,
       username: user.username,
       password: user.password,
@@ -27,7 +27,7 @@ var UserActionCreators = {
    * @param  {object} userUpdates:  object containing possible updates (username, password, and/or fullname, role)
    */
   update: function(id, /*object*/ userUpdates) {
-    UserDispatcher.dispatch({
+    AppDispatcher.dispatch({
       actionType: UserConstants.USER_UPDATE,
       id: id,
       userUpdates: userUpdates
@@ -37,7 +37,7 @@ var UserActionCreators = {
   getAllFromServer: function() {
     // console.log('in UserActionCreators, getallFromServer. Dispatching USER_GET_ALL_FROM_SERVER')
 
-    // UserDispatcher.dispatch({
+    // AppDispatcher.dispatch({
     //   actionType: UserConstants.USER_GET_ALL_FROM_SERVER
     // });
     UserWebAPIUtils.getAllUsers();
@@ -52,7 +52,7 @@ var UserActionCreators = {
   //       UserConstants.USER_UNDO_COMPLETE :
   //       UserConstants.USER_COMPLETE;
 
-  //   UserDispatcher.dispatch({
+  //   AppDispatcher.dispatch({
   //     actionType: actionType,
   //     id: id
   //   });
@@ -62,7 +62,7 @@ var UserActionCreators = {
    * Mark all Users as complete
    */
   // toggleCompleteAll: function() {
-  //   UserDispatcher.dispatch({
+  //   AppDispatcher.dispatch({
   //     actionType: UserConstants.USER_TOGGLE_COMPLETE_ALL
   //   });
   // },
@@ -73,7 +73,7 @@ var UserActionCreators = {
   destroy: function(id) {
     //note: currently, the server will not destroy any polls or votes associated with user when user is deleted
     // UserWebAPIUtils.destroy(id)
-    // UserDispatcher.dispatch({
+    // AppDispatcher.dispatch({
     //   actionType: UserConstants.USER_DESTROY,
     //   id: id
     // });
@@ -82,7 +82,7 @@ var UserActionCreators = {
 
   login: function(username, password) {
     UserWebAPIUtils.login(username, password);
-    // UserDispatcher.dispatch({
+    // AppDispatcher.dispatch({
     //   actionType: UserConstants.USER_LOGIN,
     //   username: username,
     //   password: password
@@ -97,7 +97,7 @@ var UserActionCreators = {
    * Delete all the completed Users
    */
   // destroyCompleted: function() {
-  //   UserDispatcher.dispatch({
+  //   AppDispatcher.dispatch({
   //     actionType: UserConstants.USER_DESTROY_COMPLETED
   //   });
   // }

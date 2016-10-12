@@ -18,11 +18,11 @@ jest.autoMockOff();
 //jest.dontMock('../../constants/UserConstants');
 //jest.dontMock('../UserStore');
 //jest.dontMock('object-assign');
-jest.mock('../../dispatcher/UserDispatcher')
+jest.mock('../../dispatcher/AppDispatcher')
 
 
   // var UserConstants = require('./UserConstants.js');
-  // var UserDispatcher;
+  // var AppDispatcher;
   // var UserStore;
   // var callback;
   // console.log("UserConstants are", UserConstants)
@@ -35,7 +35,7 @@ describe('UserStore', function() {
 
 
   var UserConstants = require('../../constants/UserConstants');
-  var UserDispatcher;
+  var AppDispatcher;
   var UserStore;
   var callback;
   // console.log("UserConstants are", UserConstants)
@@ -105,18 +105,18 @@ describe('UserStore', function() {
 
 
   beforeEach(function() {
-    UserDispatcher = require('../../dispatcher/UserDispatcher');
+    AppDispatcher = require('../../dispatcher/AppDispatcher');
     UserStore = require('../UserStore');
     // console.log("user store is:", UserStore.getAll());
-    // console.log('\n\n\nUserDispatcher.register is', UserDispatcher.register)
-    // console.log('\n\n\nUserDispatcher.register is', UserDispatcher.register.mock)
-    callback = UserDispatcher.register.mock.calls[0][0];
+    // console.log('\n\n\nAppDispatcher.register is', AppDispatcher.register)
+    // console.log('\n\n\nAppDispatcher.register is', AppDispatcher.register.mock)
+    callback = AppDispatcher.register.mock.calls[0][0];
 
-    // callback = UserDispatcher.register.mock.calls[0][0];
+    // callback = AppDispatcher.register.mock.calls[0][0];
   });
 
   it('registers a callback with the dispatcher', function() {
-    expect(UserDispatcher.register.mock.calls.length).toBe(1);
+    expect(AppDispatcher.register.mock.calls.length).toBe(1);
   });
 
   it('should initialize with no user items', function() {
