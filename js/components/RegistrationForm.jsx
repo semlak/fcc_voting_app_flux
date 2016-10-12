@@ -62,9 +62,6 @@ export default React.createClass({
 		var key = e.target.name.toString();
 		var newParam = {}
 		newParam[key] = e.target.value
-		// newParam[e.target.name] = e.target.value
-		// console.log('newParam is ', newParam)
-		// var blah = {param: ''}
 		this.setState(newParam)
 	},
 	render: function() {

@@ -12,12 +12,6 @@ export default React.createClass({
 		};
 	},
 
-
-  // getInitialState: function() {
-  //   UserStore.getAllUsersFromServer()
-  //   return getUserState();
-  // },
-
   componentDidMount: function() {
     UserStore.addChangeListener(this._onChange);
   },
@@ -26,14 +20,6 @@ export default React.createClass({
     UserStore.removeChangeListener(this._onChange);
   },
 
-	// handleClick: function(e) {
-	// 	console.log("\n\n\n\n\nclicked element of LoginForm. e is ", e, '\n\ne.nativeEvent is ', e.nativeEvent)
-	// 	e.stopPropagation()
-	// 	e.nativeEvent.stopImmediatePropagation()
-	// },
-	// componentWillReceiveProps: function(nextProps) {
-	// 	// console.log("in 'componentWillReceiveProps' of LoginForm, nextProps is ", nextProps)
-	// },
 	handleLogin: function() {
 		UserActionCreators.login(this.state.username.trim(), this.state.password.trim())
 	},
@@ -43,9 +29,6 @@ export default React.createClass({
 		var key = e.target.name.toString();
 		var newParam = {}
 		newParam[key] = e.target.value
-		// newParam[e.target.name] = e.target.value
-		// console.log('newParam is ', newParam)
-		// var blah = {param: ''}
 		this.setState(newParam)
 	},
 	render: function() {

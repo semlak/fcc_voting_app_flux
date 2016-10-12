@@ -22,7 +22,8 @@ export default React.createClass({
 		return {
 			currentUser: currentUser,
 			showModal: showModal,
-			activeModalTab : 2
+			activeModalTab : 2,
+			expanded: false
 		};
 	},
 
@@ -67,6 +68,33 @@ export default React.createClass({
 		UserActionCreators.logout();
 	},
 
+	onToggle: function(navExpanded) {
+		// console.log("in 'onToggle' of <Navbar />.",  ", navExpanded:", navExpanded);
+		this.setState({expanded: !this.state.expanded});
+
+	},
+
+	// onClose: function() {
+	// 	console.log("in 'onClose' of <Navbar />.");
+
+	// },
+
+
+	onSelect: function(eventKey, event) {
+		// console.log("in 'onSelect' of <Navbar />. ", "eventKey: ", eventKey, ", event:", event);
+		//this is used primarily to just close an expanded navbar (like a mobile view's dropdown) when a navitem is clicked.
+
+		//right now, there are no eventKeys that I don't want to trigger this state change. But if there were some, I would put in if statement.
+		if (eventKey != 654 ) {
+			this.setState({expanded: false});
+		}
+
+	},
+
+	// navbarToggleClick: function(e) {
+	// 	// console.log("in 'navbarToggleClick' of <Navbar />.", "event: ", e);
+	// },
+
 	render: function() {
 		// console.log("this.props:", this.props)
 		// var usermenu = <UserMenu user={this.props.user} />
@@ -75,17 +103,17 @@ export default React.createClass({
 		var rightNavbarListItems = function() {
 			if (this.state.currentUser == null || this.state.currentUser.username == null) {
 				return ([
-					<NavItem key={1001} eventKey={1} onClick={this.openModalToRegister} >Register</NavItem>,
-					<NavItem key={1002} eventKey={2} onClick={this.openModalToLogin} >Login</NavItem>
+					<NavItem key={1001} eventKey={1001} onClick={this.openModalToRegister} >Register</NavItem>,
+					<NavItem key={1002} eventKey={1002} onClick={this.openModalToLogin} >Login</NavItem>
 				])
 
 			}
 			else {
 				return ([
-					<NavDropdown key={1001} eventKey={13} title={this.state.currentUser.username} id="basic-nav-dropdown">
-						<LinkContainer eventKey={13.1} to={'/Users/' + this.state.currentUser.username.toString() +'/polls'}><MenuItem>View My Polls</MenuItem></LinkContainer>
+					<NavDropdown key={1001} eventKey={1001} title={this.state.currentUser.username} id="basic-nav-dropdown" onClose={this.onClose}>
+						<LinkContainer eventKey={1011} to={'/Users/' + this.state.currentUser.username.toString() +'/polls'}><MenuItem>View My Polls</MenuItem></LinkContainer>
 						<MenuItem divider />
-						<MenuItem eventKey={13.2} onClick={this.handleLogout}>Logout</MenuItem>
+						<MenuItem eventKey={1012} onClick={this.handleLogout}>Logout</MenuItem>
 					</NavDropdown>
 				])
 
@@ -93,7 +121,6 @@ export default React.createClass({
 			}
 		}.bind(this);
 
-		var activeTab = 'home_tab'
 		var modal = (
 			<Modal show={this.state.showModal} onHide={this.close}>
 				<Modal.Header closeButton>
@@ -108,24 +135,24 @@ export default React.createClass({
 			</Modal>
 		)
 
-		return (
+		const mainNavBar = (
 			<div>
-				<Navbar inverse>
+				<Navbar inverse onToggle={this.onToggle} expanded={this.state.expanded} >
 					<Navbar.Header>
 						<Navbar.Brand>
-							<a href="#">Voting App</a>
+							<IndexLink to="/" >Voting App</IndexLink>
 						</Navbar.Brand>
-						<Navbar.Toggle />
+						<Navbar.Toggle onClick={this.navbarToggleClick}/>
 					</Navbar.Header>
 					<Navbar.Collapse>
-						<Nav>
+						<Nav onSelect={this.onSelect}>
 							<IndexLinkContainer to="/" ><NavItem eventKey={1} >Home</NavItem></IndexLinkContainer>
 							<LinkContainer to="/About" ><NavItem eventKey={2} >About</NavItem></LinkContainer>
 							<LinkContainer to="/Polls" ><NavItem eventKey={3} >Polls</NavItem></LinkContainer>
 							<LinkContainer to="/New_poll" ><NavItem eventKey={4} >New Poll</NavItem></LinkContainer>
 							<LinkContainer to="/Users" ><NavItem eventKey={5} >Users</NavItem></LinkContainer>
 						</Nav>
-						<Nav pullRight>
+						<Nav pullRight onSelect={this.onSelect}>
 							{rightNavbarListItems()}
 						</Nav>
 					</Navbar.Collapse>
@@ -133,8 +160,12 @@ export default React.createClass({
 				{modal}
 			</div>
 		);
+		// console.log("mainNavBar:", mainNavBar);
+		return mainNavBar;
 
 	},
+
+
 	getCurrentUser: function() {
 		return UserStore.getAuthenticatedUser();
 	},
