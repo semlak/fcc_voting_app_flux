@@ -14,11 +14,16 @@ var Router = require('react-router');
 
 export default React.createClass({
 	getInitialState: function() {
-			return {
-				currentUser: this.getCurrentUser(),
-				showModal: false,
-				activeModalTab : 2
-			};
+		// console.log("getting initial state for <Navbar/>");
+		//we want to require a login if an unauthenticated user loads the "/New_poll" location
+		var currentUser = this.getCurrentUser();
+		var showModal = this.props.location == "/New_poll" && currentUser.username == null ? true : false;
+		// console.log("currentUser:", currentUser, ", showModal: ", showModal);
+		return {
+			currentUser: currentUser,
+			showModal: showModal,
+			activeModalTab : 2
+		};
 	},
 
 	close: function() {
@@ -47,6 +52,13 @@ export default React.createClass({
 		UserStore.removeChangeListener(this._onChange);
 	},
 
+	componentWillReceiveProps: function(nextProps) {
+		// console.log("in componentWillReceiveProps of <Navbar />, nextProps: ", nextProps);
+		if (this.state.currentUser.username == null && nextProps.location.toLowerCase() == "/new_poll") {
+			this.setState({showModal: true});
+		}
+	},
+
 	loadUserPolls: function() {
 
 	},
@@ -56,6 +68,7 @@ export default React.createClass({
 	},
 
 	render: function() {
+		// console.log("this.props:", this.props)
 		// var usermenu = <UserMenu user={this.props.user} />
 		// console.log("rendering NavBar, state is ", this.state)
 		// var rightNavbarListItems = function() {[<div/>]}
@@ -127,19 +140,24 @@ export default React.createClass({
 	},
 
 	_onChange: function() {
+		// console.log("in _onChange of <Navbar/>", "props: ", this.props)
 		var currentUser = this.getCurrentUser();
+		var newState = {};
+		var location = this.props.location.toLowerCase()
 
 		if (currentUser.username == null && this.state.currentUser.username != null) {
 			// this should only occur when user has logged out
-			// console.log('\n\n\n\nthis.props', this.props)
-			// console.log('Router.browserHistory is', Router.browserHistory)
-			if (this.props.pathname == 'new_poll' || this.props.pathname  == 'login' || this.props.pathname == 'register')
-			Router.browserHistory.push('/');
-			// console.log(this.props.location)
-			// console.log(this.props.location.pathname)
+			if ( location == '/new_poll' || location == '/login' || location == '/register')
+				Router.browserHistory.push('/');
 		}
-		this.setState({currentUser: currentUser, showModal: false})
-
+		else if (currentUser.username == null && location == "/new_poll") {
+			//this should occur if the user has loaded the app directly to the "/new_poll" page, just after the app updates users
+			//we still want to show the login/register modal upon page rendering.
+			this.setState({currentUser: currentUser})
+		}
+		else {
+			this.setState({currentUser: currentUser, showModal: false})
+		}
 	}
 })
 

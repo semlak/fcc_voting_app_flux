@@ -211,7 +211,7 @@ var NewAnswerOptionForm = React.createClass({
 	          <FormControl
 							type="text"
 							value={this.state.new_answer_option}
-
+							title={userIsAuthenticated ? 'Enter a new poll answer option here' : 'Login to add a poll answer option'}
 							placeholder={userIsAuthenticated ? 'Enter a new poll answer option here' : 'Login to add a poll answer option'}
 							onChange={this.handleNewAnswerOptionChange}
 							autoComplete="off"

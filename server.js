@@ -6,6 +6,9 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+var https = require('https');
+var fs = require('fs')
+
 var mongoose = require('mongoose');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
@@ -16,9 +19,19 @@ var polls = require('./controllers/poll', passport);
 var votes = require('./controllers/vote', passport);
 
 
-
 var app = express()
 app.use(compression())
+
+
+var options = {
+    key: fs.readFileSync('./key.pem'),
+    cert: fs.readFileSync('./cert.pem'),
+    requestCert: false,
+    rejectUnauthorized: false
+};
+
+
+
 
 
 //serve static stuff like index.css
@@ -111,7 +124,12 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+// var server = http.createServer(app);
+
+var server = https.createServer(options, app).listen(port, function(){
+
+});
+
 
 /**
  * Listen on provided port, on all network interfaces.

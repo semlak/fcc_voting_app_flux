@@ -147,7 +147,7 @@ export default React.createClass({
 
 	render: function() {
 		// console.log("rendering pollForm. answer_options are:", this.state.answer_options, ", props are", this.props)
-		// var formInstance = (
+		// var formInstanceOld = (
 		// 	// uses single <AnswerOptionsBox> rather than <AnswerOptionsList> and <NewAnswerOptionForm> separately
 		// 	<div className='poll well'>
 	 //      <form>
@@ -180,8 +180,9 @@ export default React.createClass({
 		var authorField = this.state.authorField;
 		var questionField = this.state.questionField;
 		var answerOptionsField = this.state.answerOptionsField;
+		var userIsAuthenticated = this.state.currentUser != null && this.state.currentUser.username != null;
 
-		var formInstanceNew = (
+		var formInstance = (
 			// uses <AnswerOptionsList> and <NewAnswerOptionForm> separately rather than single <AnswerOptionsBox>
 			<div className='poll well'>
 	      <form>
@@ -190,7 +191,9 @@ export default React.createClass({
 	          <FormControl
 	            type="text"
 	            value={this.state.author}
-	            placeholder="Your name"
+	            title={userIsAuthenticated ? "Poll Author" : "Login to create a poll."}
+	            placeholder={userIsAuthenticated ? "Your name" : "Login to create a poll."}
+							disabled={userIsAuthenticated ? null : 'disabled'}
 	            onChange={this.handleAuthorChange}
 	          />
 	          <FormControl.Feedback />
@@ -201,7 +204,9 @@ export default React.createClass({
 	          <FormControl
 	            type="text"
 	            value={this.state.question}
+	            title={userIsAuthenticated ? "Poll Question" : "Login to create a poll."}
 	            placeholder="Type your poll question..."
+							disabled={userIsAuthenticated ? null : 'disabled'}
 	            onChange={this.handleQuestionChange}
 	          />
 	          <FormControl.Feedback />
@@ -241,7 +246,7 @@ export default React.createClass({
             <h2 className='displayInline'>Create a new Poll</h2> :
         </div>
         <br />
-        {formInstanceNew}
+        {formInstance}
         {backToPollListButton}
 			</div>
 		);
