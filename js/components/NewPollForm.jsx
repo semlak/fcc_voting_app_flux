@@ -228,7 +228,7 @@ export default React.createClass({
 	},
 
 	_onUserChange: function() {
-		console.log("in _onUserChange of NewPollForm component");
+		// console.log("in _onUserChange of NewPollForm component");
 		// var location = this.props.location.toLowerCase()
 		// console.log("location: ", location);
 		var currentUser = UserStore.getAuthenticatedUser();
