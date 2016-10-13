@@ -97,8 +97,8 @@ module.exports = {
 
     xhr.onload = function() {
         if (xhr.status === 200) {
-            // console.log('Successfully received reponse from user.logout xhr. xhr. The responseText is' + xhr.responseText);
-            var rawLoginResponse = JSON.parse(xhr.responseText)
+            var rawLogoutResponse = JSON.parse(xhr.responseText)
+            // console.log('Successfully received reponse from user.logout xhr. xhr. The responseText is', rawLogoutResponse);
             UserServerActionCreators.setAuthenticatedUserState({});
         }
         else {

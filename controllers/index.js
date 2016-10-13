@@ -123,7 +123,7 @@ router.post('/login-ajax', function(req, res, next) {
 
 
 
-router.get('/logout', function(req, res) {
+router.get('/logout', function(req, res, next) {
 	var isAjaxRequest = req.xhr || req.headers.accept.indexOf('json') > -1 || req.headers["x-requested-with"] == 'XMLHttpRequest';
 	console.log('Received get request to /logout. Logging off user');
 	console.log('isAjaxRequest is', isAjaxRequest)
@@ -134,11 +134,9 @@ router.get('/logout', function(req, res) {
 		res.json({error: false, message: 'User logged off.', user: null})
 	}
 	else {
-		req.logout();
+		// req.logout();
 		res.redirect('/');
 	}
-	res.json({})
-
 });
 
 router.get('/ping', function(req, res) {

@@ -399,13 +399,16 @@ UserStore.dispatchToken = AppDispatcher.register(function(action) {
       // triggered after user successfully logged.
       // console.log("\n\nIn UserStore, dispatch receiving. received 'USER_SET_AUTHENTICATED_USER_STATE' action signal, rawUser is", action.rawUser)
       if (action.rawUser == null || action.rawUser == undefined || action.rawUser.username == null) {
-        if (_authenticatedUser != {}) {
-          _authenticatedUser = {};
-          UserStore.emitChange();
-        }
+        _authenticatedUser = {};
+        UserStore.emitChange();
       }
       else if (_authenticatedUser.username != action.rawUser.username || _authenticatedUser.fullname != action.rawUser.fullname) {
         _authenticatedUser = action.rawUser
+        UserStore.emitChange();
+      }
+      else {
+        console.log("Problem encountered when setting the user authentication state");
+        _authenticatedUser = {};
         UserStore.emitChange();
       }
       // console.log('_authenticatedUser is now', _authenticatedUser)

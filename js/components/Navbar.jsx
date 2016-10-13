@@ -170,16 +170,24 @@ export default React.createClass({
 		return UserStore.getAuthenticatedUser();
 	},
 
-	_onChange: function() {
+	_onChange: function(message) {
 		// console.log("in _onChange of <Navbar/>", "props: ", this.props)
+
+		//things are a little misnamed here. the variable currentUser below is refering to the most recent updated authenticated user
+		//this.state.currentUser is the authenticated user last set in the NavBar object, which could be out of date (being checked here)
 		var currentUser = this.getCurrentUser();
 		var newState = {};
 		var location = this.props.location.toLowerCase()
 
+		if (message != null) {
+
+		}
 		if (currentUser.username == null && this.state.currentUser.username != null) {
 			// this should only occur when user has logged out
-			if ( location == '/new_poll' || location == '/login' || location == '/register')
+			this.setState({currentUser: currentUser})
+			if ( location == '/login' || location == '/register') {
 				Router.browserHistory.push('/');
+			}
 		}
 		else if (currentUser.username == null && location == "/new_poll") {
 			//this should occur if the user has loaded the app directly to the "/new_poll" page, just after the app updates users

@@ -228,9 +228,16 @@ export default React.createClass({
 	},
 
 	_onUserChange: function() {
-		// console.log("in _onUserChange of NewPollForm component");
+		console.log("in _onUserChange of NewPollForm component");
+		// var location = this.props.location.toLowerCase()
+		// console.log("location: ", location);
 		var currentUser = UserStore.getAuthenticatedUser();
-		if (currentUser != this.state.currentUser) {
+		if (currentUser.username == null && this.state.currentUser.username != null) {
+			//this means a user was logged in and now has logged out.
+			Router.browserHistory.push('/');
+		}
+		else if (currentUser.username != this.state.currentUser.username) {
+			//user has changed. Likely gone from unauthenticated to authenticated
 			var newState = {currentUser: currentUser}
 			if (this.state.author == '') {
 				newState.author = currentUser.fullname || currentUser.username || '';

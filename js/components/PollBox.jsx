@@ -20,10 +20,10 @@ var UserStore = require('../stores/UserStore');
 
 function filterPollsByOwner(polls, owner_username) {
   var owner = UserStore.getUserByUsername(owner_username)
-  var owner = UserStore.getUserByUsername(owner_username)
   var owner_id = typeof owner == 'object' ? owner.id : ''
   var filteredPolls = {}
   Object.keys(polls).forEach(function(poll_id) {
+    // console.log("poll_id", poll_id, ", polls[poll_id]", polls[poll_id], ", owner_id", owner_id)
     if (polls[poll_id].owner.toString() == owner_id.toString()) {
       filteredPolls[poll_id] = polls[poll_id]
     }

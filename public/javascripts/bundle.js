@@ -27250,10 +27250,10 @@
 
 	function filterPollsByOwner(polls, owner_username) {
 	  var owner = UserStore.getUserByUsername(owner_username);
-	  var owner = UserStore.getUserByUsername(owner_username);
 	  var owner_id = (typeof owner === 'undefined' ? 'undefined' : _typeof(owner)) == 'object' ? owner.id : '';
 	  var filteredPolls = {};
 	  Object.keys(polls).forEach(function (poll_id) {
+	    // console.log("poll_id", poll_id, ", polls[poll_id]", polls[poll_id], ", owner_id", owner_id)
 	    if (polls[poll_id].owner.toString() == owner_id.toString()) {
 	      filteredPolls[poll_id] = polls[poll_id];
 	    }
@@ -48032,12 +48032,14 @@
 	      // triggered after user successfully logged.
 	      // console.log("\n\nIn UserStore, dispatch receiving. received 'USER_SET_AUTHENTICATED_USER_STATE' action signal, rawUser is", action.rawUser)
 	      if (action.rawUser == null || action.rawUser == undefined || action.rawUser.username == null) {
-	        if (_authenticatedUser != {}) {
-	          _authenticatedUser = {};
-	          UserStore.emitChange();
-	        }
+	        _authenticatedUser = {};
+	        UserStore.emitChange();
 	      } else if (_authenticatedUser.username != action.rawUser.username || _authenticatedUser.fullname != action.rawUser.fullname) {
 	        _authenticatedUser = action.rawUser;
+	        UserStore.emitChange();
+	      } else {
+	        console.log("Problem encountered when setting the user authentication state");
+	        _authenticatedUser = {};
 	        UserStore.emitChange();
 	      }
 	      // console.log('_authenticatedUser is now', _authenticatedUser)
@@ -48398,15 +48400,22 @@
 			return UserStore.getAuthenticatedUser();
 		},
 
-		_onChange: function _onChange() {
+		_onChange: function _onChange(message) {
 			// console.log("in _onChange of <Navbar/>", "props: ", this.props)
+
+			//things are a little misnamed here. the variable currentUser below is refering to the most recent updated authenticated user
+			//this.state.currentUser is the authenticated user last set in the NavBar object, which could be out of date (being checked here)
 			var currentUser = this.getCurrentUser();
 			var newState = {};
 			var location = this.props.location.toLowerCase();
 
+			if (message != null) {}
 			if (currentUser.username == null && this.state.currentUser.username != null) {
 				// this should only occur when user has logged out
-				if (location == '/new_poll' || location == '/login' || location == '/register') Router.browserHistory.push('/');
+				this.setState({ currentUser: currentUser });
+				if (location == '/login' || location == '/register') {
+					Router.browserHistory.push('/');
+				}
 			} else if (currentUser.username == null && location == "/new_poll") {
 				//this should occur if the user has loaded the app directly to the "/new_poll" page, just after the app updates users
 				//we still want to show the login/register modal upon page rendering.
@@ -48965,8 +48974,8 @@
 
 	        xhr.onload = function () {
 	            if (xhr.status === 200) {
-	                // console.log('Successfully received reponse from user.logout xhr. xhr. The responseText is' + xhr.responseText);
-	                var rawLoginResponse = JSON.parse(xhr.responseText);
+	                var rawLogoutResponse = JSON.parse(xhr.responseText);
+	                // console.log('Successfully received reponse from user.logout xhr. xhr. The responseText is', rawLogoutResponse);
 	                UserServerActionCreators.setAuthenticatedUserState({});
 	            } else {
 	                console.log('Request failed.  Returned status of ' + xhr.status);
@@ -87788,9 +87797,15 @@
 		},
 
 		_onUserChange: function _onUserChange() {
-			// console.log("in _onUserChange of NewPollForm component");
+			console.log("in _onUserChange of NewPollForm component");
+			// var location = this.props.location.toLowerCase()
+			// console.log("location: ", location);
 			var currentUser = UserStore.getAuthenticatedUser();
-			if (currentUser != this.state.currentUser) {
+			if (currentUser.username == null && this.state.currentUser.username != null) {
+				//this means a user was logged in and now has logged out.
+				Router.browserHistory.push('/');
+			} else if (currentUser.username != this.state.currentUser.username) {
+				//user has changed. Likely gone from unauthenticated to authenticated
 				var newState = { currentUser: currentUser };
 				if (this.state.author == '') {
 					newState.author = currentUser.fullname || currentUser.username || '';
