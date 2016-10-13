@@ -23,12 +23,12 @@ var app = express()
 app.use(compression())
 
 
-var options = {
-    key: fs.readFileSync('./key.pem'),
-    cert: fs.readFileSync('./cert.pem'),
-    requestCert: false,
-    rejectUnauthorized: false
-};
+// var options = {
+//     key: fs.readFileSync('./key.pem'),
+//     cert: fs.readFileSync('./cert.pem'),
+//     requestCert: false,
+//     rejectUnauthorized: false
+// };
 
 
 
@@ -124,11 +124,10 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-// var server = http.createServer(app);
+var server = http.createServer(app);
 
-var server = https.createServer(options, app).listen(port, function(){
-
-});
+// var server = https.createServer(options, app).listen(port, function(){
+// });
 
 
 /**
