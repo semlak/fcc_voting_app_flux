@@ -22,15 +22,11 @@ var UserList = React.createClass({
    * @return {object}
    */
   render: function() {
-    // This section should be hidden by default
-    // and shown when there are users.
+    console.log("rendering <UserList />")
+    // This function should return null when there are no users to list.
     if (Object.keys(this.props.allUsers).length < 1) {
       return null;
     }
-
-    // if (this.props.allUsers.length < 1) {
-    //   return null;
-    // }
 
     var allUsers = this.props.allUsers;
     var users = []
@@ -45,13 +41,6 @@ var UserList = React.createClass({
         <ul id="user-list">{users}</ul>
       </div>
     );
-  },
-
-  /**
-   * Event handler to mark all USERs as complete
-   */
-  _onToggleCompleteAll: function() {
-    UserActionCreators.toggleCompleteAll();
   }
 
 });

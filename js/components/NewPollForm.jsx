@@ -147,35 +147,6 @@ export default React.createClass({
 
 	render: function() {
 		// console.log("rendering pollForm. answer_options are:", this.state.answer_options, ", props are", this.props)
-		// var formInstanceOld = (
-		// 	// uses single <AnswerOptionsBox> rather than <AnswerOptionsList> and <NewAnswerOptionForm> separately
-		// 	<div className='poll well'>
-	 //      <form>
-	 //        <FormGroup controlId="formAuthor">
-	 //          <ControlLabel>Poll Author:</ControlLabel>
-	 //          <FormControl
-	 //            type="text"
-	 //            value={this.state.author}
-	 //            placeholder="Your name"
-	 //            onChange={this.handleAuthorChange}
-	 //          />
-	 //        </FormGroup>
-	 //        <FormGroup controlId="formQuestion">
-	 //          <ControlLabel>Poll Question:</ControlLabel>
-	 //          <FormControl
-	 //            type="text"
-	 //            value={this.state.question}
-	 //            placeholder="Type your poll question..."
-	 //            onChange={this.handleQuestionChange}
-	 //          />
-	 //        </FormGroup>
-		// 			<p>Answer options (can be added later):</p>
-		// 			<AnswerOptionsBox answer_options={this.state.answer_options} votes={[]} handleAddAnswerOption={this.handleAddAnswerOption} handleAnswerOptionChange={this.handleAnswerOptionChange} options_are_editable={true} initial_new_answer_option={this.state.initial_new_answer_option} user={this.state.currentUser} />
-		// 			<br/>
-		// 			<Button type='button' onClick={this.handleSubmit}>Post New Poll </Button>
-	 //      </form>
-	 //    </div>
-		// )
 
 		var authorField = this.state.authorField;
 		var questionField = this.state.questionField;

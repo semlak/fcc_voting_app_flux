@@ -72,7 +72,6 @@ passport.deserializeUser(Account.deserializeUser());
 
 //mongoose
 mongoose.Promise = global.Promise;
-console.log("process.env", process.env);
 mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI || process.env.MONGO_URI || 'mongodb://localhost/voting-app/')
 
 

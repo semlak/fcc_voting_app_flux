@@ -28,7 +28,8 @@ router.get('/register', function(req, res) {
 
 router.post('/register', function(req, res, next) {
 	var isAjaxRequest = req.xhr;
-	console.log("trying to register account. req.body is ", req.body)
+	// console.log("trying to register account. req.body is ", req.body)
+	console.log("Received request to register an account");
 	// if this is the first account created for the application, it should be an admin user. Otherwise, it will be standard user.
 	var role;
 	Account.find(function(err, accounts) {

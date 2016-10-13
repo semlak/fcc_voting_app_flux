@@ -78,14 +78,27 @@ function updateRole(rawUser) {
 
 
 function updateUserSet(rawUsers) {
-  // returns true if updates were needed, false if no change
+  /*
+    Makes sure the current user set is in sync with rawUsers (which was provided by server)
+    This means that any users that have been deleted (meaning, they are in the current user set but not in rawUsers) will be removed
+    New users will be added. Any changes in the user's username, fullname, or role will be updated.
+
+    Overall, the function returns true if updates were needed, false if no change.
+  */
+
+  //This first line just makes sure the 'id' is set from '_id' for each user. I would like to move this to the UserUtils functions
   rawUsers.forEach(function(user) {user.id = user._id})
-  var updatesNeeded = false
+
+  //If there are currently no users in the user set (_users), then add all users and return true
   if (Object.keys(_users).length  == 0 ) {
     addUsers(rawUsers)
     return true
   }
-  // otherwise, we want to delete user from _users who is no longer on the list, add user to _users who was not on list, and update existing user info
+
+  //Otherwise, we want to delete user from _users who is no longer on the list, add user to _users who was not on list, and update existing user info
+  //This variable will keep track if updates were needed (for the return value of the function)
+  var updatesNeeded = false
+
 
   // to check if user from _user is no longer on list, it is most efficient to create a hash of the new user list and compare
   var new_user_set = {}
@@ -117,6 +130,25 @@ function updateUserSet(rawUsers) {
   })
   return updatesNeeded
 }
+
+
+
+function addToUserSet(rawUser) {
+  /*
+  This function is only expected to be called upon the creation (registration) of a new user. However, we will still check that
+  the rawUser is not in existing set, and then add the rawUser. The function returns true if the user was added to the user set.
+  */
+
+  rawUser.id = rawUser._id;
+  if (_users[rawUser.id]) {
+    addUser(rawUser)
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
 
   /**
    * Create user
@@ -201,7 +233,6 @@ function destroy(id) {
 //   }
 // }
 // console.log("hey");
-  // console.log("user url is ",  UserConstants.USER_URL);
 
 var UserStore = assign({}, EventEmitter.prototype, {
 
@@ -226,7 +257,6 @@ var UserStore = assign({}, EventEmitter.prototype, {
   getAll: function() {
     // var users = this.getAllUsersFromServer
     // _users = users
-  // console.log("user url is ",  UserConstants.USER_URL);
 
     return _users;
   },
@@ -242,8 +272,13 @@ var UserStore = assign({}, EventEmitter.prototype, {
     return _authenticatedUser;
   },
 
-  emitChange: function() {
-    this.emit(CHANGE_EVENT);
+  emitChange: function(message) {
+    // console.log("in UserStore. Emitting CHANGE_EVENT")
+    this.emit(CHANGE_EVENT, message);
+  },
+
+  emitUserCreate: function(message) {
+    this.emit(CREATE_EVENT, message);
   },
 
   /**
@@ -260,6 +295,21 @@ var UserStore = assign({}, EventEmitter.prototype, {
     this.removeListener(CHANGE_EVENT, callback);
   },
 
+/**
+   * @param {function} callback
+   */
+  addCreateListener: function(callback) {
+    this.on(CREATE_EVENT, callback);
+  },
+
+  /**
+   * @param {function} callback
+   */
+  removeCreateListener: function(callback) {
+    this.removeListener(CREATE_EVENT, callback);
+  },
+
+
   getUsersURL: function() {
     return _usersURL;
   }
@@ -270,7 +320,7 @@ UserStore.dispatchToken = AppDispatcher.register(function(action) {
   // console.log('AppDispatcher firing. action is ' , action)
   switch(action.actionType) {
     case UserConstants.USER_RECEIVE_RAW_USERS:
-      // the action that actually received the list of users fired, resulting in this call from the dispatcher
+      // This is the action that actually received the list of users, resulting in this call from the dispatcher
       // console.log("\n\nIn UserStore, dispatch receiving. received 'USER_RECEIVE_RAW_USERS' action signal, rawUsers are", action.rawUsers)
       var updatesMade = updateUserSet(action.rawUsers);
       // AppDispatcher.waitFor([ThreadStore.dispatchToken]);
@@ -280,8 +330,27 @@ UserStore.dispatchToken = AppDispatcher.register(function(action) {
       // also, the adduser function only adds user if they are not already in _users. It does not update their data if it has changed.
       // add, it does not remove users from _users that are no longer registered.
       if (updatesMade) {
-        UserStore.emitChange();
+        UserStore.emitChange(null);
       }
+      break;
+
+
+    case UserConstants.USER_RECEIVE_RAW_CREATED_USER:
+      // console.log("\n\nIn UserStore, dispatch receiving. received 'USER_RECEIVE_RAW_CREATED_USER' action signal, rawUser is", action.rawUser)
+      if (action.rawUser != null) {
+        var updatesMade = addToUserSet([action.rawUser]);
+        // console.log("updatesMade in USER_RECEIVE_RAW_CREATED_USER is :", updatesMade)
+        if (updatesMade) {
+          UserStore.emitChange(null);
+          UserStore.emitUserCreate(null);
+        }
+      }
+      else {
+        var message = action.message || "Unable to create new user.";
+        UserStore.emitUserCreate(message);
+      }
+
+      //also want to set the created user as the authenticated user. Currently, this is handled by the UserServerActionCreator dispatching separate signals
       break;
 
     case UserConstants.USER_CREATE:
@@ -299,26 +368,6 @@ UserStore.dispatchToken = AppDispatcher.register(function(action) {
       }
       break;
 
-
-
-    // case UserConstants.USER_TOGGLE_COMPLETE_ALL:
-    //   if (UserStore.areAllComplete()) {
-    //     updateAll({complete: false});
-    //   } else {
-    //     updateAll({complete: true});
-    //   }
-    //   UserStore.emitChange();
-    //   break;
-
-    // case UserConstants.USER_UNDO_COMPLETE:
-    //   update(action.id, {complete: false});
-    //   UserStore.emitChange();
-    //   break;
-
-    // case UserConstants.USER_COMPLETE:
-    //   update(action.id, {complete: true});
-    //   UserStore.emitChange();
-    //   break;
 
     case UserConstants.USER_UPDATE:
       // console.log("action is ", action);

@@ -9,17 +9,18 @@ import UserWebAPIUtils from '../utils/UserWebAPIUtils'
 var UserActionCreators = {
 
   /**
-   * @param  {object} user, containing a username, password, and fullname, role.
+   * @param  {object} user, containing a username, password, and fullname.  (no 'role' provided, this will be set by server )
           The password will be hashed on the server. password will not be stored in plaintext after creation
    */
   create: function(/*object*/ user) {
-    AppDispatcher.dispatch({
-      actionType: UserConstants.USER_CREATE,
-      username: user.username,
-      password: user.password,
-      fullname: user.fullname,
-      role: user.role
-    });
+    // AppDispatcher.dispatch({
+    //   actionType: UserConstants.USER_CREATE,
+    //   username: user.username,
+    //   password: user.password,
+    //   fullname: user.fullname,
+    //   role: user.role
+    // });
+    UserWebAPIUtils.registerNewUser(user)
   },
 
   /**

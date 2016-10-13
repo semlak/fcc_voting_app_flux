@@ -70,7 +70,7 @@
 
 	var _RegistrationForm2 = _interopRequireDefault(_RegistrationForm);
 
-	var _LoginForm = __webpack_require__(511);
+	var _LoginForm = __webpack_require__(514);
 
 	var _LoginForm2 = _interopRequireDefault(_LoginForm);
 
@@ -82,7 +82,7 @@
 
 	var _User2 = _interopRequireDefault(_User);
 
-	var _UserActionCreators = __webpack_require__(512);
+	var _UserActionCreators = __webpack_require__(511);
 
 	var _UserActionCreators2 = _interopRequireDefault(_UserActionCreators);
 
@@ -47724,16 +47724,27 @@
 	}
 
 	function updateUserSet(rawUsers) {
-	  // returns true if updates were needed, false if no change
+	  /*
+	    Makes sure the current user set is in sync with rawUsers (which was provided by server)
+	    This means that any users that have been deleted (meaning, they are in the current user set but not in rawUsers) will be removed
+	    New users will be added. Any changes in the user's username, fullname, or role will be updated.
+	     Overall, the function returns true if updates were needed, false if no change.
+	  */
+
+	  //This first line just makes sure the 'id' is set from '_id' for each user. I would like to move this to the UserUtils functions
 	  rawUsers.forEach(function (user) {
 	    user.id = user._id;
 	  });
-	  var updatesNeeded = false;
+
+	  //If there are currently no users in the user set (_users), then add all users and return true
 	  if (Object.keys(_users).length == 0) {
 	    addUsers(rawUsers);
 	    return true;
 	  }
-	  // otherwise, we want to delete user from _users who is no longer on the list, add user to _users who was not on list, and update existing user info
+
+	  //Otherwise, we want to delete user from _users who is no longer on the list, add user to _users who was not on list, and update existing user info
+	  //This variable will keep track if updates were needed (for the return value of the function)
+	  var updatesNeeded = false;
 
 	  // to check if user from _user is no longer on list, it is most efficient to create a hash of the new user list and compare
 	  var new_user_set = {};
@@ -47765,6 +47776,21 @@
 	    }
 	  });
 	  return updatesNeeded;
+	}
+
+	function addToUserSet(rawUser) {
+	  /*
+	  This function is only expected to be called upon the creation (registration) of a new user. However, we will still check that
+	  the rawUser is not in existing set, and then add the rawUser. The function returns true if the user was added to the user set.
+	  */
+
+	  rawUser.id = rawUser._id;
+	  if (_users[rawUser.id]) {
+	    addUser(rawUser);
+	    return true;
+	  } else {
+	    return false;
+	  }
 	}
 
 	/**
@@ -47848,7 +47874,6 @@
 	//   }
 	// }
 	// console.log("hey");
-	// console.log("user url is ",  UserConstants.USER_URL);
 
 	var UserStore = assign({}, EventEmitter.prototype, {
 
@@ -47873,7 +47898,6 @@
 	  getAll: function getAll() {
 	    // var users = this.getAllUsersFromServer
 	    // _users = users
-	    // console.log("user url is ",  UserConstants.USER_URL);
 
 	    return _users;
 	  },
@@ -47889,8 +47913,13 @@
 	    return _authenticatedUser;
 	  },
 
-	  emitChange: function emitChange() {
-	    this.emit(CHANGE_EVENT);
+	  emitChange: function emitChange(message) {
+	    // console.log("in UserStore. Emitting CHANGE_EVENT")
+	    this.emit(CHANGE_EVENT, message);
+	  },
+
+	  emitUserCreate: function emitUserCreate(message) {
+	    this.emit(CREATE_EVENT, message);
 	  },
 
 	  /**
@@ -47907,6 +47936,20 @@
 	    this.removeListener(CHANGE_EVENT, callback);
 	  },
 
+	  /**
+	     * @param {function} callback
+	     */
+	  addCreateListener: function addCreateListener(callback) {
+	    this.on(CREATE_EVENT, callback);
+	  },
+
+	  /**
+	   * @param {function} callback
+	   */
+	  removeCreateListener: function removeCreateListener(callback) {
+	    this.removeListener(CREATE_EVENT, callback);
+	  },
+
 	  getUsersURL: function getUsersURL() {
 	    return _usersURL;
 	  }
@@ -47917,7 +47960,7 @@
 	  // console.log('AppDispatcher firing. action is ' , action)
 	  switch (action.actionType) {
 	    case UserConstants.USER_RECEIVE_RAW_USERS:
-	      // the action that actually received the list of users fired, resulting in this call from the dispatcher
+	      // This is the action that actually received the list of users, resulting in this call from the dispatcher
 	      // console.log("\n\nIn UserStore, dispatch receiving. received 'USER_RECEIVE_RAW_USERS' action signal, rawUsers are", action.rawUsers)
 	      var updatesMade = updateUserSet(action.rawUsers);
 	      // AppDispatcher.waitFor([ThreadStore.dispatchToken]);
@@ -47927,8 +47970,25 @@
 	      // also, the adduser function only adds user if they are not already in _users. It does not update their data if it has changed.
 	      // add, it does not remove users from _users that are no longer registered.
 	      if (updatesMade) {
-	        UserStore.emitChange();
+	        UserStore.emitChange(null);
 	      }
+	      break;
+
+	    case UserConstants.USER_RECEIVE_RAW_CREATED_USER:
+	      // console.log("\n\nIn UserStore, dispatch receiving. received 'USER_RECEIVE_RAW_CREATED_USER' action signal, rawUser is", action.rawUser)
+	      if (action.rawUser != null) {
+	        var updatesMade = addToUserSet([action.rawUser]);
+	        // console.log("updatesMade in USER_RECEIVE_RAW_CREATED_USER is :", updatesMade)
+	        if (updatesMade) {
+	          UserStore.emitChange(null);
+	          UserStore.emitUserCreate(null);
+	        }
+	      } else {
+	        var message = action.message || "Unable to create new user.";
+	        UserStore.emitUserCreate(message);
+	      }
+
+	      //also want to set the created user as the authenticated user. Currently, this is handled by the UserServerActionCreator dispatching separate signals
 	      break;
 
 	    case UserConstants.USER_CREATE:
@@ -47944,25 +48004,6 @@
 	        UserStore.emitChange();
 	      }
 	      break;
-
-	    // case UserConstants.USER_TOGGLE_COMPLETE_ALL:
-	    //   if (UserStore.areAllComplete()) {
-	    //     updateAll({complete: false});
-	    //   } else {
-	    //     updateAll({complete: true});
-	    //   }
-	    //   UserStore.emitChange();
-	    //   break;
-
-	    // case UserConstants.USER_UNDO_COMPLETE:
-	    //   update(action.id, {complete: false});
-	    //   UserStore.emitChange();
-	    //   break;
-
-	    // case UserConstants.USER_COMPLETE:
-	    //   update(action.id, {complete: true});
-	    //   UserStore.emitChange();
-	    //   break;
 
 	    case UserConstants.USER_UPDATE:
 	      // console.log("action is ", action);
@@ -48027,8 +48068,8 @@
 	  USER_REGISTER: null,
 	  USER_GET_ALL_FROM_SERVER: null,
 	  USER_RECEIVE_RAW_USERS: null,
-	  USER_URL: '/users',
-	  USER_SET_AUTHENTICATED_USER_STATE: null
+	  USER_SET_AUTHENTICATED_USER_STATE: null,
+	  USER_RECEIVE_RAW_CREATED_USER: null
 	});
 
 /***/ },
@@ -48101,14 +48142,14 @@
 
 	var _RegistrationForm2 = _interopRequireDefault(_RegistrationForm);
 
-	var _LoginForm = __webpack_require__(511);
+	var _LoginForm = __webpack_require__(514);
 
 	var _LoginForm2 = _interopRequireDefault(_LoginForm);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var UserStore = __webpack_require__(503);
-	var UserActionCreators = __webpack_require__(512);
+	var UserActionCreators = __webpack_require__(511);
 	var Router = __webpack_require__(173);
 
 	exports.default = _react2.default.createClass({
@@ -48597,6 +48638,9 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	var UserStore = __webpack_require__(503);
+	var UserActionCreators = __webpack_require__(511);
+
 	exports.default = _react2.default.createClass({
 		displayName: 'RegistrationForm',
 
@@ -48605,63 +48649,39 @@
 				username: '',
 				password: '',
 				fullname: '',
-				role: '',
 				error_message: ''
 			};
 		},
 		componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
 			// console.log("in 'componentWillReceiveProps' of RegisterForm, nextProps is ", nextProps)
 		},
-		componentDidMount: function componentDidMount() {
-			// $('#register_box').on('show.bs.modal', function (e) {
-			// 	this.setState(this.getInitialState())
-			// 	$('#register_message').empty()
-			// 	$('#sign_in_message').empty()
-			//   // if (!data) return e.preventDefault() // stops modal from being shown
-			// }.bind(this))
-		},
+
 		prepareRegisterRequest: function prepareRegisterRequest() {
 			var data = {
 				username: this.state.username,
 				password: this.state.password,
-				fullname: this.state.fullname || this.state.username,
-				role: this.state.role
+				fullname: this.state.fullname || this.state.username
 			};
-			// $.ajax({
-			// 	type: 'POST',
-			// 	url: '/register',
-			// 	data: data,
-			// 	success: function(result) {
-			// 		if (!result) {
-			// 			// $("#usermenu-list").append('<li>Invalid Username or password</li>');
-			// 			console.log("unable to register")
-
-			// 		}
-			// 		else {
-			// 			console.log("result is ", result)
-			// 			if (result.user) {
-			// 				this.props.updateAppState({user: result.user})
-			// 				$("#register_box").modal('hide')
-			// 			}
-			// 			else if (result.message) {
-			// 				this.setState({error_message: result.message})
-			// 				// $('#register_message').append("<div class='alert alert-danger fade in'>" + this.state.modal_error_message + "<button type='button' class='close pull-right' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>")
-			// 			}
-			// 		}
-			// 	}.bind(this),
-			// 	error: function(xhr, status, err) {
-			// 		// this.setState({data: newPoll});
-			// 		console.error("error when trying to register", this.props.poll_url, xhr, status, err.toString());
-			// 	}.bind(this)
-			// })
+			UserActionCreators.create(data);
 		},
+
 		handleFieldChange: function handleFieldChange(e) {
 			// console.log(e.target.name, e.target.value)
 			var key = e.target.name.toString();
-			var newParam = {};
-			newParam[key] = e.target.value;
-			this.setState(newParam);
+			var newState = {};
+			newState[key] = e.target.value;
+			newState.error_message = '';
+			this.setState(newState);
 		},
+
+		componentDidMount: function componentDidMount() {
+			UserStore.addCreateListener(this._onUserCreate);
+		},
+
+		componentWillUnmount: function componentWillUnmount() {
+			UserStore.removeCreateListener(this._onUserCreate);
+		},
+
 		render: function render() {
 			// console.log("rendering RegistrationForm")
 			return _react2.default.createElement(
@@ -48698,11 +48718,6 @@
 						'div',
 						{ className: 'form-group' },
 						_react2.default.createElement('input', { className: 'form-control', type: 'text', name: 'fullname', onChange: this.handleFieldChange, value: this.state.fullname, placeholder: 'Enter full name (not required, can leave blank)' })
-					),
-					_react2.default.createElement(
-						'div',
-						{ className: 'form-group' },
-						_react2.default.createElement('input', { className: 'form-control', type: 'text', name: 'role', onChange: this.handleFieldChange, value: this.state.role, placeholder: 'Role (not required, can leave blank)' })
 					)
 				),
 				_react2.default.createElement(
@@ -48720,6 +48735,14 @@
 					)
 				)
 			);
+		},
+
+		_onUserCreate: function _onUserCreate(message) {
+			console.log("received _onUserCreate event in <RegistrationForm />");
+			if (message != null) {
+				console.log("Message:", message);
+				this.setState({ error_message: message });
+			}
 		}
 
 	});
@@ -48730,112 +48753,7 @@
 
 	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactBootstrap = __webpack_require__(238);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var UserStore = __webpack_require__(503);
-	var UserActionCreators = __webpack_require__(512);
-	exports.default = _react2.default.createClass({
-		displayName: 'LoginForm',
-
-		getInitialState: function getInitialState() {
-			return {
-				username: '',
-				password: '',
-				error_message: ''
-			};
-		},
-
-		componentDidMount: function componentDidMount() {
-			UserStore.addChangeListener(this._onChange);
-		},
-
-		componentWillUnmount: function componentWillUnmount() {
-			UserStore.removeChangeListener(this._onChange);
-		},
-
-		handleLogin: function handleLogin() {
-			UserActionCreators.login(this.state.username.trim(), this.state.password.trim());
-		},
-
-		handleFieldChange: function handleFieldChange(e) {
-			// console.log(e.target.name, e.target.value)
-			var key = e.target.name.toString();
-			var newParam = {};
-			newParam[key] = e.target.value;
-			this.setState(newParam);
-		},
-		render: function render() {
-			// console.log("rendering LoginForm")
-			return _react2.default.createElement(
-				'div',
-				{ className: 'sign_in_form', onClick: this.handleClick },
-				_react2.default.createElement(
-					'div',
-					{ className: 'modal-body', onClick: this.handleClick },
-					_react2.default.createElement(
-						'div',
-						{ id: 'sign_in_message', className: this.state.error_message == '' ? ' hidden' : 'alert alert-danger' },
-						this.state.error_message || 'Hey',
-						_react2.default.createElement(
-							'button',
-							{ type: 'button', className: 'close pull-right', 'data-hide': 'alert', 'aria-label': 'Close' },
-							_react2.default.createElement(
-								'span',
-								{ 'aria-hidden': 'true' },
-								'\xD7'
-							)
-						)
-					),
-					_react2.default.createElement(
-						'div',
-						{ className: 'form-group' },
-						_react2.default.createElement('input', { className: 'form-control', type: 'text', name: 'username', onChange: this.handleFieldChange, value: this.state.username, placeholder: 'Enter Username', onClick: this.handleClick })
-					),
-					_react2.default.createElement(
-						'div',
-						{ className: 'form-group' },
-						_react2.default.createElement('input', { className: 'form-control', type: 'password', name: 'password', onChange: this.handleFieldChange, value: this.state.password, placeholder: 'Enter Password' })
-					)
-				),
-				_react2.default.createElement(
-					'div',
-					{ className: 'modal-footer' },
-					_react2.default.createElement(
-						_reactBootstrap.Button,
-						{ bsStyle: 'primary', onClick: this.handleLogin },
-						'Sign In '
-					),
-					_react2.default.createElement(
-						_reactBootstrap.Button,
-						{ bsStyle: 'default', onClick: this.props.onCancel },
-						'Cancel '
-					)
-				)
-			);
-		},
-
-		_onChange: function _onChange() {
-			// this.setState(getUserState());
-		}
-	});
-
-/***/ },
-/* 512 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _UserWebAPIUtils = __webpack_require__(513);
+	var _UserWebAPIUtils = __webpack_require__(512);
 
 	var _UserWebAPIUtils2 = _interopRequireDefault(_UserWebAPIUtils);
 
@@ -48852,17 +48770,18 @@
 	var UserActionCreators = {
 
 	  /**
-	   * @param  {object} user, containing a username, password, and fullname, role.
+	   * @param  {object} user, containing a username, password, and fullname.  (no 'role' provided, this will be set by server )
 	          The password will be hashed on the server. password will not be stored in plaintext after creation
 	   */
 	  create: function create( /*object*/user) {
-	    AppDispatcher.dispatch({
-	      actionType: UserConstants.USER_CREATE,
-	      username: user.username,
-	      password: user.password,
-	      fullname: user.fullname,
-	      role: user.role
-	    });
+	    // AppDispatcher.dispatch({
+	    //   actionType: UserConstants.USER_CREATE,
+	    //   username: user.username,
+	    //   password: user.password,
+	    //   fullname: user.fullname,
+	    //   role: user.role
+	    // });
+	    _UserWebAPIUtils2.default.registerNewUser(user);
 	  },
 
 	  /**
@@ -48949,12 +48868,12 @@
 	module.exports = UserActionCreators;
 
 /***/ },
-/* 513 */
+/* 512 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var UserServerActionCreators = __webpack_require__(514);
+	var UserServerActionCreators = __webpack_require__(513);
 	var UserStore = __webpack_require__(503);
 
 	var usersURL = UserStore.getUsersURL();
@@ -48999,12 +48918,13 @@
 
 	        xhr.onload = function () {
 	            if (xhr.status === 200) {
-	                // console.log('Submitted Registration ajax xhr! xhr.responseText is' + xhr.responseText);
-	                // should receive a new list of users, or update to add newly_created user to current list of users
-	                // UserServerActionCreators.receiveAll(rawUsers);
-
+	                var response = JSON.parse(xhr.responseText);
+	                // console.log('Submitted Registration ajax xhr! xhr.responseText is', response);
+	                // should receive the new user object as a user (includes id, username, fullname, and role)
+	                UserServerActionCreators.receiveCreatedUser(response.user, null);
 	            } else {
 	                console.log('Registration xrh request failed.  Returned status is ' + xhr.status);
+	                UserServerActionCreators.receiveCreatedUser(null, "Failed to register new user.");
 	            }
 	        }.bind(this);
 
@@ -49053,7 +48973,7 @@
 	};
 
 /***/ },
-/* 514 */
+/* 513 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -49083,11 +49003,25 @@
 	    });
 	  },
 
-	  receiveCreatedUser: function receiveCreatedUser(createdUser) {
-	    AppDispatcher.dispatch({
-	      actionType: UserConstants.USER_RECEIVE_RAW_CREATED_USER,
-	      rawUser: createdUser
-	    });
+	  receiveCreatedUser: function receiveCreatedUser(createdUser, errorMessage) {
+	    //errorMessage will be null if user was successfully created.
+	    if (createdUser != null) {
+	      AppDispatcher.dispatch({
+	        actionType: UserConstants.USER_RECEIVE_RAW_CREATED_USER,
+	        rawUser: createdUser
+	      });
+
+	      AppDispatcher.dispatch({
+	        actionType: UserConstants.USER_SET_AUTHENTICATED_USER_STATE,
+	        rawUser: createdUser
+	      });
+	    } else {
+	      AppDispatcher.dispatch({
+	        actionType: UserConstants.USER_RECEIVE_RAW_CREATED_USER,
+	        rawUser: null,
+	        errorMessage: errorMessage
+	      });
+	    }
 	  },
 
 	  setAuthenticatedUserState: function setAuthenticatedUserState(rawUser) {
@@ -49098,6 +49032,111 @@
 	  }
 
 	};
+
+/***/ },
+/* 514 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactBootstrap = __webpack_require__(238);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var UserStore = __webpack_require__(503);
+	var UserActionCreators = __webpack_require__(511);
+	exports.default = _react2.default.createClass({
+		displayName: 'LoginForm',
+
+		getInitialState: function getInitialState() {
+			return {
+				username: '',
+				password: '',
+				error_message: ''
+			};
+		},
+
+		componentDidMount: function componentDidMount() {
+			UserStore.addChangeListener(this._onChange);
+		},
+
+		componentWillUnmount: function componentWillUnmount() {
+			UserStore.removeChangeListener(this._onChange);
+		},
+
+		handleLogin: function handleLogin() {
+			UserActionCreators.login(this.state.username.trim(), this.state.password.trim());
+		},
+
+		handleFieldChange: function handleFieldChange(e) {
+			// console.log(e.target.name, e.target.value)
+			var key = e.target.name.toString();
+			var newParam = {};
+			newParam[key] = e.target.value;
+			this.setState(newParam);
+		},
+		render: function render() {
+			// console.log("rendering LoginForm")
+			return _react2.default.createElement(
+				'div',
+				{ className: 'sign_in_form', onClick: this.handleClick },
+				_react2.default.createElement(
+					'div',
+					{ className: 'modal-body', onClick: this.handleClick },
+					_react2.default.createElement(
+						'div',
+						{ id: 'sign_in_message', className: this.state.error_message == '' ? ' hidden' : 'alert alert-danger' },
+						this.state.error_message || 'Hey',
+						_react2.default.createElement(
+							'button',
+							{ type: 'button', className: 'close pull-right', 'data-hide': 'alert', 'aria-label': 'Close' },
+							_react2.default.createElement(
+								'span',
+								{ 'aria-hidden': 'true' },
+								'\xD7'
+							)
+						)
+					),
+					_react2.default.createElement(
+						'div',
+						{ className: 'form-group' },
+						_react2.default.createElement('input', { className: 'form-control', type: 'text', name: 'username', onChange: this.handleFieldChange, value: this.state.username, placeholder: 'Enter Username', onClick: this.handleClick })
+					),
+					_react2.default.createElement(
+						'div',
+						{ className: 'form-group' },
+						_react2.default.createElement('input', { className: 'form-control', type: 'password', name: 'password', onChange: this.handleFieldChange, value: this.state.password, placeholder: 'Enter Password' })
+					)
+				),
+				_react2.default.createElement(
+					'div',
+					{ className: 'modal-footer' },
+					_react2.default.createElement(
+						_reactBootstrap.Button,
+						{ bsStyle: 'primary', onClick: this.handleLogin },
+						'Sign In '
+					),
+					_react2.default.createElement(
+						_reactBootstrap.Button,
+						{ bsStyle: 'default', onClick: this.props.onCancel },
+						'Cancel '
+					)
+				)
+			);
+		},
+
+		_onChange: function _onChange() {
+			// this.setState(getUserState());
+		}
+	});
 
 /***/ },
 /* 515 */
@@ -49217,6 +49256,7 @@
 	  // {this.state.allUsers != {} ? <UserList allUsers={this.state.allUsers} />: <p>No users currently registered</p>}
 
 	  render: function render() {
+	    console.log("Rendering <UserListContainer />");
 	    return React.createElement(
 	      'section',
 	      { id: 'userapp', className: '' },
@@ -49232,7 +49272,11 @@
 	  /**
 	   * Event handler for 'change' events coming from the UserStore
 	   */
-	  _onChange: function _onChange() {
+	  _onChange: function _onChange(message) {
+	    console.log("received _onChange event in <UserListContainer/>");
+	    // if (message != null) {
+	    //   console.log("Message:", message)
+	    // }
 	    this.setState(getUserState());
 	  }
 
@@ -49255,7 +49299,7 @@
 
 	var React = __webpack_require__(1);
 	var ReactPropTypes = React.PropTypes;
-	var UserActionCreators = __webpack_require__(512);
+	var UserActionCreators = __webpack_require__(511);
 	var UserItem = __webpack_require__(519);
 
 	var UserList = React.createClass({
@@ -49270,15 +49314,11 @@
 	   * @return {object}
 	   */
 	  render: function render() {
-	    // This section should be hidden by default
-	    // and shown when there are users.
+	    console.log("rendering <UserList />");
+	    // This function should return null when there are no users to list.
 	    if (Object.keys(this.props.allUsers).length < 1) {
 	      return null;
 	    }
-
-	    // if (this.props.allUsers.length < 1) {
-	    //   return null;
-	    // }
 
 	    var allUsers = this.props.allUsers;
 	    var users = [];
@@ -49301,13 +49341,6 @@
 	        users
 	      )
 	    );
-	  },
-
-	  /**
-	   * Event handler to mark all USERs as complete
-	   */
-	  _onToggleCompleteAll: function _onToggleCompleteAll() {
-	    UserActionCreators.toggleCompleteAll();
 	  }
 
 	});
@@ -49339,7 +49372,7 @@
 
 	var React = __webpack_require__(1);
 	var ReactPropTypes = React.PropTypes;
-	var UserActionCreators = __webpack_require__(512);
+	var UserActionCreators = __webpack_require__(511);
 
 
 	// var UserTextInput = require('./UserTextInput');
@@ -87606,35 +87639,6 @@
 
 		render: function render() {
 			// console.log("rendering pollForm. answer_options are:", this.state.answer_options, ", props are", this.props)
-			// var formInstanceOld = (
-			// 	// uses single <AnswerOptionsBox> rather than <AnswerOptionsList> and <NewAnswerOptionForm> separately
-			// 	<div className='poll well'>
-			//      <form>
-			//        <FormGroup controlId="formAuthor">
-			//          <ControlLabel>Poll Author:</ControlLabel>
-			//          <FormControl
-			//            type="text"
-			//            value={this.state.author}
-			//            placeholder="Your name"
-			//            onChange={this.handleAuthorChange}
-			//          />
-			//        </FormGroup>
-			//        <FormGroup controlId="formQuestion">
-			//          <ControlLabel>Poll Question:</ControlLabel>
-			//          <FormControl
-			//            type="text"
-			//            value={this.state.question}
-			//            placeholder="Type your poll question..."
-			//            onChange={this.handleQuestionChange}
-			//          />
-			//        </FormGroup>
-			// 			<p>Answer options (can be added later):</p>
-			// 			<AnswerOptionsBox answer_options={this.state.answer_options} votes={[]} handleAddAnswerOption={this.handleAddAnswerOption} handleAnswerOptionChange={this.handleAnswerOptionChange} options_are_editable={true} initial_new_answer_option={this.state.initial_new_answer_option} user={this.state.currentUser} />
-			// 			<br/>
-			// 			<Button type='button' onClick={this.handleSubmit}>Post New Poll </Button>
-			//      </form>
-			//    </div>
-			// )
 
 			var authorField = this.state.authorField;
 			var questionField = this.state.questionField;

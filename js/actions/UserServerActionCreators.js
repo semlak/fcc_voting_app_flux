@@ -23,11 +23,26 @@ module.exports = {
     });
   },
 
-  receiveCreatedUser: function(createdUser) {
-    AppDispatcher.dispatch({
-      actionType: UserConstants.USER_RECEIVE_RAW_CREATED_USER,
-      rawUser: createdUser
-    });
+  receiveCreatedUser: function(createdUser, errorMessage) {
+    //errorMessage will be null if user was successfully created.
+    if (createdUser != null) {
+      AppDispatcher.dispatch({
+        actionType: UserConstants.USER_RECEIVE_RAW_CREATED_USER,
+        rawUser: createdUser
+      });
+
+      AppDispatcher.dispatch({
+        actionType: UserConstants.USER_SET_AUTHENTICATED_USER_STATE,
+        rawUser: createdUser
+      });
+    }
+    else {
+      AppDispatcher.dispatch({
+        actionType: UserConstants.USER_RECEIVE_RAW_CREATED_USER,
+        rawUser: null,
+        errorMessage: errorMessage
+      });
+    }
   },
 
 

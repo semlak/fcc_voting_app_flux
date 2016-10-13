@@ -46,6 +46,7 @@ export default React.createClass({
             // {this.state.allUsers != {} ? <UserList allUsers={this.state.allUsers} />: <p>No users currently registered</p>}
 
   render: function() {
+    console.log("Rendering <UserListContainer />");
     return (
         <section id='userapp'  className=''>
           <h2>User Listing</h2>
@@ -57,7 +58,11 @@ export default React.createClass({
   /**
    * Event handler for 'change' events coming from the UserStore
    */
-  _onChange: function() {
+  _onChange: function(message) {
+    console.log("received _onChange event in <UserListContainer/>")
+    // if (message != null) {
+    //   console.log("Message:", message)
+    // }
     this.setState(getUserState());
   }
 

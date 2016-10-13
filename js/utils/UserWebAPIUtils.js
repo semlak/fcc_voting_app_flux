@@ -50,13 +50,15 @@ module.exports = {
 
     xhr.onload = function() {
         if (xhr.status === 200) {
-          // console.log('Submitted Registration ajax xhr! xhr.responseText is' + xhr.responseText);
-          // should receive a new list of users, or update to add newly_created user to current list of users
-          // UserServerActionCreators.receiveAll(rawUsers);
+          const response = JSON.parse(xhr.responseText)
+          // console.log('Submitted Registration ajax xhr! xhr.responseText is', response);
+          // should receive the new user object as a user (includes id, username, fullname, and role)
+          UserServerActionCreators.receiveCreatedUser(response.user, null);
 
         }
         else {
           console.log('Registration xrh request failed.  Returned status is ' + xhr.status);
+          UserServerActionCreators.receiveCreatedUser(null, "Failed to register new user.");
         }
     }.bind(this);
 

@@ -1,5 +1,7 @@
-import React from 'react'
-import {Button} from 'react-bootstrap'
+import React from 'react';
+import {Button} from 'react-bootstrap';
+var UserStore = require('../stores/UserStore');
+var UserActionCreators = require('../actions/UserActionCreators');
 
 export default React.createClass({
 	getInitialState: function() {
@@ -7,63 +9,39 @@ export default React.createClass({
 				username: '',
 				password: '',
 				fullname: '',
-				role: '',
 				error_message: ''
 		};
 	},
 	componentWillReceiveProps: function(nextProps) {
 		// console.log("in 'componentWillReceiveProps' of RegisterForm, nextProps is ", nextProps)
 	},
-	componentDidMount: function() {
-		// $('#register_box').on('show.bs.modal', function (e) {
-		// 	this.setState(this.getInitialState())
-		// 	$('#register_message').empty()
-		// 	$('#sign_in_message').empty()
-		//   // if (!data) return e.preventDefault() // stops modal from being shown
-		// }.bind(this))
-	},
+
 	prepareRegisterRequest: function() {
 		var data = {
 			username: this.state.username,
 			password: this.state.password,
-			fullname: this.state.fullname || this.state.username,
-			role: this.state.role
+			fullname: this.state.fullname || this.state.username
 		}
-		// $.ajax({
-		// 	type: 'POST',
-		// 	url: '/register',
-		// 	data: data,
-		// 	success: function(result) {
-		// 		if (!result) {
-		// 			// $("#usermenu-list").append('<li>Invalid Username or password</li>');
-		// 			console.log("unable to register")
-
-		// 		}
-		// 		else {
-		// 			console.log("result is ", result)
-		// 			if (result.user) {
-		// 				this.props.updateAppState({user: result.user})
-		// 				$("#register_box").modal('hide')
-		// 			}
-		// 			else if (result.message) {
-		// 				this.setState({error_message: result.message})
-		// 				// $('#register_message').append("<div class='alert alert-danger fade in'>" + this.state.modal_error_message + "<button type='button' class='close pull-right' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>")
-		// 			}
-		// 		}
-		// 	}.bind(this),
-		// 	error: function(xhr, status, err) {
-		// 		// this.setState({data: newPoll});
-		// 		console.error("error when trying to register", this.props.poll_url, xhr, status, err.toString());
-		// 	}.bind(this)
-		// })
+		UserActionCreators.create(data);
 	},
+
 	handleFieldChange: function(e) {
 		// console.log(e.target.name, e.target.value)
 		var key = e.target.name.toString();
-		var newParam = {}
-		newParam[key] = e.target.value
-		this.setState(newParam)
+		var newState = {};
+		newState[key] = e.target.value;
+		newState.error_message = '';
+		this.setState(newState);
 	},
+
+  componentDidMount: function() {
+    UserStore.addCreateListener(this._onUserCreate);
+  },
+
+  componentWillUnmount: function() {
+    UserStore.removeCreateListener(this._onUserCreate);
+  },
+
 	render: function() {
 		// console.log("rendering RegistrationForm")
 		return (
@@ -83,9 +61,6 @@ export default React.createClass({
 					<div className='form-group'>
 						<input className='form-control' type='text' name='fullname' onChange={this.handleFieldChange} value={this.state.fullname} placeholder='Enter full name (not required, can leave blank)' />
 					</div>
-					<div className='form-group'>
-						<input className='form-control' type='text' name='role' onChange={this.handleFieldChange} value={this.state.role} placeholder='Role (not required, can leave blank)' />
-					</div>
 				</div>
 				<div className="modal-footer">
 					<Button type='button' bsStyle='primary' onClick={this.prepareRegisterRequest}>Register</Button>
@@ -93,7 +68,17 @@ export default React.createClass({
 				</div>
 			</div>
 		);
-	}
+	},
+
+
+  _onUserCreate: function(message) {
+    console.log("received _onUserCreate event in <RegistrationForm />")
+    if (message != null) {
+      console.log("Message:", message)
+	    this.setState({error_message: message});
+    }
+  }
+
 
 
 })
