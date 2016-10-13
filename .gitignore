@@ -6,3 +6,4 @@ main.jsx
 key.pem
 cert.pem
 .env
+__snapshots__
