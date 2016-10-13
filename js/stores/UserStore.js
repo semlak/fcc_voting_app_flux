@@ -16,6 +16,7 @@ var assign = require('object-assign');
 var UserUtils = require('../utils/UserUtils')
 
 var CHANGE_EVENT = 'change';
+var CREATE_EVENT = 'create';
 
 // var _users = {};
 var _users = {}
@@ -140,11 +141,13 @@ function addToUserSet(rawUser) {
   */
 
   rawUser.id = rawUser._id;
-  if (_users[rawUser.id]) {
+  if (_users[rawUser.id] == null) {
+    // console.log("in addToUserSet of UserStore. adding to _users set")
     addUser(rawUser)
     return true;
   }
   else {
+    // console.log("in addToUserSet of UserStore. Not adding to _users set")
     return false;
   }
 }
@@ -338,11 +341,14 @@ UserStore.dispatchToken = AppDispatcher.register(function(action) {
     case UserConstants.USER_RECEIVE_RAW_CREATED_USER:
       // console.log("\n\nIn UserStore, dispatch receiving. received 'USER_RECEIVE_RAW_CREATED_USER' action signal, rawUser is", action.rawUser)
       if (action.rawUser != null) {
-        var updatesMade = addToUserSet([action.rawUser]);
+        var updatesMade = addToUserSet(action.rawUser);
         // console.log("updatesMade in USER_RECEIVE_RAW_CREATED_USER is :", updatesMade)
         if (updatesMade) {
+          //also want to set the created user as the authenticated user.
+          _authenticatedUser = action.rawUser
           UserStore.emitChange(null);
           UserStore.emitUserCreate(null);
+          // console.log("user set (_users in UserStore) is now", _users);
         }
       }
       else {
@@ -350,7 +356,7 @@ UserStore.dispatchToken = AppDispatcher.register(function(action) {
         UserStore.emitUserCreate(message);
       }
 
-      //also want to set the created user as the authenticated user. Currently, this is handled by the UserServerActionCreator dispatching separate signals
+
       break;
 
     case UserConstants.USER_CREATE:

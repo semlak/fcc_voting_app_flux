@@ -47666,6 +47666,7 @@
 	var UserUtils = __webpack_require__(505);
 
 	var CHANGE_EVENT = 'change';
+	var CREATE_EVENT = 'create';
 
 	// var _users = {};
 	var _users = {};
@@ -47785,10 +47786,12 @@
 	  */
 
 	  rawUser.id = rawUser._id;
-	  if (_users[rawUser.id]) {
+	  if (_users[rawUser.id] == null) {
+	    // console.log("in addToUserSet of UserStore. adding to _users set")
 	    addUser(rawUser);
 	    return true;
 	  } else {
+	    // console.log("in addToUserSet of UserStore. Not adding to _users set")
 	    return false;
 	  }
 	}
@@ -47977,18 +47980,20 @@
 	    case UserConstants.USER_RECEIVE_RAW_CREATED_USER:
 	      // console.log("\n\nIn UserStore, dispatch receiving. received 'USER_RECEIVE_RAW_CREATED_USER' action signal, rawUser is", action.rawUser)
 	      if (action.rawUser != null) {
-	        var updatesMade = addToUserSet([action.rawUser]);
+	        var updatesMade = addToUserSet(action.rawUser);
 	        // console.log("updatesMade in USER_RECEIVE_RAW_CREATED_USER is :", updatesMade)
 	        if (updatesMade) {
+	          //also want to set the created user as the authenticated user.
+	          _authenticatedUser = action.rawUser;
 	          UserStore.emitChange(null);
 	          UserStore.emitUserCreate(null);
+	          // console.log("user set (_users in UserStore) is now", _users);
 	        }
 	      } else {
 	        var message = action.message || "Unable to create new user.";
 	        UserStore.emitUserCreate(message);
 	      }
 
-	      //also want to set the created user as the authenticated user. Currently, this is handled by the UserServerActionCreator dispatching separate signals
 	      break;
 
 	    case UserConstants.USER_CREATE:
@@ -48738,9 +48743,9 @@
 		},
 
 		_onUserCreate: function _onUserCreate(message) {
-			console.log("received _onUserCreate event in <RegistrationForm />");
+			// console.log("received _onUserCreate event in <RegistrationForm />")
 			if (message != null) {
-				console.log("Message:", message);
+				// console.log("Message:", message)
 				this.setState({ error_message: message });
 			}
 		}
@@ -48923,7 +48928,7 @@
 	                // should receive the new user object as a user (includes id, username, fullname, and role)
 	                UserServerActionCreators.receiveCreatedUser(response.user, null);
 	            } else {
-	                console.log('Registration xrh request failed.  Returned status is ' + xhr.status);
+	                // console.log('Registration xrh request failed.  Returned status is ' + xhr.status);
 	                UserServerActionCreators.receiveCreatedUser(null, "Failed to register new user.");
 	            }
 	        }.bind(this);
@@ -49005,17 +49010,15 @@
 
 	  receiveCreatedUser: function receiveCreatedUser(createdUser, errorMessage) {
 	    //errorMessage will be null if user was successfully created.
+	    // console.log("in UserServerActionCreators, receiveCreatedUser; createdUser is ", createdUser);
 	    if (createdUser != null) {
+	      // console.log("in if branch of receiveCreatedUser");
 	      AppDispatcher.dispatch({
 	        actionType: UserConstants.USER_RECEIVE_RAW_CREATED_USER,
 	        rawUser: createdUser
 	      });
-
-	      AppDispatcher.dispatch({
-	        actionType: UserConstants.USER_SET_AUTHENTICATED_USER_STATE,
-	        rawUser: createdUser
-	      });
 	    } else {
+	      // console.log("in else branch of receiveCreatedUser");
 	      AppDispatcher.dispatch({
 	        actionType: UserConstants.USER_RECEIVE_RAW_CREATED_USER,
 	        rawUser: null,
@@ -49256,7 +49259,7 @@
 	  // {this.state.allUsers != {} ? <UserList allUsers={this.state.allUsers} />: <p>No users currently registered</p>}
 
 	  render: function render() {
-	    console.log("Rendering <UserListContainer />");
+	    // console.log("Rendering <UserListContainer />");
 	    return React.createElement(
 	      'section',
 	      { id: 'userapp', className: '' },
@@ -49273,7 +49276,7 @@
 	   * Event handler for 'change' events coming from the UserStore
 	   */
 	  _onChange: function _onChange(message) {
-	    console.log("received _onChange event in <UserListContainer/>");
+	    // console.log("received _onChange event in <UserListContainer/>")
 	    // if (message != null) {
 	    //   console.log("Message:", message)
 	    // }
@@ -49314,7 +49317,7 @@
 	   * @return {object}
 	   */
 	  render: function render() {
-	    console.log("rendering <UserList />");
+	    // console.log("rendering <UserList />")
 	    // This function should return null when there are no users to list.
 	    if (Object.keys(this.props.allUsers).length < 1) {
 	      return null;

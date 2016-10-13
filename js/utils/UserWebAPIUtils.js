@@ -57,7 +57,7 @@ module.exports = {
 
         }
         else {
-          console.log('Registration xrh request failed.  Returned status is ' + xhr.status);
+          // console.log('Registration xrh request failed.  Returned status is ' + xhr.status);
           UserServerActionCreators.receiveCreatedUser(null, "Failed to register new user.");
         }
     }.bind(this);

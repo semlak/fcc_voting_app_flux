@@ -25,18 +25,16 @@ module.exports = {
 
   receiveCreatedUser: function(createdUser, errorMessage) {
     //errorMessage will be null if user was successfully created.
+    // console.log("in UserServerActionCreators, receiveCreatedUser; createdUser is ", createdUser);
     if (createdUser != null) {
+      // console.log("in if branch of receiveCreatedUser");
       AppDispatcher.dispatch({
         actionType: UserConstants.USER_RECEIVE_RAW_CREATED_USER,
         rawUser: createdUser
       });
-
-      AppDispatcher.dispatch({
-        actionType: UserConstants.USER_SET_AUTHENTICATED_USER_STATE,
-        rawUser: createdUser
-      });
     }
     else {
+      // console.log("in else branch of receiveCreatedUser");
       AppDispatcher.dispatch({
         actionType: UserConstants.USER_RECEIVE_RAW_CREATED_USER,
         rawUser: null,

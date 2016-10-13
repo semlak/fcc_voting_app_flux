@@ -72,9 +72,9 @@ export default React.createClass({
 
 
   _onUserCreate: function(message) {
-    console.log("received _onUserCreate event in <RegistrationForm />")
+    // console.log("received _onUserCreate event in <RegistrationForm />")
     if (message != null) {
-      console.log("Message:", message)
+      // console.log("Message:", message)
 	    this.setState({error_message: message});
     }
   }

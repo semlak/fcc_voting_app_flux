@@ -22,7 +22,7 @@ var UserList = React.createClass({
    * @return {object}
    */
   render: function() {
-    console.log("rendering <UserList />")
+    // console.log("rendering <UserList />")
     // This function should return null when there are no users to list.
     if (Object.keys(this.props.allUsers).length < 1) {
       return null;
