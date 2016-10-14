@@ -7,3 +7,4 @@ key.pem
 cert.pem
 .env
 __snapshots__
+npm-debug.log
