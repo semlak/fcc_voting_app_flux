@@ -52,6 +52,7 @@
     "react-router-bootstrap": "^0.23.1",
     "recharts": "^0.15.1",
     "serve-favicon": "^2.3.0",
+    "webpack": "^1.12.13",
     "should": "^9.0.2"
   },
   "devDependencies": {
