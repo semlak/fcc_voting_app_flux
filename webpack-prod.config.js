@@ -2,6 +2,8 @@ var webpack = require('webpack')
 
 
 module.exports = {
+  devtool: 'source-map',
+
   entry: './js/index.jsx',
 
 
@@ -40,25 +42,25 @@ module.exports = {
     extensions: ['', '.js', '.jsx']
   },
 
- module: {
+ // module: {
+ //    loaders: [
+ //      { test: /\.js?$/,
+ //        loader: 'babel',
+ //        exclude: /node_modules/ },
+ //      // { test: /\.scss?$/,
+ //        // loader: 'style!css!sass',
+ //        // include: path.join(__dirname, 'src', 'styles') },
+ //      { test: /\.png$/,
+ //        loader: 'file' },
+ //      { test: /\.(ttf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
+ //        loader: 'file'}
+ //    ]
+ //  }
+
+  module: {
     loaders: [
-      { test: /\.js?$/,
-        loader: 'babel',
-        exclude: /node_modules/ },
-      { test: /\.scss?$/,
-        loader: 'style!css!sass',
-        include: path.join(__dirname, 'src', 'styles') },
-      { test: /\.png$/,
-        loader: 'file' },
-      { test: /\.(ttf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
-        loader: 'file'}
+      { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader' },
+      { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' }
     ]
   }
-
-  // module: {
-  //   loaders: [
-  //     { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader?presets[]=es2015&presets[]=react' },
-  //     { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' }
-  //   ]
-  // }
 }
