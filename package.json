@@ -4,10 +4,10 @@
   "description": "A Polling/Voting App created to complete requirements for freecodecamp.com curriculum",
   "main": "index.jsx",
   "scripts": {
-    "postinstall": "webpack --config ./webpack.config.js --progress --colors",
+    "postinstall": "webpack --config ./webpack-prod.config.js --progress --colors",
     "start": "node server.js",
     "start:dev": "webpack-dev-server --inline --content-base public  --history-api-fallback",
-    "start:prod": "node server.js",
+    "start:production": "node server.js",
     "test": "jest"
   },
   "jest": {

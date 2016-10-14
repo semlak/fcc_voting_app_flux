@@ -36,47 +36,47 @@ router.post('/register', function(req, res, next) {
 		if (err) {
 			res.json(err)
 		}
-		else if (accounts.length == 0) {
-			role = 'admin'
-		}
 		else {
-			role = 'user'
-		}
-		Account.register(new Account({ username : req.body.username, fullname: req.body.fullname, email: req.body.email, role: role }), req.body.password, function(err, account) {
-			if (err) {
-				if (isAjaxRequest) {
-					res.json(err)
-				}
-				else {
-					return res.render('register', { error : err.message });
-				}
+			if (accounts.length == 0) {
+				role = 'admin'
 			}
 			else {
-				passport.authenticate('local') (req, res, function () {
-					req.session.save(function (err) {
-						if (err) {
-							return next(err)
-						}
-						else {
-							if (isAjaxRequest) {
-								// polls.forEach(item => console.log('item is ', item))
-								res.json({error: false, message: 'Successfully registered.', user: reqUserInfo(req.user)});
+				role = 'user'
+			}
+			Account.register(new Account({ username : req.body.username, fullname: req.body.fullname, email: req.body.email, role: role }), req.body.password, function(err, account) {
+				if (err) {
+					if (isAjaxRequest) {
+						res.json(err)
+					}
+					else {
+						return res.render('register', { error : err.message });
+					}
+				}
+				else {
+					passport.authenticate('local') (req, res, function () {
+						req.session.save(function (err) {
+							if (err) {
+								return next(err)
 							}
 							else {
-								// res.json(poll)
-								// res.render('polls', {user: reqUserInfo(req.user), title: 'Poll Listing', poll: JSON.stringify(poll)})
-								// res.set('Content-Type', 'application/javascript');
-								res.redirect('/');
-								// res.render('testPage', { myVar : ... });
+								if (isAjaxRequest) {
+									// polls.forEach(item => console.log('item is ', item))
+									res.json({error: false, message: 'Successfully registered.', user: reqUserInfo(req.user)});
+								}
+								else {
+									// res.json(poll)
+									// res.render('polls', {user: reqUserInfo(req.user), title: 'Poll Listing', poll: JSON.stringify(poll)})
+									// res.set('Content-Type', 'application/javascript');
+									res.redirect('/');
+									// res.render('testPage', { myVar : ... });
+								}
 							}
-						}
+						});
 					});
-				});
-			}
-		});
-
+				}
+			});
+		}
 	})
-
 });
 
 router.post('/login', passport.authenticate('local'), function(req, res) {
