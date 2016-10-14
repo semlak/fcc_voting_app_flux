@@ -35,7 +35,7 @@ router.get('/polls/', function(req, res, next) {
 	// res.render('index', { user: reqUserInfo(req.user), title: 'Express' });
 	console.log("Received GET request for poll listing. )")
 	var isAjaxRequest = req.xhr || req.headers.accept.indexOf('json') > -1 || req.headers["x-requested-with"] == 'XMLHttpRequest';
-	console.log('isAjaxRequest is', isAjaxRequest);
+	// console.log('isAjaxRequest is', isAjaxRequest);
 	if (isAjaxRequest) {
 		Poll.find().sort({'_id': -1}).populate('votes').exec(function(err, polls) {
 			if (err) {
@@ -57,7 +57,7 @@ router.get('/polls/', function(req, res, next) {
 router.get('/polls/:poll_id', function(req, res, next) {
 	var isAjaxRequest = req.xhr || req.headers.accept.indexOf('json') > -1 || req.headers["x-requested-with"] == 'XMLHttpRequest';
 	if (isAjaxRequest) {
-		console.log("poll_id is ", poll_id)
+		// console.log("poll_id is ", poll_id)
 		var poll_id = req.params.poll_id
 		Poll.findById(poll_id).populate('votes').exec(function(err, poll) {
 			if (err) {
@@ -100,8 +100,8 @@ router.get('/polls/user_polls/:user_id', function(req, res, next) {
 
 
 router.post('/polls/new_answer_option', function(req, res, next) {
-	console.log("received post request");
-	console.log("request body is ", req.body )
+	// console.log("received post request");
+	// console.log("request body is ", req.body )
 	var poll_id = req.body.poll_id
 	var user_name = req.body.user_name
 	var new_answer_option = req.body.new_answer_option
@@ -153,8 +153,8 @@ router.post('/polls/new_answer_option', function(req, res, next) {
 
 //a poll creation request
 router.post('/polls/', function(req, res, next) {
-	console.log("received post request");
-	console.log("request body is ", req.body, "user is ", req.user )
+	// console.log("received post request");
+	// console.log("request body is ", req.body, "user is ", req.user )
 	var poll = new Poll();
 	// Anonymous user was only allowed to create poll in testing
 	// poll.author = req.body.author || 'Anonymous User';
@@ -163,7 +163,7 @@ router.post('/polls/', function(req, res, next) {
 	poll.question = req.body.question;
 	poll.answer_options = req.body['answer_options\[\]'] || req.body.answer_options || [];
 	poll.owner = req.user._id
-	console.log("poll object:", poll)
+	// console.log("poll object:", poll)
 
 	// for (var key in req.body) {
 	// 	console.log("key is ", key, "val is ", req.body[key])

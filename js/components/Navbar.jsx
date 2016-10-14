@@ -17,7 +17,7 @@ export default React.createClass({
 		// console.log("getting initial state for <Navbar/>");
 		//we want to require a login if an unauthenticated user loads the "/New_poll" location
 		var currentUser = this.getCurrentUser();
-		var showModal = this.props.location == "/New_poll" && currentUser.username == null ? true : false;
+		var showModal = false;
 		// console.log("currentUser:", currentUser, ", showModal: ", showModal);
 		return {
 			currentUser: currentUser,
@@ -25,6 +25,8 @@ export default React.createClass({
 			activeModalTab : 2,
 			expanded: false
 		};
+			//expanded in the state refers to if the navBar is expanded, as in when in mobile view and the bar has been clicked to drop down the nav elements
+			//Unfortunately, it seems we need to control this state explicitly to accurately make sure the bar collapses after clicks when wanted
 	},
 
 	close: function() {
@@ -171,7 +173,7 @@ export default React.createClass({
 	},
 
 	_onChange: function(message) {
-		// console.log("in _onChange of <Navbar/>", "props: ", this.props)
+		// console.log("in _onChange of <Navbar/>")
 
 		//things are a little misnamed here. the variable currentUser below is refering to the most recent updated authenticated user
 		//this.state.currentUser is the authenticated user last set in the NavBar object, which could be out of date (being checked here)
@@ -192,9 +194,10 @@ export default React.createClass({
 		else if (currentUser.username == null && location == "/new_poll") {
 			//this should occur if the user has loaded the app directly to the "/new_poll" page, just after the app updates users
 			//we still want to show the login/register modal upon page rendering.
-			this.setState({currentUser: currentUser})
+			this.setState({currentUser: currentUser, showModal: true})
 		}
 		else {
+			//this should occur when the user logged in while viewing a page
 			this.setState({currentUser: currentUser, showModal: false})
 		}
 	}

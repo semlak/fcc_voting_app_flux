@@ -187,7 +187,7 @@ export default React.createClass({
 	          <ControlLabel>Current Answer options:</ControlLabel>
 						<AnswerOptionsList answer_options={this.state.answer_options} votes={[]} handleAnswerOptionChange={this.handleAnswerOptionChange} options_are_editable={true} />
 	          <FormControl.Feedback />
-						{answerOptionsField.validationMessage == null ? <HelpBlock>The current answer options are above, and you can add more later or right now using the field below.<br />You can enter many blank ones and then fill them in before submitting poll.</HelpBlock> : <HelpBlock>{answerOptionsField.validationMessage}</HelpBlock> }
+						{answerOptionsField.validationMessage == null ? null : <HelpBlock>{answerOptionsField.validationMessage}</HelpBlock> }
 					</FormGroup>
 					<FormGroup controlId="newAnswerOptionForm" className="newAnswerOptionFormContainer well">
 	          <ControlLabel>Add additional answer option:</ControlLabel>

@@ -20,7 +20,6 @@ var isLoggedIn = app.isLoggedIn
 // this does not require an authenticated user.
 router.get('/votes/', function(req, res, next) {
 	// res.render('index', { user: req.user, title: 'Express' });
-	console.log("hey")
 	Vote.find().sort({'_id': -1}).exec(function(err, votes) {
 		if (err) {
 			res.json(err);
@@ -34,7 +33,7 @@ router.get('/votes/', function(req, res, next) {
 			}
 			else {
 				// render()
-				console.log("votes:", votes)
+				// console.log("votes:", votes)
 				res.render('votes', { user: req.user, title: 'Vote Listing', votes: votes })
 			}
 			// need more logic here
@@ -47,7 +46,7 @@ router.get('/votes/', function(req, res, next) {
 
 // submit a vote (a response to a poll).
 router.post('/votes', function(req, res, next) {
-	console.log("received post request for a vote");
+	// console.log("received post request for a vote");
 	console.log("request body is ", req.body )
 	var vote = new Vote();
 	// need to change this to look up user
@@ -58,9 +57,9 @@ router.post('/votes', function(req, res, next) {
 	var vote_text = req.body.answer_option_text;
 	// vote.question = req.body.question || '';
 	// vote.answer_options = req.body['answer_options\[\]'] || [];
-	for (var key in req.body) {
-		console.log("key is ", key, "val is ", req.body[key])
-	}
+	// for (var key in req.body) {
+	// 	// console.log("key is ", key, "val is ", req.body[key])
+	// }
 
 	//check to see if user has already voted
 	var props = {poll: vote.poll}
@@ -92,7 +91,7 @@ router.post('/votes', function(req, res, next) {
 						res.json({message: 'No poll found corresponding to your vote.'})
 					}
 					else {
-						console.log('poll is', poll)
+						// console.log('poll is', poll)
 						poll.votes.push(vote);
 						poll.save(function(err) {
 							if (err) {
@@ -106,7 +105,7 @@ router.post('/votes', function(req, res, next) {
 									}
 									else {
 										// need more logic here
-										console.log("responding with votes", votes)
+										// console.log("responding with votes", votes)
 										res.json({message: 'Vote was successful', votes: votes});
 									}
 								});
