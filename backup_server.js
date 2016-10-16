@@ -64,7 +64,8 @@ mongoose.connect(process.env.MONGOLAB_URI || process.env.MONGO_URI || 'mongodb:/
 
 //	app.get('/login', function(req, res) {
 //		console.log('received get request for /login')
-//		var isAjaxRequest = req.xhr;
+//    var isAjaxRequest = req.xhr || req.headers.accept.indexOf('json') > -1 || req.headers["x-requested-with"] == 'XMLHttpRequest';
+
 //		if (isAjaxRequest) {
 //			res.json({message:'Hello. Login, ajax'})
 //		}

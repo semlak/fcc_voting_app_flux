@@ -11,8 +11,9 @@
 
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
-var UserActionCreators = require('../actions/UserActionCreators');
-import NavLink from './NavLink'
+// var UserActionCreators = require('../actions/UserActionCreators');
+// import NavLink from './NavLink'
+var Router = require('react-router');
 
 // var UserTextInput = require('./UserTextInput');
 
@@ -24,6 +25,11 @@ var UserItem = React.createClass({
   },
 
 
+  handleUserSelect: function(e) {
+    console.log("running handleUserSelect.")
+    Router.browserHistory.push('/users/' + this.props.user.username);
+  },
+  /**
   /**
    * @return {object}
    */
@@ -38,8 +44,12 @@ var UserItem = React.createClass({
     // This differentiation between classification and state becomes important
     // in the naming of view actions toggleComplete() vs. destroyCompleted().
     return (
-      <div className='user-item' key={user.id}>
-            <NavLink to={'/users/' + user.username}>{user.username}</NavLink>
+      // <div className='user-item well poll' key={user.id}>
+      //       <NavLink to={'/users/' + user.username}>{user.username}</NavLink>
+      // </div>
+
+      <div className='poll well' onClick={this.handleUserSelect}>
+          {"User: " + user.username}
       </div>
     );
   }

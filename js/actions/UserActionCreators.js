@@ -28,11 +28,16 @@ var UserActionCreators = {
    * @param  {object} userUpdates:  object containing possible updates (username, password, and/or fullname, role)
    */
   update: function(id, /*object*/ userUpdates) {
-    AppDispatcher.dispatch({
-      actionType: UserConstants.USER_UPDATE,
-      id: id,
-      userUpdates: userUpdates
-    });
+    console.log("UserActionCreators.update function fired");
+
+    // var data = userUpdates;
+    // data.id = id;
+    // AppDispatcher.dispatch({
+    //   actionType: UserConstants.USER_UPDATE,
+    //   id: id,
+    //   userUpdates: userUpdates
+    // });
+    UserWebAPIUtils.update(id, userUpdates);
   },
 
   getAllFromServer: function() {

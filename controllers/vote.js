@@ -25,7 +25,6 @@ router.get('/votes/', function(req, res, next) {
 			res.json(err);
 		}
 		else {
-			// var isAjaxRequest = req.xhr;
 			var isAjaxRequest = req.xhr || req.headers.accept.indexOf('json') > -1 || req.headers["x-requested-with"] == 'XMLHttpRequest';
 
 			if (isAjaxRequest) {

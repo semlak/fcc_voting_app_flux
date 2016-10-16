@@ -24,15 +24,10 @@ var PollList = React.createClass({
    * @return {object}
    */
   render: function() {
-    // This section should be hidden by default
-    // and shown when there are polls.
-    if (Object.keys(this.props.allPolls).length < 1) {
-      return null;
-    }
-
-    // if (this.props.allPolls.length < 1) {
+    // if (Object.keys(this.props.allPolls).length < 1) {
     //   return null;
     // }
+
 
     var allPolls = this.props.allPolls;
     var pollNodes = []
@@ -47,13 +42,21 @@ var PollList = React.createClass({
         );
     }
 
+    if (pollNodes.length == 0) {
+      pollNodes.push(
+        <Col key={1} xs={12} sm={12} md={12} className=''>
+          <div>No polls.</div>
+        </Col>
+      )
+    }
+
     return (
       // <div id="poll-list">
       //   <ul id="poll-list">{polls}</ul>
       // </div>
       <div>
         <div className='pollBoxHeader'>
-          <h2 className='displayInline'>Listing of all polls</h2>
+          <h2 className='displayInline'>{this.props.header || 'Listing of all polls'}</h2>
         </div>
         <br />
         <Grid>

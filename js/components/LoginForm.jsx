@@ -1,27 +1,27 @@
 import React from 'react'
 var UserStore = require('../stores/UserStore');
 var UserActionCreators = require('../actions/UserActionCreators');
-import {Button} from 'react-bootstrap'
+import {Button, Grid, Row, Col, Form, FormGroup, FormControl, Checkbox, ControlLabel, HelpBlock} from 'react-bootstrap'
 
 export default React.createClass({
 	getInitialState: function() {
 		return {
 				username: '',
 				password: '',
-				error_message: ''
+				message_obj: null
 		};
 	},
 
   componentDidMount: function() {
-    UserStore.addChangeListener(this._onChange);
+    UserStore.addAuthenticationChangeListener(this._onAuthenticationChange);
   },
 
   componentWillUnmount: function() {
-    UserStore.removeChangeListener(this._onChange);
+    UserStore.removeAuthenticationChangeListener(this._onAuthenticationChange);
   },
 
 	handleLogin: function() {
-		UserActionCreators.login(this.state.username.trim(), this.state.password.trim())
+		UserActionCreators.login(this.state.username, this.state.password)
 	},
 
 	handleFieldChange: function(e) {
@@ -29,34 +29,53 @@ export default React.createClass({
 		var key = e.target.name.toString();
 		var newParam = {}
 		newParam[key] = e.target.value
+		newParam['message_obj'] = null;
 		this.setState(newParam)
 	},
 	render: function() {
 		// console.log("rendering LoginForm")
+		var message_obj = this.state.message_obj;
+		var validationState = message_obj == null ? null : (message_obj.error ? "error" : "success");
+		var validationMessage = message_obj == null ? "" : message_obj.message_text;
 		return (
 			<div className="sign_in_form" onClick={this.handleClick} >
 				<div className="modal-body" onClick={this.handleClick} >
-					<div id='sign_in_message' className={(this.state.error_message == '' ? ' hidden' : 'alert alert-danger')}>{this.state.error_message || 'Hey'}
-						<button type='button' className='close pull-right' data-hide='alert' aria-label='Close'><span aria-hidden='true'>&times;</span>
-						</button>
-					</div>
-
-					<div className='form-group' >
-						<input className='form-control' type='text' name='username' onChange={this.handleFieldChange} value={this.state.username} placeholder='Enter Username' onClick={this.handleClick} />
-					</div>
-					<div className='form-group'>
-						<input className='form-control' type='password' name='password' onChange={this.handleFieldChange} value={this.state.password} placeholder='Enter Password' />
-					</div>
+				  <Form horizontal>
+				  	<FormGroup validationState={validationState}>
+					    <FormGroup controlId="formHorizontalUsername">
+					      <Col smOffset={0} sm={2} componentClass={ControlLabel}>
+					        Username:
+					      </Col>
+					      <Col sm={10}>
+					        <FormControl type="text" name="username" value={this.state.username} onChange={this.handleFieldChange} placeholder='Enter Username' />
+					      </Col>
+					    </FormGroup>
+					    <FormGroup controlId="formHorizontalPassword">
+					      <Col smOffset={0} sm={2} componentClass={ControlLabel}>
+					        Password:
+					      </Col>
+					      <Col sm={10}>
+					        <FormControl type="password" name="password" value={this.state.password} onChange={this.handleFieldChange} placeholder='Enter Password'/>
+					      </Col>
+					    </FormGroup>
+				    	<Col smOffset={2} sm={10}>
+								{validationState == null ? <HelpBlock>{"Log in with your username and password."}</HelpBlock> : <HelpBlock>{validationMessage}</HelpBlock> }
+							</Col>
+					  </FormGroup>
+				  </Form>
 				</div>
 				<div className="modal-footer">
-					<Button bsStyle="primary" onClick={this.handleLogin}>Sign In </Button>
+					<Button bsStyle="primary" onClick={this.handleLogin}>Sign In</Button>
 					<Button bsStyle='default' onClick={this.props.onCancel}>Cancel </Button>
 				</div>
 			</div>
 		);
 	},
 
-  _onChange: function() {
+  _onAuthenticationChange: function(message_obj) {
     // this.setState(getUserState());
+    if (message_obj != null && message_obj.error) {
+    	this.setState({message_obj: message_obj});
+    }
   }
 })

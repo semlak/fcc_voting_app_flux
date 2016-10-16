@@ -11,6 +11,7 @@ var React = require('react');
 var ReactPropTypes = React.PropTypes;
 var UserActionCreators = require('../actions/UserActionCreators');
 var UserItem = require('./UserItem');
+import {Row, Col, Grid} from 'react-bootstrap'
 
 var UserList = React.createClass({
 
@@ -23,23 +24,58 @@ var UserList = React.createClass({
    */
   render: function() {
     // console.log("rendering <UserList />")
-    // This function should return null when there are no users to list.
-    if (Object.keys(this.props.allUsers).length < 1) {
-      return null;
-    }
+    // if (Object.keys(this.props.allUsers).length < 1) {
+    //   return null;
+    // }
 
     var allUsers = this.props.allUsers;
-    var users = []
+    var userNodes = []
     // var users = allUsers.map(user => (<li><UserItem key={user.id} user={user}/></li>));
 
     for (var key in allUsers) {
-      users.push(<li key={key}><UserItem user={allUsers[key]} /></li>);
+      userNodes.push(
+        <Col key={key} xs={12} sm={6} md={3} className=''>
+          <UserItem  user={allUsers[key]} />
+        </Col>
+        // <li key={key}><UserItem user={allUsers[key]} /></li>
+        );
     }
 
+    // This function should return null when there are no users to list.
+    if (userNodes.length == 0) {
+      userNodes.push(
+        <Col key={1} xs={12} sm={12} md={12} className=''>
+          <div>No users.</div>
+        </Col>
+      )
+    }
+
+    // for (var key in allPolls) {
+    //   // console.log("poll:", allPolls[key]);
+    //   pollNodes.push(
+    //     <Col key={key} xs={12} sm={6} md={6} className=''>
+    //       <PollItem  poll={allPolls[key]} />
+    //     </Col>
+    //     );
+    // }
+
     return (
-      <div id="user-list">
-        <ul id="user-list">{users}</ul>
+      // <div id="user-list">
+      //   <ul id="user-list">{users}</ul>
+      // </div>
+
+      <div>
+        <div id="user-list" className='pollBoxHeader'>
+          <h2 className='displayInline'>Listing of all Users:</h2>
+        </div>
+        <br />
+        <Grid>
+          <Row className='userList pollList'>
+            {userNodes}
+          </Row>
+        </Grid>
       </div>
+
     );
   }
 

@@ -27,7 +27,7 @@ router.get('/register', function(req, res) {
 });
 
 router.post('/register', function(req, res, next) {
-	var isAjaxRequest = req.xhr;
+	var isAjaxRequest = req.xhr || req.headers.accept.indexOf('json') > -1 || req.headers["x-requested-with"] == 'XMLHttpRequest';
 	// console.log("trying to register account. req.body is ", req.body)
 	console.log("Received request to register an account");
 	// if this is the first account created for the application, it should be an admin user. Otherwise, it will be standard user.
@@ -60,7 +60,6 @@ router.post('/register', function(req, res, next) {
 							}
 							else {
 								if (isAjaxRequest) {
-									// polls.forEach(item => console.log('item is ', item))
 									res.json({error: false, message: 'Successfully registered.', user: reqUserInfo(req.user)});
 								}
 								else {
@@ -80,7 +79,8 @@ router.post('/register', function(req, res, next) {
 });
 
 router.post('/login', passport.authenticate('local'), function(req, res) {
-	var isAjaxRequest = req.xhr;
+	var isAjaxRequest = req.xhr || req.headers.accept.indexOf('json') > -1 || req.headers["x-requested-with"] == 'XMLHttpRequest';
+
 	// res.
 
 	res.redirect('/');
@@ -96,8 +96,8 @@ router.post('/login-ajax', function(req, res, next) {
 		}
 		if (!user) {
 			if (isAjaxRequest) {
-				return res.status(403).json( {
-					message: "no user found"
+				return res.status(401).json( {
+					message: "Invalid username or password."
 				});
 			}
 			else {
@@ -112,7 +112,7 @@ router.post('/login-ajax', function(req, res, next) {
 				return next(err);
 			}
 			else if (isAjaxRequest) {
-				return res.json({ message: 'user authenticated', username: user.username, user: reqUserInfo(req.user)});
+				return res.json({ message: 'User authenticated.', username: user.username, user: reqUserInfo(req.user)});
 			}
 			else {
 				res.redirect('/')
@@ -131,7 +131,7 @@ router.get('/logout', function(req, res, next) {
 	req.logout();
 
 	if (isAjaxRequest) {
-		res.json({error: false, message: 'User logged off.', user: null})
+		res.json({error: false, message: 'User logged off successfully.', user: null})
 	}
 	else {
 		// req.logout();

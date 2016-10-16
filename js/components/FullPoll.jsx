@@ -151,14 +151,14 @@ export default React.createClass({
 	},
 
   componentDidMount: function() {
-    UserStore.addChangeListener(this._onUserChange);
+    UserStore.addAuthenticationChangeListener(this._onAuthenticationChange);
 		PollStore.addChangeListener(this._onPollChange);
 		PollStore.addDestroyListener(this._onPollDestroy);
 		PollStore.addVoteCreatedListener(this._onVoteCreate);
   },
 
   componentWillUnmount: function() {
-    UserStore.removeChangeListener(this._onUserChange);
+    UserStore.removeAuthenticationChangeListener(this._onAuthenticationChange);
     PollStore.removeChangeListener(this._onPollChange);
 		PollStore.removeDestroyListener(this._onPollDestroy);
 		PollStore.removeVoteCreatedListener(this._onVoteCreate);
@@ -495,7 +495,7 @@ export default React.createClass({
 		return UserStore.getAuthenticatedUser();
 	},
 
-	_onUserChange: function() {
+	_onAuthenticationChange: function() {
 		this.setState({currentUser: UserStore.getAuthenticatedUser()})
 	},
 

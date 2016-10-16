@@ -63,7 +63,7 @@ router.get('/users/', function(req, res, next) {
 
 			if (isAjaxRequest) {
 
-				res.json({error: false, users: accounts, message: 'Success', user: reqUserInfo(req.user)})
+				res.json({error: false, users: accounts, message: 'Successfully retrieved users.', user: reqUserInfo(req.user)})
 			}
 
 			else {
@@ -83,38 +83,39 @@ router.get('/users/', function(req, res, next) {
 });
 
 // router.get('/:username', isLoggedIn, function(req, res, next) {
-router.get('/users/:username', function(req, res, next) {
-	// console.log("is logged in", isLoggedIn)
-	// This is the user profile that any registered user will be able to view.
-	// Ideally provide more actions is the client is viewing their own user profile
+// router.get('/users/:username', function(req, res, next) {
+// 	// console.log("is logged in", isLoggedIn)
+// 	// This is the user profile that any registered user will be able to view.
+// 	// Ideally provide more actions is the client is viewing their own user profile
 
-		var isAjaxRequest = req.xhr || req.headers.accept.indexOf('json') > -1 || req.headers["x-requested-with"] == 'XMLHttpRequest';
-		if (isAjaxRequest) {
-			Account.findOne({username: req.params.username}, function(err, userToRender) {
-				if (err) {
-					console.log("error when searching by username", err);
-					res.redirect('/',  { error : err.message })
-				}
-				else {
-					// if (userToRender.length != 1) {
-					// 	console.log("this isn't supposed to happen")
-					// }
-					console.log("rendering user", userToRender);
-					// app.use(express.static(path.join(__dirname, 'public')))
-					res.json({userToRender: userToRender, user: reqUserInfo(req.user)})
+// 		var isAjaxRequest = req.xhr || req.headers.accept.indexOf('json') > -1 || req.headers["x-requested-with"] == 'XMLHttpRequest';
+// 		if (isAjaxRequest) {
+// 			Account.findOne({username: req.params.username}, function(err, userToRender) {
+// 				if (err) {
+// 					console.log("error when searching by username", err);
+// 					// res.redirect('/',  { error : err.message })
+// 					res.json(err);
+// 				}
+// 				else {
+// 					// if (userToRender.length != 1) {
+// 					// 	console.log("this isn't supposed to happen")
+// 					// }
+// 					console.log("rendering user", userToRender);
+// 					// app.use(express.static(path.join(__dirname, 'public')))
+// 					res.json({userToRender: userToRender, user: reqUserInfo(req.user)})
 
-					// res.render('user', {user: reqUserInfo(req.user), userToRender: userToRender, usernames: false, title: 'Express' });
-					// res.render('index', {title: 'Express' });
-				}
-			});
-		}
-		else {
-			res.render('index', {title: 'Express' });
-				// res.sendFile(path.join(__dirname ,'public', 'index.html'))
+// 					// res.render('user', {user: reqUserInfo(req.user), userToRender: userToRender, usernames: false, title: 'Express' });
+// 					// res.render('index', {title: 'Express' });
+// 				}
+// 			});
+// 		}
+// 		else {
+// 			res.render('index', {title: 'Express' });
+// 				// res.sendFile(path.join(__dirname ,'public', 'index.html'))
 
-		}
+// 		}
 
-});
+// });
 
 
 var updatePassword = function(username, password, cb) {
@@ -142,8 +143,10 @@ var updatePassword = function(username, password, cb) {
 	})
 }
 
-var updateUser = function(username, attributes, cb) {
-	Account.findByUsername(username, function(err, account) {
+
+//note, this currently will create an error if we try to update the user password and another property (both will try to have the server respond).
+var updateUser = function(user_id, attributes, cb) {
+	Account.findById(user_id, function(err, account) {
 		if (err) cb(err)
 		else {
 			if (attributes.password) {
@@ -157,7 +160,7 @@ var updateUser = function(username, attributes, cb) {
 								cb(err2)
 							}
 							else {
-								cb(null, {message: 'Account saved with new password.'})
+								cb(null, {message: 'Account saved with new password.', user: reqUserInfo(account1)})
 							}
 						})
 					}
@@ -166,7 +169,7 @@ var updateUser = function(username, attributes, cb) {
 			else {
 				Object.keys(attributes).forEach(function(attrib) {
 					if (attributes[attrib]) {
-						if (attrib != 'password') {
+						if (attrib != 'password' && attrib != 'current_password') {
 							account[attrib] = attributes[attrib]
 						}
 					}
@@ -184,86 +187,55 @@ var updateUser = function(username, attributes, cb) {
 	})
 }
 
-// updatePassword('semlak', 'semlak', function(blah1, blah2) {console.log(blah1)})
-
-//****testing ///
-			var changePassword = function(username, password, cb) {
-				Account.findByUsername(username, password, cb)
-
-
-			}
-
-			cb = function(err, account, blah1, blah2) {
-				console.log("err", err, ", account", account, ", blah1", blah1, ", blah2", blah2)
-				cb1 = function(err, account) {
-					console.log('err', err, 'account', account)
-					account.save(function(err) {
-						if (err) console.log(err)
-						else {
-							console.log('Account saved.')
-						}
-					})
-				}
-				account.setPassword('blah', cb1)
-				// account.role = 'admin'
-				// account.save(function(err) {
-				// 	if (err) console.log(err)
-				// 	else {
-				// 		console.log('account saved')
-				// 	}
-				// })
-			// 			poll.save(function(err) {
-			// 				if (err) console.log(err)
-			// 				console.log("saved poll", poll)
-			// 			})
-			}
-
-
-			// changePassword('semlak', 'blah', cb);
-			// changePassword('semlak', 'blah', function(err, account) {
-			// 	console.log(account)
-			// 	account.setPassword('hey')
-			// })
-/////*****//////
 
 
 //update property of specific user. Can only be done by admin or by the specific user.
-router.post('/users/:username', isLoggedIn, function(req, res, next) {
+//note, this currently will create an error if we try to update the user password and another property (both will try to have the server respond).
+router.post('/users/:user_id', function(req, res, next) {
 
 // router.post(':username', function(req, res, next) {
-	var isAjaxRequest = req.xhr;
-	console.log("trying to update user account. req.body is ", req.body)
+	var isAjaxRequest = req.xhr || req.headers.accept.indexOf('json') > -1 || req.headers["x-requested-with"] == 'XMLHttpRequest';
 
-	if (req.user.username != req.params.username && req.user.role != 'admin') {
-		res.json({message: 'User update can only be performed by the same user or by an admin user.'})
+	console.log("trying to update user account. req.body is ", req.body)
+	if (!req.isAuthenticated()) {
+		console.log("in 'if' branch of user UPDATE request")
+		var message = "User update can only be performed by authenticated user.";
+		console.log(message);
+		res.json({message: message });
+	}
+	else if (req.user._id != req.params.user_id && req.user.role != 'admin') {
+		console.log("in 'else if 0' branch of user UPDATE request")
+		var message = 'User update can only be performed by the same user or by an admin user.';
+		console.log(message);
+		res.json({message: message });
 	}
 	else if (req.body.new_role == 'admin' && req.user.role != 'admin') {
-			console.log("User role update can only be changed to 'admin' by a current admin")
-			res.json({message: "User role update can only be changed to 'admin' by a current admin."})
+		console.log("in 'else if 1' branch of user UPDATE request")
+		var message = "User role update can only be changed to 'admin' by a current admin";
+		console.log(message);
+		res.json({message: message });
+	}
+	else if (req.body.new_role != null && req.body.new_role != 'admin' && req.body.new_role != 'user') {
+		console.log("in 'else if 2' branch of user UPDATE request")
+		message = "User role can only be 'admin' or 'user.'";
+		console.log(message);
+		res.json({message: message });
 	}
 	else {
-		var cb = function(blah) {
+		console.log("in else branch of user UPDATE request")
+		var cb = function(response) {
 
-			res.json (blah)
+			res.json (response)
 		}
 		var updates = {}
-		updates.user_to_update = req.params.username || null
-		updates.role = req.body.new_role || null
-		updates.fullname = req.body.new_fullname || null
-		updates.email = req.body.new_email|| null
-		updates.password = req.body.new_password|| null
-		updates.username = req.body.new_username|| null
+		updates.user_to_update = req.params.user_id || null; //this should not be null, otherwise this route would not trigger.
+		updates.role = req.body.new_role || null;
+		updates.fullname = req.body.new_fullname || null;
+		// updates.email = req.body.new_email|| null;
+		updates.password = req.body.new_password|| null;
+		updates.username = req.body.new_username|| null;
+		updates.current_password = req.body.current_password || null;
 
-		if (updates.role) {
-			if (updates.role == 'admin' && req.user.role != 'admin') {
-				console.log("User role update can only be changed to 'admin' by a current admin.")
-				updates.role = null
-			}
-			else if (updates.role != 'admin' && updates.role != 'user') {
-				console.log("User role can only be 'admin' or 'user.'")
-				updates.role = null
-			}
-		}
 		// email should be validated
 		// if (updates.password) {
 		// 	updatePassword('semlak', 'semlak', function(blah1, blah2) {
@@ -288,39 +260,6 @@ router.post('/users/:username', isLoggedIn, function(req, res, next) {
 		// res.json({})
 		// console.log('account is ', Account)
 	}
-
-	// Account.register(new Account({ username : req.body.username, fullname: req.body.fullname, email: req.body.email }), req.body.password, function(err, account) {
-	// 	if (err) {
-	// 		if (isAjaxRequest) {
-	// 			res.json(err)
-	// 		}
-	// 		else {
-	// 			return res.render('register', { error : err.message });
-	// 		}
-	// 	}
-	// 	else {
-	// 		passport.authenticate('local') (req, res, function () {
-	// 			req.session.save(function (err) {
-	// 				if (err) {
-	// 					return next(err)
-	// 				}
-	// 				else {
-	// 					if (isAjaxRequest) {
-	// 						// polls.forEach(item => console.log('item is ', item))
-	// 						res.json({user: reqUserInfo(req.user)});
-	// 					}
-	// 					else {
-	// 						// res.json(poll)
-	// 						// res.render('polls', {user: reqUserInfo(req.user), title: 'Poll Listing', poll: JSON.stringify(poll)})
-	// 						// res.set('Content-Type', 'application/javascript');
-	// 						res.redirect('/');
-	// 						// res.render('testPage', { myVar : ... });
-	// 					}
-	// 				}
-	// 			});
-	// 		});
-	// 	}
-	// });
 });
 
 // router.get('/login', function(req, res) {

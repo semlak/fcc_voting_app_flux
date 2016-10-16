@@ -21,9 +21,9 @@ var UserStore = require('../stores/UserStore');
 function filterPollsByOwner(polls, owner_username) {
   var owner = UserStore.getUserByUsername(owner_username)
   var owner_id = typeof owner == 'object' ? owner.id : ''
+
   var filteredPolls = {}
   Object.keys(polls).forEach(function(poll_id) {
-    // console.log("poll_id", poll_id, ", polls[poll_id]", polls[poll_id], ", owner_id", owner_id)
     if (polls[poll_id].owner.toString() == owner_id.toString()) {
       filteredPolls[poll_id] = polls[poll_id]
     }
@@ -61,6 +61,7 @@ export default React.createClass({
   render: function() {
     // console.log("rendering Pollbox, props are", this.props, ', allPolls are', this.state.allPolls)
     var pollsToRender;
+    // var userPollsToRender =
     if (this.props.params && this.props.params.userPollsToRender && this.props.params.userPollsToRender != null) {
       pollsToRender = filterPollsByOwner(this.state.allPolls, this.props.params.userPollsToRender)
     }
@@ -68,9 +69,10 @@ export default React.createClass({
       pollsToRender = this.state.allPolls
     }
     // console.log("polls to render are ", pollsToRender)
+    var pollListHeader = this.props.params == null || this.props.params.userPollsToRender == null ? 'Listing of All Polls:' : "Listing of " + this.props.params.userPollsToRender + "'s Polls:"
     return (
         <div id='pollapp'  className='pollBox'>
-          <PollList allPolls={pollsToRender} />
+          <PollList allPolls={pollsToRender} header={pollListHeader}/>
         </div>
     );
   },

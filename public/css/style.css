@@ -1,6 +1,6 @@
 body {
   /*padding: 50px;*/
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  /*font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;*/
 }
 /*
 a {
@@ -125,8 +125,12 @@ li.answer_option, .answer_option {
 }
 
 
-.modal, .modal-footer {
+.modal-header, .modal-footer {
 	text-align:center
+}
+
+.modal-body .control-label {
+	padding-right: 0;
 }
 
 .chart-title {

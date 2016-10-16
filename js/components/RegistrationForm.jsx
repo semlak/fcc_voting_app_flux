@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button} from 'react-bootstrap';
+import {Button, Grid, Row, Col, Form, FormGroup, FormControl, Checkbox, ControlLabel, HelpBlock} from 'react-bootstrap'
 var UserStore = require('../stores/UserStore');
 var UserActionCreators = require('../actions/UserActionCreators');
 
@@ -8,8 +8,9 @@ export default React.createClass({
 		return {
 				username: '',
 				password: '',
+				password_confirm: '',
 				fullname: '',
-				error_message: ''
+				message_obj: null
 		};
 	},
 	componentWillReceiveProps: function(nextProps) {
@@ -17,12 +18,26 @@ export default React.createClass({
 	},
 
 	prepareRegisterRequest: function() {
-		var data = {
-			username: this.state.username,
-			password: this.state.password,
-			fullname: this.state.fullname || this.state.username
+		if (this.state.password_confirm != this.state.password) {
+			this.setState({message_obj: {error: true, message_text: "Password and Password Confirmation must match."}})
 		}
-		UserActionCreators.create(data);
+		else if (this.state.password.length < 1) {
+			this.setState({message_obj: {error: true, message_text: "Password must have at least 1 character."}})
+		}
+		else if (this.state.username.length < 1) {
+			this.setState({message_obj: {error: true, message_text: "Username must have at least 1 character."}})
+		}
+		else if (UserStore.getUserByUsername(this.state.username) != null) {
+			this.setState({message_obj: {error: true, message_text: "Username is already taken."}})
+		}
+		else {
+			var data = {
+				username: this.state.username,
+				password: this.state.password,
+				fullname: this.state.fullname || this.state.username
+			}
+			UserActionCreators.create(data);
+		}
 	},
 
 	handleFieldChange: function(e) {
@@ -30,7 +45,7 @@ export default React.createClass({
 		var key = e.target.name.toString();
 		var newState = {};
 		newState[key] = e.target.value;
-		newState.error_message = '';
+		newState.message_obj = null;
 		this.setState(newState);
 	},
 
@@ -44,23 +59,51 @@ export default React.createClass({
 
 	render: function() {
 		// console.log("rendering RegistrationForm")
+		var message_obj = this.state.message_obj;
+		var validationState = message_obj == null ? null : (message_obj.error ? "error" : "success");
+		var validationMessage = message_obj == null ? "" : message_obj.message_text;
 		return (
 			<div className="registration_form">
 				<div className="modal-body">
-					<div id='register_message' className={(this.state.error_message == '' ? ' hidden' : 'alert alert-danger')}>{this.state.error_message || 'Hey'}
-						<button type='button' className='close pull-right' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span>
-						</button>
-					</div>
-
-					<div className='form-group'>
-						<input className='form-control' autoComplete='off' type='text' name='username' onChange={this.handleFieldChange} value={this.state.username} placeholder='Enter Username' />
-					</div>
-					<div className='form-group'>
-						<input className='form-control' autoComplete='off' type='password' name='password' onChange={this.handleFieldChange} value={this.state.password} placeholder='Password' />
-					</div>
-					<div className='form-group'>
-						<input className='form-control' type='text' name='fullname' onChange={this.handleFieldChange} value={this.state.fullname} placeholder='Enter full name (not required, can leave blank)' />
-					</div>
+				  <Form horizontal>
+				  	<FormGroup validationState={validationState}>
+					    <FormGroup controlId="formHorizontalUsername">
+					      <Col smOffset={0} sm={2} componentClass={ControlLabel}>
+					        Username:
+					      </Col>
+					      <Col sm={10}>
+					        <FormControl type="text" autoComplete='off' name="username" value={this.state.username} onChange={this.handleFieldChange} placeholder='Enter Username' />
+					      </Col>
+					    </FormGroup>
+					    <FormGroup controlId="formHorizontalFullname">
+					      <Col smOffset={0} sm={2} componentClass={ControlLabel}>
+					        Fullname:
+					      </Col>
+					      <Col sm={10}>
+					        <FormControl type="text" autoComplete='off' name="fullname" value={this.state.fullname} onChange={this.handleFieldChange} placeholder='Enter Fullname (optional)' />
+					      </Col>
+					    </FormGroup>
+					    <FormGroup controlId="formHorizontalPassword">
+					      <Col smOffset={0} sm={2} componentClass={ControlLabel}>
+					        Password:
+					      </Col>
+					      <Col sm={10}>
+					        <FormControl type="password" autoComplete='off' name="password" value={this.state.password} onChange={this.handleFieldChange} placeholder='Enter Password'/>
+					      </Col>
+					    </FormGroup>
+					    <FormGroup controlId="formHorizontalPasswordConfirm">
+					      <Col smOffset={0} sm={2} componentClass={ControlLabel}>
+					        Confirm:
+					      </Col>
+					      <Col sm={10}>
+					        <FormControl type="password" autoComplete='off' name="password_confirm" value={this.state.password_confirm} onChange={this.handleFieldChange} placeholder='Confirm Password'/>
+					      </Col>
+					    </FormGroup>
+				    	<Col smOffset={2} sm={10}>
+								{validationState == null ? <HelpBlock>{"Create a new username with fullname (optional) and password."}</HelpBlock> : <HelpBlock>{validationMessage}</HelpBlock> }
+							</Col>
+					  </FormGroup>
+				  </Form>
 				</div>
 				<div className="modal-footer">
 					<Button type='button' bsStyle='primary' onClick={this.prepareRegisterRequest}>Register</Button>
@@ -71,11 +114,11 @@ export default React.createClass({
 	},
 
 
-  _onUserCreate: function(message) {
+  _onUserCreate: function(message_obj) {
     // console.log("received _onUserCreate event in <RegistrationForm />")
-    if (message != null) {
+    if (message_obj != null && message_obj.error) {
       // console.log("Message:", message)
-	    this.setState({error_message: message});
+	    this.setState({message_obj: message_obj});
     }
   }
 

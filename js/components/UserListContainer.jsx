@@ -33,11 +33,11 @@ export default React.createClass({
   },
 
   componentDidMount: function() {
-    UserStore.addChangeListener(this._onChange);
+    UserStore.addChangeListener(this._onUserChange);
   },
 
   componentWillUnmount: function() {
-    UserStore.removeChangeListener(this._onChange);
+    UserStore.removeChangeListener(this._onUserChange);
   },
 
   /**
@@ -48,18 +48,17 @@ export default React.createClass({
   render: function() {
     // console.log("Rendering <UserListContainer />");
     return (
-        <section id='userapp'  className=''>
-          <h2>User Listing</h2>
-             <UserList allUsers={this.state.allUsers} />
-        </section>
+        <div id='userapp'  className='userListContainer'>
+          <UserList allUsers={this.state.allUsers} />
+        </div>
     );
   },
 
   /**
    * Event handler for 'change' events coming from the UserStore
    */
-  _onChange: function(message) {
-    // console.log("received _onChange event in <UserListContainer/>")
+  _onUserChange: function(message) {
+    // console.log("received _onUserChange event in <UserListContainer/>")
     // if (message != null) {
     //   console.log("Message:", message)
     // }

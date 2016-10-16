@@ -8,7 +8,7 @@ import Home from './components/Home'
 import RegistrationForm from './components/RegistrationForm'
 import LoginForm from './components/LoginForm'
 import UserListContainer from './components/UserListContainer'
-import User from './components/User'
+import FullUser from './components/FullUser'
 import UserActionCreators from './actions/UserActionCreators'
 var PollActionCreators = require('./actions/PollActionCreators');
 
@@ -38,7 +38,7 @@ render((
 			<Route path='/login' component={LoginForm} />
 			<Route path='/users' component={UserListContainer}>
 			</Route>
-			<Route path='/users/:userName' component={User} />
+			<Route path='/users/:username' component={FullUser} />
 
 		</Route>
 	</Router>

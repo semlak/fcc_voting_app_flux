@@ -32,6 +32,7 @@ export default React.createClass({
   },
 
 	getInitialState: function() {
+		console.log("in 'getInitialState' for <NewPollForm /> ")
 		// this just sets a default author value, but the user can change it (it does not have to match account data)
 		var currentUser = UserStore.getAuthenticatedUser();
 		var author = currentUser.fullname || currentUser.username || '';
@@ -69,12 +70,12 @@ export default React.createClass({
 	},
 
   componentDidMount: function() {
-    UserStore.addChangeListener(this._onUserChange);
+    UserStore.addAuthenticationChangeListener(this._onAuthenticationChange);
 		PollStore.addCreatedListener(this._onPollCreated);
   },
 
   componentWillUnmount: function() {
-    UserStore.removeChangeListener(this._onUserChange);
+    UserStore.removeAuthenticationChangeListener(this._onAuthenticationChange);
     PollStore.removeCreatedListener(this._onPollCreated);
   },
 
@@ -146,7 +147,7 @@ export default React.createClass({
 	},
 
 	render: function() {
-		// console.log("rendering pollForm. answer_options are:", this.state.answer_options, ", props are", this.props)
+		console.log("rendering NewPollForm. answer_options are:", this.state.answer_options, ", props are", this.props)
 
 		var authorField = this.state.authorField;
 		var questionField = this.state.questionField;
@@ -227,8 +228,8 @@ export default React.createClass({
 		return UserStore.getAuthenticatedUser();
 	},
 
-	_onUserChange: function() {
-		// console.log("in _onUserChange of NewPollForm component");
+	_onAuthenticationChange: function() {
+		// console.log("in _onAuthenticationChange of NewPollForm component");
 		// var location = this.props.location.toLowerCase()
 		// console.log("location: ", location);
 		var currentUser = UserStore.getAuthenticatedUser();
@@ -245,6 +246,24 @@ export default React.createClass({
 			// console.log("setting the following variables in setState:", newState);
 			this.setState(newState);
 		}
+	},
+
+	_onUserChange: function() {
+		// console.log("in _onUserChange of NewPollForm component");
+		// var location = this.props.location.toLowerCase()
+		// console.log("location: ", location);
+
+		//This could be the result of user having viewed the form and then updating some of their user profile information.
+		var currentUser = UserStore.getAuthenticatedUser();
+		// var newState = {};
+		// if (currentUser.fullname != this.state.currentUser.fullname) {
+		// 	//The user appears to have changed their fullname on their user profile. If this.state.author was set to fullname, then update the author state.
+		// 	if (this.state.author == this.state.currentUser.fullname) {
+		// 		newState.author = currentUser.fullname;
+		// 		newState.currentUser = currentUser;
+		// 		this.setState(newState);
+		// 	}
+		// }
 	},
 
 	_onPollCreated: function(new_poll_id) {
