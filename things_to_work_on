@@ -7,7 +7,9 @@ When deleting a poll:
 	-show progress for deleting poll. Could test by having client or server delay response.
 	-Show a message on the redirected page indicating the poll has been deleted. Could offer undo option (I currently would not be able to support this, just say "'undo feature' not currently supported")
 
-Handle situation where poll user is viewing is deleted by another client (our user's client would need to do a refresh, but then would either get confused or redirect to pollListing without user understanding why. Would be nice to give option to user to re-create poll).
+Handle situation where poll user is viewing is deleted by another client (our user's client would need to do a refresh, but then would either get confused (not handle correctly, try to load a blank poll) or redirect to pollListing without user understanding why (I'm not sure which would happen).
+	Would like to at least notify user.
+	Would be nice to give option to user to re-create poll.
 
 
 I've done this. There might still be some cleaning up to do. The FullPoll and NewPollForm pass an initial_new_answer_option, which certainly shouldn't be part of the state their states and might be unnessary.
@@ -53,3 +55,14 @@ Fix update to chart when a new_answer_option is added. I can't tell if this is e
 Chart updates on many actions that shouldn't really affect it. When animation is on, it's really annoying (so I turned it off).
 	-Could try to turn animation on and off, so that when it is first generated or on a vote, it looks cool, but doesn't get annoying. Example, on initial poll load, render chart with animation. Then after chart is mounted, re-render with animation off.
 	-Could figure out why it regenerates all the time. Happens on login, the share_poll modal or delete_poll modals opened and closed, ...
+
+
+
+Tests, or thoughts on tests that are needed:
+	There are so many tests that are needed.
+		Many pages have slight issues when refreshed.
+		-A page may generally work correctly, but if the app refreshes while viewing that specific page, there are issues when the reloads, like
+		not having the initial app data in the store and then not being able to handle or not listening for change to the store
+		-When the app does a full browswer refresh, the app has to load the user data before knowing whether the user is authenticated. This can cause problems when on a component or page that does different things based on whether the user is logged in or not, like the FullPull, the NavBar, the NewPollForm, FullUser.
+		-The component may essentially behave correct, but flash a sign on form  or some other state before updating to correct state. Would like to provide the best user experience. Also, this behavior will probably seem worse if the server is slower.
+	Right now, I have minimal tests. The ones I have test basic unit functionality but are hardly thorough, and there are basically no tests for the overall functionality or for user interface qirks (like the refresh issues, the deletion of a poll by a user while another user is currently viewing) - these might be integration testing. Have no idea about code coverage.
