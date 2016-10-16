@@ -252,7 +252,7 @@ export default React.createClass({
 		// var poll = PollStore.getPollById(this.props.params.poll_id);
 		var poll = this.state.poll;
 
-		// console.log('rendering FullPoll')
+		console.log('rendering FullPoll')
 		var author_label = "Poll Author: "
 		var question_label = "Poll Question: "
 		if (this.state.poll == null || this.state.poll == undefined) {
@@ -500,18 +500,27 @@ export default React.createClass({
 	},
 
 	_onPollChange: function() {
-		// console.log("in FullPoll, received notification of poll update from  PollStore");
+		/*
+			As long as the poll is not null, the state is updated with the poll's freshest data.
+			We attempt to verify that the poll's answer_options array now contains the new_answer_option. If so, we reset new_answer_option.
+		*/
+		console.log("in _onPollChange of FullPoll, received notification of poll update from  PollStore");
 		var poll = PollStore.getPollById(this.props.params.poll_id);
-		var newState = {poll: poll}
-		if (poll != null) {
+		var newState = {};
+		newState.poll = poll;
+		if (poll != null && poll != undefined) {
 			if (poll.answer_options[poll.answer_options.length - 1] == this.state.new_answer_option) {
 				//new_answer_option has been properly added to the poll.
+				newState.new_answer_option = '';
+				newState.form_feedback = null;
+			} else if (poll.answer_options.indexOf(this.state.new_answer_option) >= 0) {
+				//Presumably, the answer option submitted was added to the poll but is just not the last answer_option on the updated poll.
+				//(Possible due to multiple users submitting new answer_options.)
 				newState.new_answer_option = '';
 				newState.form_feedback = null;
 			}
 			this.setState(newState);
 		}
-
 	},
 
 	_onPollDestroy: function(poll_id, success) {
