@@ -2,9 +2,25 @@ var express = require('express');
 var passport = require('passport');
 var Account = require('../models/account');
 var router = express.Router();
+var path = require('path')
 
 // var Poll = require('../models/poll');
 // var Vote = require('../models/vote');
+
+
+	/* Note:
+			This controller only expects to handles AJAX requests. All responses are via json.
+
+			If there are no user accounts set up, the first account created is automatically an 'admin' account (this is the 'role' of the account schema).
+			Additional accounts are always created as 'user' accounts (an admin can change thier role).
+			***I need to add code to make sure that the application does not allow deletion of an admin account if it is the only admin account.
+
+			I do have some old routes commented out that include non-json responses (I initially created this app as a non-single-page-app)
+			THIS APPLICATION MIGHT SEND SENSTIVE USER DATA TO CLIENT. This should be cleaned up before production use.
+	*/
+
+
+
 
 var reqUserInfo = function(account) {
 	if (account == undefined || account == null || account.username == null) {
@@ -21,132 +37,21 @@ var reqUserInfo = function(account) {
 }
 
 
-router.get('/register', function(req, res) {
-	console.log("Received get request for register page ('/register'). Rendering.")
-	res.render('register', {title: 'Register' });
-});
-
-router.post('/register', function(req, res, next) {
-	var isAjaxRequest = req.xhr || req.headers.accept.indexOf('json') > -1 || req.headers["x-requested-with"] == 'XMLHttpRequest';
-	// console.log("trying to register account. req.body is ", req.body)
-	console.log("Received request to register an account");
-	// if this is the first account created for the application, it should be an admin user. Otherwise, it will be standard user.
-	var role;
-	Account.find(function(err, accounts) {
-		if (err) {
-			res.json(err)
-		}
-		else {
-			if (accounts.length == 0) {
-				role = 'admin'
-			}
-			else {
-				role = 'user'
-			}
-			Account.register(new Account({ username : req.body.username, fullname: req.body.fullname, email: req.body.email, role: role }), req.body.password, function(err, account) {
-				if (err) {
-					if (isAjaxRequest) {
-						res.json(err)
-					}
-					else {
-						return res.render('register', { error : err.message });
-					}
-				}
-				else {
-					passport.authenticate('local') (req, res, function () {
-						req.session.save(function (err) {
-							if (err) {
-								return next(err)
-							}
-							else {
-								if (isAjaxRequest) {
-									res.json({error: false, message: 'Successfully registered.', user: reqUserInfo(req.user)});
-								}
-								else {
-									// res.json(poll)
-									// res.render('polls', {user: reqUserInfo(req.user), title: 'Poll Listing', poll: JSON.stringify(poll)})
-									// res.set('Content-Type', 'application/javascript');
-									res.redirect('/');
-									// res.render('testPage', { myVar : ... });
-								}
-							}
-						});
-					});
-				}
-			});
-		}
-	})
-});
-
-router.post('/login', passport.authenticate('local'), function(req, res) {
-	var isAjaxRequest = req.xhr || req.headers.accept.indexOf('json') > -1 || req.headers["x-requested-with"] == 'XMLHttpRequest';
-
-	// res.
-
-	res.redirect('/');
-});
+// router.get('/register', function(req, res) {
+// 	console.log("Received get request for register page ('/register'). Rendering.")
+// 	res.render('register', {title: 'Register' });
+// });
 
 
-router.post('/login-ajax', function(req, res, next) {
-	var isAjaxRequest = req.xhr || req.headers.accept.indexOf('json') > -1 || req.headers["x-requested-with"] == 'XMLHttpRequest';
-
-	passport.authenticate('local', function(err, user, info) {
-		if (err) {
-			return next(err);
-		}
-		if (!user) {
-			if (isAjaxRequest) {
-				return res.status(401).json( {
-					message: "Invalid username or password."
-				});
-			}
-			else {
-				// should do something to display an error here. But I'm not really using this path (login request almost always via ajax)
-				return res.redirect('/')
-			}
-		}
-
-		//manualy establish session
-		req.login(user, function(err) {
-			if (err) {
-				return next(err);
-			}
-			else if (isAjaxRequest) {
-				return res.json({ message: 'User authenticated.', username: user.username, user: reqUserInfo(req.user)});
-			}
-			else {
-				res.redirect('/')
-			}
-		});
-	})(req, res, next);
-});
+// router.post('/login', passport.authenticate('local'), function(req, res) {
+// 	res.redirect('/');
+// });
 
 
-
-router.get('/logout', function(req, res, next) {
-	var isAjaxRequest = req.xhr || req.headers.accept.indexOf('json') > -1 || req.headers["x-requested-with"] == 'XMLHttpRequest';
-	console.log('Received get request to /logout. Logging off user');
-	console.log('isAjaxRequest is', isAjaxRequest)
-
-	req.logout();
-
-	if (isAjaxRequest) {
-		res.json({error: false, message: 'User logged off successfully.', user: null})
-	}
-	else {
-		// req.logout();
-		res.redirect('/');
-	}
-});
-
-router.get('/ping', function(req, res) {
-	res.status(200).send("pong!");
-});
-
-/* GET home page. */
-router.get('*', function(req, res, next) {
+/* GET home page. The globbering is because react-router handles most routes as a single-page-app on the client side*/
+router.get('/*', function(req, res, next) {
 	console.log("Received get request for homepage ('/') in index.js. Rendering homepage")
-	res.render('index.pug', { user: reqUserInfo(req.user), title: 'Home' });
+   res.sendFile(path.join(__dirname, '../public', 'index.html'))
 });
 
 
@@ -154,15 +59,11 @@ module.exports = router;
 
 // route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
-
     // if user is authenticated in the session, carry on
     if (req.isAuthenticated())
         return next();
-
     // if they aren't redirect them to the home page
     res.redirect('/login');
 }
 
-
-
-module.exports.isLoggedIn = isLoggedIn
+// module.exports.isLoggedIn = isLoggedIn

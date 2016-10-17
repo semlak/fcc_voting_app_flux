@@ -23,7 +23,8 @@ var VOTE_CREATED_EVENT = 'vote_create'
 
 // var _polls = {};
 var _polls = {}
-var _pollsURL = '/polls'
+var _pollsURL = '/api/polls'
+var _votesURL = '/api/votes'
 
 
 function addPolls(rawPolls) {
@@ -275,10 +276,15 @@ var PollStore = assign({}, EventEmitter.prototype, {
 
 
 
-
   getPollsURL: function() {
     return _pollsURL;
+  },
+
+
+  getVotesURL: function() {
+    return _votesURL;
   }
+
 });
 
 // Register callback to handle all updates

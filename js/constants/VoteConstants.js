@@ -12,6 +12,5 @@ module.exports = keyMirror({
   VOTE_RECEIVE_RAW_CREATED_VOTE: null,
   VOTE_GET_ALL_FROM_SERVER: null,
   VOTE_RECEIVE_RAW_VOTES: null,
-  VOTE_DESTROY: null,
-  VOTE_URL: '/votes'
+  VOTE_DESTROY: null
 });

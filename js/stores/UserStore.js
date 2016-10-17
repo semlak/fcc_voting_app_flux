@@ -23,7 +23,7 @@ var _users = {}
 var _usersByUsername = {};
 var _authenticatedUserId = null;
 var _UserStoreIsInitialized = false;
-var _usersURL = '/users';
+var _usersURL = '/api/users';
 
 
 

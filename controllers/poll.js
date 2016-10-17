@@ -7,7 +7,6 @@ var Poll = require('../models/poll');
 var Vote = require('../models/vote')
 
 var app = require('./index')
-var isLoggedIn = app.isLoggedIn
 
 var reqUserInfo = function(account) {
 	if (account == undefined || account == null || account.username == null) {
@@ -23,14 +22,16 @@ var reqUserInfo = function(account) {
 	}
 }
 
+
+
 /*
-	All ajax requests to /polls (except when there is a database err, in which case the response is just the err object)
+	This controller only expects to handles AJAX requests. All responses are via json.
+	I do have some old routes commented out that include non-json responses (I initially created this app as a non-single-page-app)
+
+	All responses to ajax requests to /polls (except when there is a database err, in which case the response is just the err object)
 		include the requesting user's data (an object or null), message (string), and an error status (boolean, true if error occurred) .
 	The user data for the request is implicitly provided by Passport.js in the request (same for all requests), but included explicitly after
 		being cleaned to avoid sending password hashes. I would like to find way to have passport or express do this implicitly.
-
-	The messyness of detecting ajax request was easier with jQuery requests, but using the standard javascript XMLHttpRequest seems more complicated.
-		I would like to improve this.
 
 	THIS APPLICATION CURRENTLY SENDS SOME SENSTIVE USER DATA TO CLIENT. This should be cleaned up before production use. The main examples I can think of
 		are get requests that retrieve all or some polls. They include the polls votes, which include the voter's id and IP address. There could be other issues.
@@ -57,11 +58,7 @@ var reqUserInfo = function(account) {
 	*/
 
 router.get('/polls/', function(req, res, next) {
-	// res.render('index', { user: reqUserInfo(req.user), title: 'Express' });
 	console.log("Received GET request for all polls listing.")
-	var isAjaxRequest = req.xhr || req.headers.accept.indexOf('json') > -1 || req.headers["x-requested-with"] == 'XMLHttpRequest';
-	// console.log('isAjaxRequest is', isAjaxRequest);
-	if (isAjaxRequest) {
 		Poll.find().sort({'_id': -1}).populate('votes').exec(function(err, polls) {
 			if (err) {
 				res.json(err);
@@ -71,11 +68,6 @@ router.get('/polls/', function(req, res, next) {
 				res.json({error: (polls.length < 0), polls: polls, message: message, user: reqUserInfo(req.user)});
 			}
 		});
-	}
-	else {
-		//res.sendFile(path.join(__dirname, '..' ,'public', 'index.html'))
-		res.render('index', { user: reqUserInfo(req.user), title: 'Create New Poll'})
-	}
 });
 
 
@@ -116,7 +108,7 @@ router.get('/polls/', function(req, res, next) {
 		req.body.owner
 
 	Note: user needs to be authenticated.
-	If request is done via ajax, all responses (except for the general database error) include the user object and a message (string).
+	All responses (except for the general database error) include the user object and a message (string).
 		If the poll is succesfully created, the response also includes a refreshed array of all polls, and the new poll's id (new_poll_id)
 		I would like to update this so that the response only sends the new poll, which the client would add to the list.
 
@@ -131,14 +123,10 @@ router.post('/polls/', function(req, res, next) {
 	// console.log("received post request");
 	// console.log("request body is ", req.body, "user is ", req.user )
 	var poll = new Poll();
-	// Anonymous user was only allowed to create poll in testing
-	// poll.author = req.body.author || 'Anonymous User';
-	// poll.question = req.body.question || '';
 	poll.author = req.body.author
 	poll.question = req.body.question;
 	poll.answer_options = req.body['answer_options\[\]'] || req.body.answer_options || [];
 	poll.owner = req.user._id
-	// console.log("poll object:", poll)
 
 	// for (var key in req.body) {
 	// 	console.log("key is ", key, "val is ", req.body[key])
@@ -177,16 +165,17 @@ router.post('/polls/', function(req, res, next) {
 
 
 /*
-	This requests to create a new answer option for an existing poll. The data is provided as a 'post' request to /polls/new_answer_option.
-	The data will be found in the req.body as:
+	This requests to create a new answer option for an existing poll. The data is provided as a 'post' request to '/polls/new_answer_option'.
+	The data is expected to be found in the req.body as:
 		req.body.poll_id
 		req.body.new_answer_option
-		req.body.user_name (not really used, as this is also part of the Passport request)
+		req.body.user_name
 
 	The new_answer_option will be appended to the existing poll's answer_options array.
+	The user_name above is not really used, but I had thought it would be necessary. I rely on Passport to provide the requesting user's info in the request)
 
 	Note: The user needs to be authenticated; however, the user does not have to be the owner/creator of the poll.
-	If request is done via ajax, all responses (except for the general database error) include the user object and a message (string).
+	All responses are via json and (except for the general database error) include the user (object) and a message (string).
 		If the new answer_option is succesfully created (appended to the existing poll's answer_option array),
 			the response also includes a refreshed array of all polls.
 		I would like to update this so that the response only sends the updated poll as a poll object. (which would include the updated answer_options array)

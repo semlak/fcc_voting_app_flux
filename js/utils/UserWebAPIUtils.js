@@ -47,7 +47,7 @@ module.exports = {
 		//   email: this.state.email
 		// }
 		var xhr = new XMLHttpRequest();
-		xhr.open('POST', '/register');
+		xhr.open('POST', usersURL+ '/register');
 		xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
 		xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
@@ -72,7 +72,7 @@ module.exports = {
 	login: function(username, password) {
 		var data = {username: username, password: password}
 		var xhr = new XMLHttpRequest();
-		xhr.open('POST', '/login-ajax');
+		xhr.open('POST', usersURL + '/login');
 		xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
 		xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
@@ -98,7 +98,7 @@ module.exports = {
 
 	logout: function() {
 		var xhr = new XMLHttpRequest();
-		xhr.open('GET', '/logout');
+		xhr.open('GET', usersURL + '/logout');
 		xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
 		xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
@@ -156,7 +156,7 @@ module.exports = {
 		xhr.onload = function() {
 				if (xhr.status === 200) {
 					var response = JSON.parse(xhr.responseText)
-					console.log('Submitted Registration ajax xhr! xhr.responseText is', response);
+					console.log('Submitted user update ajax xhr! xhr.responseText is', response);
 					// should receive the updated user object as response.user (includes id, username, fullname, and role)
 					var message_obj = { error: false, message_text: response.message}
 					UserServerActionCreators.receiveUpdatedUser(response.user, message_obj);

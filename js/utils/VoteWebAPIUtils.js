@@ -9,15 +9,19 @@ import VoteServerActionCreators from '../actions/VoteServerActionCreators';
 import VoteConstants from '../constants/VoteConstants';
 // import PollWebAPIUtils from '../utils/PollWebAPIUtils';
 import PollActionCreators from '../actions/PollActionCreators';
+import PollStore from '../stores/PollStore';
+
+var votesURL = PollStore.getVotesURL();
 
 
 
 module.exports = {
 
   getAllVotes: function() {
-    // simulate retrieving data from a database
+    // This would probably only be used by an adminstrator, but I currently don't even have any instances of it being used.
+    // When the application retrieves polls from the server, their votes are automatically included in the poll object, so there is no need for separate vote retrieval
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', '/votes');
+    xhr.open('GET', votesURL);
     xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
     xhr.onload = function() {
         if (xhr.status === 200) {
@@ -43,7 +47,7 @@ module.exports = {
     // }
     var xhr = new XMLHttpRequest();
     // xhr.open('POST', VoteConstants.VOTE_URL);
-    xhr.open('POST', '/votes');
+    xhr.open('POST', votesURL);
     xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
