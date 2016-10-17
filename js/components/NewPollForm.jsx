@@ -1,11 +1,11 @@
 import React from 'react'
 import {Button, Form, FormGroup, FormControl, Checkbox, Col, ControlLabel, HelpBlock} from 'react-bootstrap'
 var Router = require('react-router');
-var UserStore = require('../stores/UserStore');
-var PollStore = require('../stores/PollStore');
+import UserStore from '../stores/UserStore';
+import PollStore from '../stores/PollStore';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import {AnswerOptionsBox, AnswerOptionsList, NewAnswerOptionForm} from './AnswerOptionsBox';
-var PollActionCreators = require('../actions/PollActionCreators');
+import PollActionCreators from '../actions/PollActionCreators';
 
 
 

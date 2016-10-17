@@ -10,8 +10,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-var AppDispatcher = require('../dispatcher/AppDispatcher');
-var UserConstants = require('../constants/UserConstants');
+import AppDispatcher from '../dispatcher/AppDispatcher';
+import UserConstants from '../constants/UserConstants';
 
 module.exports = {
 

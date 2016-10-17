@@ -9,13 +9,13 @@
 
  // This is called UserItem rather than just 'User', because it is specifically to represent a User on a list of Users.
 
-var React = require('react');
+import React from 'react';
 var ReactPropTypes = React.PropTypes;
-// var UserActionCreators = require('../actions/UserActionCreators');
+// import UserActionCreators from '../actions/UserActionCreators';
 // import NavLink from './NavLink'
 var Router = require('react-router');
 
-// var UserTextInput = require('./UserTextInput');
+// import UserTextInput from './UserTextInput';
 
 
 var UserItem = React.createClass({

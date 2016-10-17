@@ -15,8 +15,8 @@ PollServerActionCreators.js
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-var AppDispatcher = require('../dispatcher/AppDispatcher');
-var PollConstants = require('../constants/PollConstants');
+import AppDispatcher from '../dispatcher/AppDispatcher';
+import PollConstants from '../constants/PollConstants';
 
 module.exports = {
 

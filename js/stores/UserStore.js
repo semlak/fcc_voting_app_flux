@@ -9,11 +9,11 @@
  * UserStore
  */
 
-var AppDispatcher = require('../dispatcher/AppDispatcher');
-var EventEmitter = require('events').EventEmitter;
-var UserConstants = require('../constants/UserConstants');
-var assign = require('object-assign');
-var UserUtils = require('../utils/UserUtils')
+import AppDispatcher from '../dispatcher/AppDispatcher';
+import {EventEmitter} from 'events';
+import UserConstants from '../constants/UserConstants';
+import assign from 'object-assign';
+import UserUtils from '../utils/UserUtils';
 
 var CHANGE_EVENT = 'change';
 var CREATE_EVENT = 'create';

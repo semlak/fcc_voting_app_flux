@@ -9,12 +9,12 @@
  * PollStore
  */
 
-var AppDispatcher = require('../dispatcher/AppDispatcher');
-var EventEmitter = require('events').EventEmitter;
-var PollConstants = require('../constants/PollConstants');
-var VoteConstants = require('../constants/VoteConstants');
-var assign = require('object-assign');
-var PollUtils = require('../utils/PollUtils')
+import AppDispatcher from '../dispatcher/AppDispatcher';
+import {EventEmitter} from 'events';
+import PollConstants from '../constants/PollConstants';
+import VoteConstants from '../constants/VoteConstants';
+import assign from 'object-assign';
+import PollUtils from '../utils/PollUtils';
 
 var CHANGE_EVENT = 'change';
 var CREATED_EVENT = 'create';

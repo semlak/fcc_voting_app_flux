@@ -7,12 +7,12 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-var React = require('react');
+import React from 'react';
 var ReactPropTypes = React.PropTypes;
-var PollActionCreators = require('../actions/PollActionCreators');
+import PollActionCreators from '../actions/PollActionCreators';
 import {Row, Col, Grid} from 'react-bootstrap'
 
-var PollItem = require('./PollItem');
+import PollItem from './PollItem';
 
 var PollList = React.createClass({
 

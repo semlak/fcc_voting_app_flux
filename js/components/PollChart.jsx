@@ -6,19 +6,21 @@ using react-d3-basic library
 import React from 'react'
 // import {Button, Row, Col, Grid, ButtonToolbar, Modal} from 'react-bootstrap'
 // var Router = require('react-router');
-var UserStore = require('../stores/UserStore');
+import UserStore from '../stores/UserStore';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-var Recharts = require('recharts');
-var PollStore = require('../stores/PollStore');
+// import Recharts from 'recharts';
+import {BarChart, Cell, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts';
+		// const {BarChart, Cell, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} = Recharts;
+
 var ReactPropTypes = React.PropTypes;
-// var AnswerOptionsBox = require('./AnswerOptionsBox')
+// import AnswerOptionsBox from './AnswerOptionsBox'
 
-var PollStore = require('../stores/PollStore');
-var PollActionCreators = require('../actions/PollActionCreators');
+import PollStore from '../stores/PollStore';
+import PollActionCreators from '../actions/PollActionCreators';
 
 
-// var React = require('React/addons'),
-// var addons = require('react-addons')
+// import React from 'React/addons',
+// import addons from 'react-addons'
   // var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
 // var ReactCSSTransitionGroup =
@@ -123,7 +125,7 @@ export default React.createClass({
 
 		// var currentUserIsPollOwner = (this.state.currentUser == null || this.state.currentUser.username == null) ? false : (this.state.currentUser.id == this.state.poll.owner)
 		// console.log('\n\n\ncurrentUserIsPollOwner is', currentUserIsPollOwner)
-		const {BarChart, Cell, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} = Recharts;
+		// const {BarChart, Cell, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} = Recharts;
 
 
     var mappedVotes = this.mapVotesToAnswerOptions(poll.answer_options, poll.votes);

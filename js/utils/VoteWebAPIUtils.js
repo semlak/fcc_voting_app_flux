@@ -5,10 +5,10 @@ The actual ajax calls (xhr) occur here.
 */
 
 
-var VoteServerActionCreators = require('../actions/VoteServerActionCreators');
-var VoteConstants = require('../constants/VoteConstants');
-// var PollWebAPIUtils = require('../utils/PollWebAPIUtils');
-var PollActionCreators = require('../actions/PollActionCreators');
+import VoteServerActionCreators from '../actions/VoteServerActionCreators';
+import VoteConstants from '../constants/VoteConstants';
+// import PollWebAPIUtils from '../utils/PollWebAPIUtils';
+import PollActionCreators from '../actions/PollActionCreators';
 
 
 

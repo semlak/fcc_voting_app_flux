@@ -1,11 +1,11 @@
 
  // This is called PollItem rather than just 'Poll', because it is specifically to represent a Poll on a list of Polls.
 
-var React = require('react');
+import React from 'react';
 var Router = require('react-router');
 
 var ReactPropTypes = React.PropTypes;
-var PollActionCreators = require('../actions/PollActionCreators');
+import PollActionCreators from '../actions/PollActionCreators';
 import NavLink from './NavLink'
 
 var PollItem = React.createClass({

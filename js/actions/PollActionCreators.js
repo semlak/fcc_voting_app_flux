@@ -2,9 +2,9 @@
 PollActionCreators
  */
 
-var AppDispatcher = require('../dispatcher/AppDispatcher');
-var PollConstants = require('../constants/PollConstants');
-var PollWebAPIUtils = require('../utils/PollWebAPIUtils');
+import AppDispatcher from '../dispatcher/AppDispatcher';
+import PollConstants from '../constants/PollConstants';
+import PollWebAPIUtils from '../utils/PollWebAPIUtils';
 
 var PollActionCreators = {
 

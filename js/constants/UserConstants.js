@@ -2,7 +2,7 @@
  * UserConstants
  */
 
-var keyMirror = require('keymirror');
+import keyMirror from 'keymirror';
 
 module.exports = keyMirror({
   USER_CREATE: null,

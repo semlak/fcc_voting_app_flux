@@ -12,9 +12,9 @@
  * the UserStore and passes the new data to its children.
  */
 
-var React = require('react');
-var UserList = require('./UserList');
-var UserStore = require('../stores/UserStore');
+import React from 'react';
+import UserList from './UserList';
+import UserStore from '../stores/UserStore';
 
 /**
  * Retrieve the current USER data from the UserStore

@@ -7,8 +7,8 @@ import RegistrationForm from './RegistrationForm'
 import LoginForm from './LoginForm'
 import ChangePasswordForm from './ChangePasswordForm'
 
-var UserStore = require('../stores/UserStore');
-var UserActionCreators = require('../actions/UserActionCreators');
+import UserStore from '../stores/UserStore';
+import UserActionCreators from '../actions/UserActionCreators';
 var Router = require('react-router');
 
 

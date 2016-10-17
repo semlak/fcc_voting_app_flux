@@ -12,10 +12,10 @@
  * the PollStore and passes the new data to its children.
  */
 
-var React = require('react');
-var PollList = require('./PollList');
-var PollStore = require('../stores/PollStore');
-var UserStore = require('../stores/UserStore');
+import React from 'react';
+import PollList from './PollList';
+import PollStore from '../stores/PollStore';
+import UserStore from '../stores/UserStore';
 
 
 function filterPollsByOwner(polls, owner_username) {

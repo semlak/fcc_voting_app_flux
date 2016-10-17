@@ -2,7 +2,7 @@
  * VoteConstants
  */
 
-var keyMirror = require('keymirror');
+import keyMirror from 'keymirror';
 
 module.exports = keyMirror({
   VOTE_CREATE: null,

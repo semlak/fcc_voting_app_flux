@@ -2,8 +2,8 @@
   VoteServerActionCreator. When creating, getting, or destroying votes, this handles actions after receiving information from server
  */
 
-var AppDispatcher = require('../dispatcher/AppDispatcher');
-var VoteConstants = require('../constants/VoteConstants');
+import AppDispatcher from '../dispatcher/AppDispatcher';
+import VoteConstants from '../constants/VoteConstants';
 
 module.exports = {
 

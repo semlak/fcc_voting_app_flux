@@ -3,20 +3,6 @@ import {IndexLink } from 'react-router'
 import PollBox from './PollBox'
 import Navbar from './Navbar'
 
-
-// var Popover = require('react-bootstrap').Popover;
-// var Tooltip = require('react-bootstrap').Tooltip;
-// var Button = require('react-bootstrap').Button;
-// var Modal = require('react-bootstrap').Modal;
-// var OverlayTrigger = require('react-bootstrap').OverlayTrigger;
-
-// export default React.createClass({
-//   render() {
-//     return <div>Hello, React Router!</div>
-//   }
-// })
-
-
 export default React.createClass({
 
 	render: function() {

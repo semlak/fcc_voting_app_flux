@@ -10,7 +10,7 @@ import LoginForm from './components/LoginForm'
 import UserListContainer from './components/UserListContainer'
 import FullUser from './components/FullUser'
 import UserActionCreators from './actions/UserActionCreators'
-var PollActionCreators = require('./actions/PollActionCreators');
+import PollActionCreators from './actions/PollActionCreators';
 
 import PollBox from './components/PollBox'
 import FullPoll from './components/FullPoll'

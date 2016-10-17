@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, Grid, Row, Col, Form, FormGroup, FormControl, Checkbox, ControlLabel, HelpBlock} from 'react-bootstrap'
-var UserStore = require('../stores/UserStore');
-var UserActionCreators = require('../actions/UserActionCreators');
+import UserStore from '../stores/UserStore';
+import UserActionCreators from '../actions/UserActionCreators';
 
 export default React.createClass({
 	getInitialState: function() {

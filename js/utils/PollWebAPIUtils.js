@@ -2,11 +2,11 @@
 PollWebAPIUtils.js
 */
 
-var PollServerActionCreators = require('../actions/PollServerActionCreators');
-var PollActionCreators = require('../actions/PollActionCreators');
-// var PollActionCreators = require('../actions/PollActionCreators');
+import PollServerActionCreators from '../actions/PollServerActionCreators';
+import PollActionCreators from '../actions/PollActionCreators';
+// import PollActionCreators from '../actions/PollActionCreators';
 
-var PollStore = require('../stores/PollStore');
+import PollStore from '../stores/PollStore';
 var pollsURL = PollStore.getPollsURL();
 
 // !!! Please Note !!!

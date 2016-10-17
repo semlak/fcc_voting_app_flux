@@ -2,7 +2,7 @@
  * PollConstants
  */
 
-var keyMirror = require('keymirror');
+import keyMirror from 'keymirror';
 
 module.exports = keyMirror({
   POLL_CREATE: null,

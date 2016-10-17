@@ -1,7 +1,5 @@
-
-
-var UserServerActionCreators = require('../actions/UserServerActionCreators');
-var UserStore = require('../stores/UserStore');
+import UserServerActionCreators from '../actions/UserServerActionCreators';
+import UserStore from '../stores/UserStore';
 
 var usersURL = UserStore.getUsersURL()
 

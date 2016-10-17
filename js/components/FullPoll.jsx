@@ -5,23 +5,24 @@
 
 import React from 'react'
 import {Button, Row, Col, Grid, ButtonToolbar, Modal} from 'react-bootstrap'
+// import Router from 'react-router';
+// import {Router, Route, browserHistory, IndexRoute} from 'react-router'
 var Router = require('react-router');
-var UserStore = require('../stores/UserStore');
+import UserStore from '../stores/UserStore';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import {AnswerOptionsBox} from './AnswerOptionsBox';
-var PollStore = require('../stores/PollStore');
-// var AnswerOptionsBox = require('./AnswerOptionsBox')
+import PollStore from '../stores/PollStore';
+// import AnswerOptionsBox from './AnswerOptionsBox'
 import PollChart from './PollChart';
-var PollStore = require('../stores/PollStore');
-var PollActionCreators = require('../actions/PollActionCreators');
+import PollActionCreators from '../actions/PollActionCreators';
 
 
-// var React = require('React/addons'),
-// var addons = require('react-addons')
+// import React from 'React/addons',
+// import addons from 'react-addons'
   // var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
 // var ReactCSSTransitionGroup =
-
+// var Router = Router1;
 
 var getRandomColor = function() {
 	// var letters = '0123456789ABCDEF'.split('');

@@ -10,8 +10,8 @@
  */
 
 jest.autoMockOff();
-
- // var UserConstants = require('../../constants/UserConstants.js');
+import UserConstants from '../../constants/UserConstants';
+ // import UserConstants from '../../constants/UserConstants.js';
     // console.log("\n\n\nUserConstants is", UserConstants)
 
 
@@ -21,7 +21,7 @@ jest.autoMockOff();
 jest.mock('../../dispatcher/AppDispatcher')
 
 
-  // var UserConstants = require('./UserConstants.js');
+  // import UserConstants from './UserConstants.js';
   // var AppDispatcher;
   // var UserStore;
   // var callback;
@@ -34,7 +34,7 @@ describe('UserStore', function() {
 
 
 
-  var UserConstants = require('../../constants/UserConstants');
+  // var UserConstants = require('../../constants/UserConstants');
   var AppDispatcher;
   var UserStore;
   var callback;

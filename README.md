@@ -4,7 +4,7 @@
 I created this app to fulfill requirements for the freecodecamp.com coding curriculum. I added a some of my own requirements.
 It is the voting app, an app that one can create and vote on polls, described at [https://www.freecodecamp.com/challenges/build-a-voting-app](https://www.freecodecamp.com/challenges/build-a-voting-app).
 
-The basics are this: This web app allows users to create polls, vote on them, share them, etc. It uses ReactJS + Flux Architecture.
+The basics are this: This web app allows users to create polls, vote on them, share them, etc. It uses React.js + Flux Architecture.
 
 Slightly more info:
 * You can create a poll (if logged in).
@@ -14,7 +14,7 @@ Slightly more info:
 * You can view all polls created (that haven't since been deleted).
 * You can filter the polls to see ones created by a specific user.
 * You can share a poll (currently done by providing a URL to the poll. There is not a "Share on Facebook/Twitter" feature yet)
-* The application uses ReactJS (a JavaScript framework) with a Flux architecture for the front-end, and node.js/Express 4 server with a Mongo database on the back-end.
+* The application uses React.js (a JavaScript framework) with a Flux architecture for the front-end, and node.js/Express 4 server with a Mongo database on the back-end.
 * For authentication, the application uses the Passport.js module for node.js. I haven't currently implemented OAuth strategy support, only username/password strategy.
 
 ## Demo
@@ -85,20 +85,22 @@ npm test
 The tests I have created barely test any of the features and are fairly insufficient. I've only created a few, and they basically only test a few components and don't address overall functional requirements of the application or how well it is integrated.
 
 
-## Notes:
-There are many notes that I need to add here.
-
+## Issues:
 There are many things that don't really work right, such as most of the npm scripts
 It also is possible that my packages.json file has requirements that aren't actually used. Things like that.
 
 I have no idea if my license info is correct. It is listed in LICENSE.md
 
+I still have some components setting their own states too much. Also, I would like to create Containers for the components, and put all the state setting in the container. I don't think I understood that concept very well when I created the app.
 
+Right now, when updating user information, there are buttons next to each field to update that field. However, hitting one of those buttons seems like it submits that data from all of the fields (but it does not, as I intended). Because the form then makes all of the fields green (validationState = "success"), it makes it seem like all of the updates are submitted. So basically, the form functions properly but the feedback it provides gives the user the wrong impression. Also, the feedback message just says account saved, not which field was updated.
+
+Tests need a lot of work. There are hardly any.
 
 ## Components
 
-### ReactJS + Flux
-ReactJS and the Flux architecture were created by Facebook. An overview is at [https://facebook.github.io/flux/docs/overview.html](https://facebook.github.io/flux/docs/overview.html). I initially tried building this app using React components by themselves without a Flux architecture, but it started getting complicated. Using a Flux architecture seems to allow for easily handling of React components. There are several libraries that provide a Flux architecture, such as [http://redux.js.org/](Redux), which look really good. However, I thought I might learn a lot about the architecture by building my app without them. I have my own Dispatcher (taken from the Facebook examples), ActionCreators, Stores, Constants, and React Components, where are definitely modeled after the Facebook examples ([https://github.com/facebook/flux/tree/master/examples](https://github.com/facebook/flux/tree/master/examples)), such as the flux-todomvc. I don't currently use "Containers", which are described in thier flux-utils section of their documentation. I had trouble finding good examples of React applications interacting with a server, but found some suggestions to put that functionality into separate modules, or Utils, so I have a Utils such as UserWebAPIUtils that are called from UserActionCreators, and PollWebAPIUtils that are called from PollActionCreators. Anyway, I think that my organization still has a lot of cleanup needed.
+### React.js + Flux
+React.js and the Flux architecture were created by Facebook. An overview of Flux is at [https://facebook.github.io/flux/docs/overview.html](https://facebook.github.io/flux/docs/overview.html). I initially tried building this app using React components by themselves without a Flux architecture, but it started getting complicated. Using a Flux architecture seems to allow for easily handling of React components. There are several libraries that provide a Flux architecture, such as [http://redux.js.org/](Redux), which look really good. However, I thought I might learn a lot about the architecture by building my app without them. I have my own Dispatcher (taken from the Facebook examples), ActionCreators, Stores, Constants, and React Components, which are modeled after the Facebook examples ([https://github.com/facebook/flux/tree/master/examples](https://github.com/facebook/flux/tree/master/examples)), such as the flux-todomvc. However, I didn't really fully understand the architecture so there are probably some issues. I don't currently use Containers to hold my components, which are described in thier flux-utils section of their documentation.  I had trouble finding good examples of React applications interacting with a server, but found some suggestions to put that functionality into separate modules, or Utils, so I have a Utils such as UserWebAPIUtils that are called from UserActionCreators, and PollWebAPIUtils that are called from PollActionCreators. Anyway, I think that my organization still has a lot of cleanup needed.
 
 
 ### react-router
@@ -108,7 +110,7 @@ I didn't find a good boilerplate structure for react/flux. After completing the 
 I use react-bootstrap ([https://react-bootstrap.github.io/](https://react-bootstrap.github.io/)) rather than jQuery and bootstrap-javascript ([https://getbootstrap.com/2.0.4/javascript.html](https://getbootstrap.com/2.0.4/javascript.html)). react-bootstrap still uses the regular bootstrap CSS file, but react-bootstrap provides you with almost all of the regular bootstrap elements as react components instead of HTML with a bunch of defined classes, and it does not depend on jQuery, as bootstrap-javascript does.
 
 ### jQuery
-I'm not using jQuery. I have nothing against jQuery, but I found it difficult to use when combined with ReactJS, and I found several forums and blogs suggesting to avoid combining them. A core issue is that ReactJS keeps its own virtual DOM and decides when to update the actual DOM based on its virtual DOM. However, jQuery frequently makes changes to the DOM that React doesn't know about, and so this interaction can cause issues. Since I stopped using jQuery for DOM manipulation for this project, I decided to not use it for AJAX calls (my other common use for jQuery), so I re-wrote my AJAX calls using XMLHTTPRequest() (part of standard JavaScript).
+I'm not using jQuery. I have nothing against jQuery, but I found it difficult to use when combined with React.js, and I found several forums and blogs suggesting to avoid combining them. A core issue is that React.js keeps its own virtual DOM and decides when to update the actual DOM based on its virtual DOM. However, jQuery frequently makes changes to the DOM that React doesn't know about, and so this interaction can cause issues. Since I stopped using jQuery for DOM manipulation for this project, I decided to not use it for AJAX calls (my other common use for jQuery), so I re-wrote my AJAX calls using XMLHTTPRequest() (part of standard JavaScript).
 
 ### Authentication
 For user authentication, I use Passport.js ([http://passportjs.org/](http://passportjs.org/)) and a local username/password strategy. I would like to add OAuth (Passport provides an OAuth strategy)

@@ -7,10 +7,10 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-var React = require('react');
+import React from 'react';
 var ReactPropTypes = React.PropTypes;
-var UserActionCreators = require('../actions/UserActionCreators');
-var UserItem = require('./UserItem');
+import UserActionCreators from '../actions/UserActionCreators';
+import UserItem from './UserItem';
 import {Row, Col, Grid} from 'react-bootstrap'
 
 var UserList = React.createClass({

@@ -2,9 +2,9 @@
 
  */
 
-var AppDispatcher = require('../dispatcher/AppDispatcher');
-var UserConstants = require('../constants/UserConstants');
-import UserWebAPIUtils from '../utils/UserWebAPIUtils'
+import AppDispatcher from '../dispatcher/AppDispatcher';
+import UserConstants from '../constants/UserConstants';
+import UserWebAPIUtils from '../utils/UserWebAPIUtils';
 
 var UserActionCreators = {
 

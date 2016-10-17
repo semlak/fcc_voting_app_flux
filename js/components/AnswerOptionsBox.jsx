@@ -1,8 +1,8 @@
 import React from 'react'
 import {Button, Grid, Row, Col, Form, FormGroup, FormControl, Checkbox, ControlLabel, HelpBlock} from 'react-bootstrap'
 
-var PollStore = require('../stores/PollStore');
-var VoteActionCreators = require('../actions/VoteActionCreators');
+import PollStore from '../stores/PollStore';
+import VoteActionCreators from '../actions/VoteActionCreators';
 
 
 

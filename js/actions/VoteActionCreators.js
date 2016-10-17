@@ -2,9 +2,9 @@
 
  */
 
-var AppDispatcher = require('../dispatcher/AppDispatcher');
-var VoteConstants = require('../constants/VoteConstants');
-var VoteWebAPIUtils = require('../utils/VoteWebAPIUtils');
+import AppDispatcher from '../dispatcher/AppDispatcher';
+import VoteConstants from '../constants/VoteConstants';
+import VoteWebAPIUtils from '../utils/VoteWebAPIUtils';
 
 var VoteActionCreators = {
 
