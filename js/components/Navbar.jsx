@@ -9,7 +9,8 @@ import ChangePasswordForm from './ChangePasswordForm'
 
 import UserStore from '../stores/UserStore';
 import UserActionCreators from '../actions/UserActionCreators';
-var Router = require('react-router');
+import {browserHistory} from 'react-router';
+import ReactPropTypes from 'react/lib/ReactPropTypes';
 
 
 
@@ -214,7 +215,7 @@ export default React.createClass({
 	},
 
 	_onAuthenticationChange: function(message_obj) {
-		console.log("in _onAuthenticationChange of <Navbar/>")
+		// console.log("in _onAuthenticationChange of <Navbar/>")
 
 		//things are a little confusing here. the variable currentUser below is refering to the most recent updated authenticated user
 		//However, this.state.currentUser is the authenticated user last set in the NavBar object, which could be out of date (being checked here)
@@ -232,7 +233,7 @@ export default React.createClass({
 			//This should only occur when user has logged out
 			this.setState({currentUser: currentUser})
 			if ( location == '/login' || location == '/register') {
-				Router.browserHistory.push('/');
+				browserHistory.push('/');
 			}
 		}
 		else if (userStoreIsInitializedState && currentUser.username == null && location == "/new_poll") {

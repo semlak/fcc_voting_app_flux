@@ -4,12 +4,15 @@ import ChangePasswordForm from './ChangePasswordForm'
 // import {Button, Form, Col, FormGroup, ControlLabel} from 'react-bootstrap'
 import {Button, Grid, Row, Col, Form, FormGroup, FormControl, Checkbox, ControlLabel, HelpBlock} from 'react-bootstrap'
 
-var Router = require('react-router');
+import {browserHistory} from 'react-router';
 import UserStore from '../stores/UserStore';
 import UserActionCreators from '../actions/UserActionCreators';
+import ReactPropTypes from 'react/lib/ReactPropTypes';
+
 
 export default React.createClass({
 	getInitialState: function() {
+		// console.log("in 'getInitialState' of <FullUser />")
 		var username = this.props.params.username;
 		var user = UserStore.getUserByUsername(username) || {};
 		return {
@@ -25,7 +28,7 @@ export default React.createClass({
 	},
 
 	backToUserList: function() {
-		Router.browserHistory.push('/users');
+		browserHistory.push('/users');
 
 	},
 
@@ -45,18 +48,18 @@ export default React.createClass({
   },
 
   updateUser: function(e) {
-		console.log("in updateUser of <FullUser/>, target.name: ", e.target.name);
+		// console.log("in updateUser of <FullUser/>, target.name: ", e.target.name);
 		var key = e.target.name.toString();
 		var data = {};
 		data[key] = this.state[key];
-		console.log("data is ", data);
+		// console.log("data is ", data);
 		UserActionCreators.update(this.state.user.id, data);
 		// this.setState(data)
 
   },
 
 	handleFieldChange: function(e) {
-		console.log(e.target.name, e.target.value)
+		// console.log(e.target.name, e.target.value)
 		var key = e.target.name.toString();
 		var newParam = {}
 		newParam[key] = e.target.value
@@ -64,7 +67,30 @@ export default React.createClass({
 		this.setState(newParam)
 	},
 
+	componentWillReceiveProps: function(nextProps) {
+		// I needed to add this to detect when the client is viewing one user's profile and navigates directly to another user's profile
+		// (for example: they are viewing somebody else's profile, and they click on the "My Profile" option in the NavBar).
+		// The reason is that this view manages its own state, and so the props are not used in the render function, only in the getInitialState() and _onUserChange().
+		// Without handling situation here, the view will not update. This is an issue I would like to eliminate by having a parent container handle.
+
+		// console.log("in 'componentWillReceiveProps' of <FullUser />. nextProps:", nextProps);
+		if (nextProps.params != null && this.state.user != null && nextProps.params.username != this.state.user.username) {
+			var username = nextProps.params.username;
+			var user = UserStore.getUserByUsername(username) || {};
+			this.setState ({
+				user: user,
+				//the following are only used if updating the user.
+				username: user.username || '',
+				fullname: user.fullname || '',
+				role: user.role || '',
+				message_obj: null
+			});
+			// this.setState(this.getInitialState());
+		}
+	},
+
 	render: function() {
+		// console.log("in 'render' of <FullUser />");
 		var user = this.state.user;
 
 		if (user == null || user.username == null) {
@@ -161,32 +187,32 @@ export default React.createClass({
 
 
 	_onUserChange: function(message_obj) {
-		console.log("in _onUserChange of <FullUser />")
+		// console.log("in _onUserChange of <FullUser />")
 		var user = UserStore.getUserByUsername(this.props.params.username) || {};
 		if (this.state.user.username != null && message_obj != null ) {
 			//this is likely just after the user attempted to update user info on the screen.
 			this.setState({message_obj: message_obj});
 		}
 		else if (user.username != null && this.state.user.username == null) {
-			console.log("in 'if' branch of _onUserChange in <FullUser />")
+			// console.log("in 'if' branch of _onUserChange in <FullUser />")
 			//this is likely just after page load. UserStore _users was initially empty but now loaded, and username in url now valid
 			this.setState(this.getInitialState())
 		}
 		else if (message_obj == null && this.state.user.username != null && this.state.username != this.state.user.username) {
-			console.log("in 'else if' branch of _onUserChange in <FullUser />")
+			// console.log("in 'else if' branch of _onUserChange in <FullUser />")
 			//this is likely just after updating the username. This page URL will no longer correctly load the user (because it is keyed by username).
-			Router.browserHistory.push('/users/' + this.state.username);
+			browserHistory.push('/users/' + this.state.username);
 		}
 		else {
-			console.log("in 'else' branch of _onUserChange in <FullUser />")
+			// console.log("in 'else' branch of _onUserChange in <FullUser />")
 			this.setState(this.getInitialState())
 		}
 
 	},
 
 	_onAuthenticationChange: function(message_obj) {
-		console.log("in _onAuthenticationChange of <FullUser />")
-		console.log("message_obj:", message_obj, ", message_obj == null", message_obj == null);
+		// console.log("in _onAuthenticationChange of <FullUser />")
+		// console.log("message_obj:", message_obj, ", message_obj == null", message_obj == null);
 		this.setState({currentUser: this.getCurrentUser()});
 	}
 })

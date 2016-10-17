@@ -4,15 +4,10 @@ using react-d3-basic library
 */
 
 import React from 'react'
-// import {Button, Row, Col, Grid, ButtonToolbar, Modal} from 'react-bootstrap'
-// var Router = require('react-router');
 import UserStore from '../stores/UserStore';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-// import Recharts from 'recharts';
 import {BarChart, Cell, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts';
-		// const {BarChart, Cell, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} = Recharts;
-
-var ReactPropTypes = React.PropTypes;
+import ReactPropTypes from 'react/lib/ReactPropTypes';
 // import AnswerOptionsBox from './AnswerOptionsBox'
 
 import PollStore from '../stores/PollStore';

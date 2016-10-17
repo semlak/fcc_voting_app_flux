@@ -1,7 +1,6 @@
 import React from 'react'
 import { render } from 'react-dom'
 import App from './components/App'
-// import {Router, Route, hashHistory, IndexRoute} from 'react-router'
 import {Router, Route, browserHistory, IndexRoute} from 'react-router'
 import About from './components/About'
 import Home from './components/Home'

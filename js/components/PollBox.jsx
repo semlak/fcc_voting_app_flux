@@ -16,6 +16,7 @@ import React from 'react';
 import PollList from './PollList';
 import PollStore from '../stores/PollStore';
 import UserStore from '../stores/UserStore';
+import ReactPropTypes from 'react/lib/ReactPropTypes';
 
 
 function filterPollsByOwner(polls, owner_username) {

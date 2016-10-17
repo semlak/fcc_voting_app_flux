@@ -10,12 +10,8 @@
  // This is called UserItem rather than just 'User', because it is specifically to represent a User on a list of Users.
 
 import React from 'react';
-var ReactPropTypes = React.PropTypes;
-// import UserActionCreators from '../actions/UserActionCreators';
-// import NavLink from './NavLink'
-var Router = require('react-router');
-
-// import UserTextInput from './UserTextInput';
+import ReactPropTypes from 'react/lib/ReactPropTypes';
+import {browserHistory} from 'react-router';
 
 
 var UserItem = React.createClass({
@@ -26,8 +22,8 @@ var UserItem = React.createClass({
 
 
   handleUserSelect: function(e) {
-    console.log("running handleUserSelect.")
-    Router.browserHistory.push('/users/' + this.props.user.username);
+    // console.log("running handleUserSelect.")
+    browserHistory.push('/users/' + this.props.user.username);
   },
   /**
   /**

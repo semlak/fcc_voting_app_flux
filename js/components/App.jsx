@@ -2,6 +2,8 @@ import React from 'react'
 import {IndexLink } from 'react-router'
 import PollBox from './PollBox'
 import Navbar from './Navbar'
+import ReactPropTypes from 'react/lib/ReactPropTypes';
+
 
 export default React.createClass({
 

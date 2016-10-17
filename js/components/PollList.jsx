@@ -8,10 +8,9 @@
  */
 
 import React from 'react';
-var ReactPropTypes = React.PropTypes;
+import ReactPropTypes from 'react/lib/ReactPropTypes';
 import PollActionCreators from '../actions/PollActionCreators';
 import {Row, Col, Grid} from 'react-bootstrap'
-
 import PollItem from './PollItem';
 
 var PollList = React.createClass({

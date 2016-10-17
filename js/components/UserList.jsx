@@ -8,7 +8,7 @@
  */
 
 import React from 'react';
-var ReactPropTypes = React.PropTypes;
+import ReactPropTypes from 'react/lib/ReactPropTypes';
 import UserActionCreators from '../actions/UserActionCreators';
 import UserItem from './UserItem';
 import {Row, Col, Grid} from 'react-bootstrap'
@@ -50,20 +50,8 @@ var UserList = React.createClass({
       )
     }
 
-    // for (var key in allPolls) {
-    //   // console.log("poll:", allPolls[key]);
-    //   pollNodes.push(
-    //     <Col key={key} xs={12} sm={6} md={6} className=''>
-    //       <PollItem  poll={allPolls[key]} />
-    //     </Col>
-    //     );
-    // }
 
     return (
-      // <div id="user-list">
-      //   <ul id="user-list">{users}</ul>
-      // </div>
-
       <div>
         <div id="user-list" className='pollBoxHeader'>
           <h2 className='displayInline'>Listing of all Users:</h2>

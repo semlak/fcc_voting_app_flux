@@ -3,6 +3,7 @@ import {Button, Grid, Row, Col, Form, FormGroup, FormControl, Checkbox, ControlL
 
 import PollStore from '../stores/PollStore';
 import VoteActionCreators from '../actions/VoteActionCreators';
+import ReactPropTypes from 'react/lib/ReactPropTypes';
 
 
 

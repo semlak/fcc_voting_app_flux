@@ -5,9 +5,7 @@
 
 import React from 'react'
 import {Button, Row, Col, Grid, ButtonToolbar, Modal} from 'react-bootstrap'
-// import Router from 'react-router';
-// import {Router, Route, browserHistory, IndexRoute} from 'react-router'
-var Router = require('react-router');
+import {browserHistory} from 'react-router'
 import UserStore from '../stores/UserStore';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import {AnswerOptionsBox} from './AnswerOptionsBox';
@@ -15,6 +13,7 @@ import PollStore from '../stores/PollStore';
 // import AnswerOptionsBox from './AnswerOptionsBox'
 import PollChart from './PollChart';
 import PollActionCreators from '../actions/PollActionCreators';
+import ReactPropTypes from 'react/lib/ReactPropTypes';
 
 
 // import React from 'React/addons',
@@ -22,7 +21,6 @@ import PollActionCreators from '../actions/PollActionCreators';
   // var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
 // var ReactCSSTransitionGroup =
-// var Router = Router1;
 
 var getRandomColor = function() {
 	// var letters = '0123456789ABCDEF'.split('');
@@ -119,7 +117,7 @@ export default React.createClass({
 		return answer_option_votes
 	},
 	backToPollList: function() {
-		Router.browserHistory.push('/polls');
+		browserHistory.push('/polls');
 
 	},
 	handleVote: function(data) {
@@ -253,7 +251,7 @@ export default React.createClass({
 		// var poll = PollStore.getPollById(this.props.params.poll_id);
 		var poll = this.state.poll;
 
-		console.log('rendering FullPoll')
+		// console.log('rendering FullPoll')
 		var author_label = "Poll Author: "
 		var question_label = "Poll Question: "
 		if (this.state.poll == null || this.state.poll == undefined) {
@@ -505,7 +503,7 @@ export default React.createClass({
 			As long as the poll is not null, the state is updated with the poll's freshest data.
 			We attempt to verify that the poll's answer_options array now contains the new_answer_option. If so, we reset new_answer_option.
 		*/
-		console.log("in _onPollChange of FullPoll, received notification of poll update from  PollStore");
+		// console.log("in _onPollChange of FullPoll, received notification of poll update from  PollStore");
 		var poll = PollStore.getPollById(this.props.params.poll_id);
 		var newState = {};
 		newState.poll = poll;

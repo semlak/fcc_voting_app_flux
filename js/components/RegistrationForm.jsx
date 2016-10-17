@@ -2,6 +2,8 @@ import React from 'react';
 import {Button, Grid, Row, Col, Form, FormGroup, FormControl, Checkbox, ControlLabel, HelpBlock} from 'react-bootstrap'
 import UserStore from '../stores/UserStore';
 import UserActionCreators from '../actions/UserActionCreators';
+import ReactPropTypes from 'react/lib/ReactPropTypes';
+
 
 export default React.createClass({
 	getInitialState: function() {

@@ -270,7 +270,7 @@ var UserStore = assign({}, EventEmitter.prototype, {
 	},
 
 	getAuthenticatedUser: function() {
-		console.log("in '_authenticatedUserId' of UserStore. _authenticatedUserId is", _authenticatedUserId)
+		// console.log("in '_authenticatedUserId' of UserStore. _authenticatedUserId is", _authenticatedUserId)
 		return _users[_authenticatedUserId] || {};
 	},
 
@@ -411,14 +411,14 @@ UserStore.dispatchToken = AppDispatcher.register(function(action) {
 
 
 		case UserConstants.USER_UPDATE:
-      console.log("\n\nIn UserStore, dispatch receiving. received 'USER_UPDATE' action signal, action is", action)
+      // console.log("\n\nIn UserStore, dispatch receiving. received 'USER_UPDATE' action signal, action is", action)
       if (action.rawUser != null) {
         var updatesMade = false;
         var user = action.rawUser;
         if (user.id == null && user._id != null)  {
           user.id = user._id;
         }
-        console.log("user in user set is ", _users[user.id]);
+        // console.log("user in user set is ", _users[user.id]);
 
         var id = user.id
         if (user.username != _users[id].username) {
@@ -433,7 +433,7 @@ UserStore.dispatchToken = AppDispatcher.register(function(action) {
 
         if (true || updatesMade) {
           UserStore.emitChange({error: false, message_text: action.message_obj.message_text});
-          console.log("user in user set is now", _users[id]);
+          // console.log("user in user set is now", _users[id]);
         }
       }
       else {
@@ -464,7 +464,7 @@ UserStore.dispatchToken = AppDispatcher.register(function(action) {
       var currentUser = action.rawUser;
       var previousAuthenticatedUser = UserStore.getAuthenticatedUser();
       var message_obj = action.message_obj
-      console.log("currentUser: ", currentUser, "previousAuth: ", previousAuthenticatedUser, "message_obj:", message_obj )
+      // console.log("currentUser: ", currentUser, "previousAuth: ", previousAuthenticatedUser, "message_obj:", message_obj )
       if (currentUser == null || currentUser == undefined)    { currentUser = {}; }
       if (currentUser._id != null && currentUser.id == null)  { currentUser.id = currentUser._id; }
 

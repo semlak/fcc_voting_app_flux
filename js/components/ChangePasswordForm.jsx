@@ -6,12 +6,11 @@ Needs username (string) passed as a prop
 
 import React from 'react'
 import NavLink from './NavLink'
-// import {Button, Form, Col, FormGroup, ControlLabel} from 'react-bootstrap'
 import {Modal, Button, Grid, Row, Col, Form, FormGroup, FormControl, Checkbox, ControlLabel, HelpBlock} from 'react-bootstrap'
-
-var Router = require('react-router');
+import {browserHistory} from 'react-router';
 import UserStore from '../stores/UserStore';
 import UserActionCreators from '../actions/UserActionCreators';
+import ReactPropTypes from 'react/lib/ReactPropTypes';
 
 export default React.createClass({
 	getInitialState: function() {
@@ -31,7 +30,7 @@ export default React.createClass({
 	},
 
 	backToUserList: function() {
-		Router.browserHistory.push('/users');
+		browserHistory.push('/users');
 	},
 
 	getCurrentUser: function() {
@@ -48,7 +47,7 @@ export default React.createClass({
   },
 
 	changePassword: function(e) {
-		console.log("attempting to change password.");
+		// console.log("attempting to change password.");
 		if (this.state.currentUser.role != 'admin' && this.state.current_password == '') {
 			this.setState({message_obj: {error: true, message_text: "You must type your current password in the \"Current Password\" Field"} });
 		}
@@ -68,7 +67,7 @@ export default React.createClass({
 	},
 
 	handleFieldChange: function(e) {
-		console.log(e.target.name, e.target.value)
+		// console.log(e.target.name, e.target.value)
 		var key = e.target.name.toString();
 		var newParam = {}
 		newParam[key] = e.target.value
@@ -88,7 +87,7 @@ export default React.createClass({
 		var message_obj = this.state.message_obj;
 		var validationState = message_obj == null ? null : (message_obj.error ? "error" : "success");
 		var validationMessage = message_obj == null ? "" : message_obj.message_text;
-		console.log("message_obj: ", message_obj, ", validationState: ", validationState, ", validationMessage: ", validationMessage);
+		// console.log("message_obj: ", message_obj, ", validationState: ", validationState, ", validationMessage: ", validationMessage);
 
 		var currentPasswordFormGroup = (
 	    <FormGroup controlId="formHorizontalPassword">
@@ -154,8 +153,8 @@ export default React.createClass({
 	},
 
 	_onUserChange: function(message_obj) {
-		console.log("in _onUserChange of <ChangePasswordForm />")
-		console.log("message:", message_obj, ", message_obj == null", message_obj == null);
+		// console.log("in _onUserChange of <ChangePasswordForm />")
+		// console.log("message:", message_obj, ", message_obj == null", message_obj == null);
 		var userToChange = UserStore.getUserByUsername(this.props.username) || {};
 		var currentUser = this.getCurrentUser();
 
@@ -168,17 +167,17 @@ export default React.createClass({
 			this.setState(newState);
 		}
 		else if (currentUser.username != null && this.state.currentUser.username == null) {
-			console.log("in 'if' branch of _onUserChange in <ChangePasswordForm />")
+			// console.log("in 'if' branch of _onUserChange in <ChangePasswordForm />")
 			//this is likely just after page load. UserStore _users was initially empty but now loaded, and username in url is still invalid
 			this.setState(this.getInitialState())
 		}
 		// else if (message_obj == null && this.state.userToChange.username != null && this.state.username != this.state.userToChange.username) {
 		// 	console.log("in 'else if' branch of _onUserChange in <ChangePasswordForm />")
 		// 	//this is likely just after updating the username. This page URL will no longer correctly load the user (because it is keyed by username).
-		// 	// Router.browserHistory.push('/users/' + this.state.username);
+		// 	// browserHistory.push('/users/' + this.state.username);
 		// }
 		else {
-			console.log("in 'else' branch of _onUserChange in <ChangePasswordForm />")
+			// console.log("in 'else' branch of _onUserChange in <ChangePasswordForm />")
 			this.setState(this.getInitialState())
 		}
 	}

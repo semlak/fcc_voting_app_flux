@@ -1,11 +1,18 @@
+/*
+NewPollForm.jsx component.
+Does not receive any props. I might change this if I have to create a container for NewPollForm to be a child of.
+*/
+
+
 import React from 'react'
 import {Button, Form, FormGroup, FormControl, Checkbox, Col, ControlLabel, HelpBlock} from 'react-bootstrap'
-var Router = require('react-router');
+import {browserHistory} from 'react-router';
 import UserStore from '../stores/UserStore';
 import PollStore from '../stores/PollStore';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import {AnswerOptionsBox, AnswerOptionsList, NewAnswerOptionForm} from './AnswerOptionsBox';
 import PollActionCreators from '../actions/PollActionCreators';
+// import ReactPropTypes from 'react/lib/ReactPropTypes';
 
 
 
@@ -27,12 +34,12 @@ var eliminateArrayDuplicates = function(arr) {
 }
 
 export default React.createClass({
-  propTypes: {
-   // poll: ReactPropTypes.object.isRequired
-  },
+  // propTypes: {
+  //  // poll: ReactPropTypes.object.isRequired
+  // },
 
 	getInitialState: function() {
-		console.log("in 'getInitialState' for <NewPollForm /> ")
+		// console.log("in 'getInitialState' for <NewPollForm /> ")
 		// this just sets a default author value, but the user can change it (it does not have to match account data)
 		var currentUser = UserStore.getAuthenticatedUser();
 		var author = currentUser.fullname || currentUser.username || '';
@@ -142,12 +149,12 @@ export default React.createClass({
 
 	},
 	backToPollList: function() {
-		Router.browserHistory.push('/polls');
+		browserHistory.push('/polls');
 
 	},
 
 	render: function() {
-		console.log("rendering NewPollForm. answer_options are:", this.state.answer_options, ", props are", this.props)
+		// console.log("rendering NewPollForm. answer_options are:", this.state.answer_options)
 
 		var authorField = this.state.authorField;
 		var questionField = this.state.questionField;
@@ -235,7 +242,7 @@ export default React.createClass({
 		var currentUser = UserStore.getAuthenticatedUser();
 		if (currentUser.username == null && this.state.currentUser.username != null) {
 			//this means a user was logged in and now has logged out.
-			Router.browserHistory.push('/');
+			browserHistory.push('/');
 		}
 		else if (currentUser.username != this.state.currentUser.username) {
 			//user has changed. Likely gone from unauthenticated to authenticated
@@ -267,7 +274,7 @@ export default React.createClass({
 	},
 
 	_onPollCreated: function(new_poll_id) {
-		Router.browserHistory.push('/polls/' + new_poll_id);
+		browserHistory.push('/polls/' + new_poll_id);
 		// this.setState({poll: PollStore.getPollById(this.props.params.poll_id)});
 	}
 })
