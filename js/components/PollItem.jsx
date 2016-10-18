@@ -5,7 +5,7 @@ import React from 'react';
 import {browserHistory} from 'react-router';
 import ReactPropTypes from 'react/lib/ReactPropTypes';
 import PollActionCreators from '../actions/PollActionCreators';
-import NavLink from './NavLink'
+// import NavLink from './NavLink'
 
 var PollItem = React.createClass({
 

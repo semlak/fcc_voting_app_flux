@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, Grid, Row, Col, Form, FormGroup, FormControl, Checkbox, ControlLabel, HelpBlock} from 'react-bootstrap'
+import {Button, Grid, Row, Col, Form, FormGroup, FormControl,  ControlLabel, HelpBlock} from 'react-bootstrap'
 
 import PollStore from '../stores/PollStore';
 import VoteActionCreators from '../actions/VoteActionCreators';

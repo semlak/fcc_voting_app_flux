@@ -2,7 +2,7 @@ import React from 'react'
 import NavLink from './NavLink'
 import ChangePasswordForm from './ChangePasswordForm'
 // import {Button, Form, Col, FormGroup, ControlLabel} from 'react-bootstrap'
-import {Button, Grid, Row, Col, Form, FormGroup, FormControl, Checkbox, ControlLabel, HelpBlock} from 'react-bootstrap'
+import {Button, Grid, Row, Col, Form, FormGroup, FormControl,  ControlLabel, HelpBlock} from 'react-bootstrap'
 
 import {browserHistory} from 'react-router';
 import UserStore from '../stores/UserStore';
@@ -15,9 +15,11 @@ export default React.createClass({
 		// console.log("in 'getInitialState' of <FullUser />")
 		var username = this.props.params.username;
 		var user = UserStore.getUserByUsername(username) || {};
+		var currentUser = this.getCurrentUser();
 		return {
 			user: user,
-			currentUser: this.getCurrentUser(),
+			currentUser: currentUser,
+			showUserAsEditable: (currentUser.role == 'admin'),
 			//the following are only used if updating the user.
 			username: user.username || '',
 			fullname: user.fullname || '',
@@ -77,8 +79,11 @@ export default React.createClass({
 		if (nextProps.params != null && this.state.user != null && nextProps.params.username != this.state.user.username) {
 			var username = nextProps.params.username;
 			var user = UserStore.getUserByUsername(username) || {};
+			var currentUser = this.getCurrentUser();
 			this.setState ({
 				user: user,
+				currentUser: currentUser,
+				showUserAsEditable: (currentUser.role == 'admin'),
 				//the following are only used if updating the user.
 				username: user.username || '',
 				fullname: user.fullname || '',
@@ -86,6 +91,12 @@ export default React.createClass({
 				message_obj: null
 			});
 			// this.setState(this.getInitialState());
+		}
+	},
+
+	openEditUserForm: function() {
+		if (this.state.user.username == this.state.currentUser.username || this.state.currentUser.role == 'admin') {
+			this.setState({showUserAsEditable: true});
 		}
 	},
 
@@ -104,12 +115,41 @@ export default React.createClass({
 	      <div id='userapp'  className=''>
 					<h2>User details</h2>
 					<div className='poll well'>
-						<p>Username: <span>{user.username}</span></p>
-						<p>Fullname: <span>{user.fullname}</span></p>
-						<p>Role: <span>{user.role}</span></p>
+					  <Form horizontal>
+					  	<FormGroup>
+						    <FormGroup controlId="formHorizontalUsername">
+						      <Col componentClass={ControlLabel} sm={2}>
+						        Username:
+						      </Col>
+						      <Col sm={8}>
+						        {this.state.username}
+						      </Col>
+						    </FormGroup>
+
+						    <FormGroup controlId="formHorizontalFullname">
+						      <Col componentClass={ControlLabel} sm={2}>
+						        Fullname:
+						      </Col>
+						      <Col sm={8}>
+						        {this.state.fullname}
+						      </Col>
+						    </FormGroup>
+						    <FormGroup controlId="formHorizontalRole">
+						      <Col componentClass={ControlLabel} sm={2}>
+						        Role:
+						      </Col>
+						      <Col sm={8}>
+						        {this.state.role || 'Not current set'}
+						      </Col>
+						    </FormGroup>
+						    <FormGroup>
+							    <Col sm={6}>
+										{ this.state.currentUser.username == user.username ? <Button type='button' bsStyle='primary' onClick={this.openEditUserForm}>Edit User Details</Button> : null}
+									</Col>
+								</FormGroup>
+						  </FormGroup>
+					  </Form>
 						<p><NavLink to={'/Users/' + user.username + '/polls'}>Polls of {user.fullname || user.username}</NavLink></p>
-						<br/>
-						<Button type='button' bsStyle='default' onClick={this.backToUserList}>Back to User List</Button>
 					</div>
 				</div>
 			);
@@ -168,6 +208,8 @@ export default React.createClass({
 								</Col>
 						  </FormGroup>
 					  </Form>
+						<p><NavLink to={'/Users/' + user.username + '/polls'}>Polls of {user.fullname || user.username}</NavLink></p>
+						<br/>
 						<Button type='button' bsStyle='default' onClick={this.backToUserList}>Back to User List</Button>
 					</div>
 				</div>
@@ -175,7 +217,7 @@ export default React.createClass({
 		}.bind(this);
 
 
-		if (this.state.currentUser.role == 'admin' || this.state.currentUser.username == user.username) {
+		if (this.state.currentUser.role == 'admin' || this.state.showUserAsEditable == true) {
 			return editableUser();
 		}
 		else {
@@ -213,6 +255,10 @@ export default React.createClass({
 	_onAuthenticationChange: function(message_obj) {
 		// console.log("in _onAuthenticationChange of <FullUser />")
 		// console.log("message_obj:", message_obj, ", message_obj == null", message_obj == null);
-		this.setState({currentUser: this.getCurrentUser()});
+		var currentUser = this.getCurrentUser();
+		this.setState({
+			currentUser: currentUser,
+			showUserAsEditable: this.state.showUserAsEditable && (currentUser.username == this.state.user.username || currentUser.role == 'admin')
+		});
 	}
 })

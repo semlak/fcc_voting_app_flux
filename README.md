@@ -93,6 +93,10 @@ I have no idea if my license info is correct. It is listed in LICENSE.md
 
 I still have some components setting their own states too much. Also, I would like to create Containers for the components, and put all the state setting in the container. I don't think I understood that concept very well when I created the app.
 
+Several of my problems for components are the result of trying to display error messages when failing to login, register, update user or poll information. I haven't figured the best way to get this information from the ajax call result to the component renderings.
+
+I still have lots of imperative-type code that updates UI components.
+
 Right now, when updating user information, there are buttons next to each field to update that field. However, hitting one of those buttons seems like it submits that data from all of the fields (but it does not, as I intended). Because the form then makes all of the fields green (validationState = "success"), it makes it seem like all of the updates are submitted. So basically, the form functions properly but the feedback it provides gives the user the wrong impression. Also, the feedback message just says account saved, not which field was updated.
 
 Tests need a lot of work. There are hardly any.

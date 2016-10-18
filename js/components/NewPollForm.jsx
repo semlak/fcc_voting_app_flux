@@ -5,7 +5,7 @@ Does not receive any props. I might change this if I have to create a container 
 
 
 import React from 'react'
-import {Button, Form, FormGroup, FormControl, Checkbox, Col, ControlLabel, HelpBlock} from 'react-bootstrap'
+import {Button, Form, FormGroup, FormControl, Col, ControlLabel, HelpBlock} from 'react-bootstrap'
 import {browserHistory} from 'react-router';
 import UserStore from '../stores/UserStore';
 import PollStore from '../stores/PollStore';
@@ -164,7 +164,7 @@ export default React.createClass({
 		var formInstance = (
 			// uses <AnswerOptionsList> and <NewAnswerOptionForm> separately rather than single <AnswerOptionsBox>
 			<div className='poll well'>
-	      <form>
+	      <Form>
 	        <FormGroup controlId="formAuthor" validationState={authorField.validationState}>
 	          <ControlLabel>Poll Author:</ControlLabel>
 	          <FormControl
@@ -203,7 +203,7 @@ export default React.createClass({
 					</FormGroup>
 					<br />
 					<Button type='button' bsStyle="primary" onClick={this.handleSubmit}>Post New Poll </Button>
-	      </form>
+	      </Form>
 	    </div>
 		)
 

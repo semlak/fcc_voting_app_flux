@@ -5,8 +5,8 @@ Needs username (string) passed as a prop
 
 
 import React from 'react'
-import NavLink from './NavLink'
-import {Modal, Button, Grid, Row, Col, Form, FormGroup, FormControl, Checkbox, ControlLabel, HelpBlock} from 'react-bootstrap'
+// import NavLink from './NavLink'
+import {Modal, Button, Grid, Row, Col, Form, FormGroup, FormControl, ControlLabel, HelpBlock} from 'react-bootstrap'
 import {browserHistory} from 'react-router';
 import UserStore from '../stores/UserStore';
 import UserActionCreators from '../actions/UserActionCreators';
