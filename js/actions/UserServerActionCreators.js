@@ -32,8 +32,8 @@ module.exports = {
 			AppDispatcher.dispatch({
 				actionType: UserConstants.USER_RECEIVE_RAW_CREATED_USER,
 				rawUser: createdUser,
-        errorMessage: null,
-        successMessage: message
+				errorMessage: null,
+				successMessage: message
 			});
 		}
 		else {
@@ -42,7 +42,7 @@ module.exports = {
 				actionType: UserConstants.USER_RECEIVE_RAW_CREATED_USER,
 				rawUser: null,
 				errorMessage: message,
-        successMessage: null
+				successMessage: null
 			});
 		}
 	},
@@ -61,7 +61,7 @@ module.exports = {
 		AppDispatcher.dispatch({
 			actionType: UserConstants.USER_SET_AUTHENTICATED_USER_STATE,
 			rawUser: rawUser,
-      message_obj: message_obj
+			message_obj: message_obj
 		});
 	}
 

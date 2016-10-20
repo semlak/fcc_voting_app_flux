@@ -25,9 +25,17 @@ module.exports = {
   },
 
   module: {
+    preLoaders: [
+        // Javascript
+        { test: /\.jsx?$/, loader: 'eslint', exclude: /node_modules/ }
+    ],
     loaders: [
       { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader?presets[]=es2015&presets[]=react' },
       { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' }
     ]
-  }
+  },
+  eslint: {
+    failOnWarning: false,
+    failOnError: true
+  },
 }

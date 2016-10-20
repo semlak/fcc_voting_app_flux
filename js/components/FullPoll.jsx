@@ -3,96 +3,80 @@
 */
 
 
-import React from 'react'
-import {Button, Row, Col, Grid, ButtonToolbar, Modal} from 'react-bootstrap'
-import {browserHistory} from 'react-router'
+import React from 'react';
+import {Button, Row, Col, Grid, ButtonToolbar, Modal} from 'react-bootstrap';
+import {browserHistory} from 'react-router';
 import UserStore from '../stores/UserStore';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import {AnswerOptionsBox} from './AnswerOptionsBox';
 import PollStore from '../stores/PollStore';
-// import AnswerOptionsBox from './AnswerOptionsBox'
+// import AnswerOptionsBox from './AnswerOptionsBox';
 import PollChart from './PollChart';
 import PollActionCreators from '../actions/PollActionCreators';
-import ReactPropTypes from 'react/lib/ReactPropTypes';
+// import ReactPropTypes from 'react/lib/ReactPropTypes';
 
 
 // import React from 'React/addons',
-// import addons from 'react-addons'
-  // var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+// import addons from 'react-addons';
+	// var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
-// var ReactCSSTransitionGroup =
-
-var getRandomColor = function() {
-	// var letters = '0123456789ABCDEF'.split('');
-	// var color = '#';
-	// for (var i = 0; i < 6; i++ ) {
-	// 	color += letters[Math.floor(Math.random() * 16)];
-	// }
-	var arr = []
-	for (var i = 0 ; i < 3; i++) {
-		arr.push(Math.floor(Math.random() * 256).toString())
-	}
-	var color = {backgroundColor: 'rgba(' + arr.join(', ') + ', 0.2)', borderColor: 'rgba(' + arr.join(', ') + ', 1)'}
-	return color;
-	// rgba(255,99,132,1)
-}
 
 function copyToClipboard(elem) {
-	  // create hidden text element, if it doesn't already exist
-    var targetId = "_hiddenCopyText_";
-    var isInput = elem.tagName === "INPUT" || elem.tagName === "TEXTAREA";
-    var origSelectionStart, origSelectionEnd;
-    if (isInput) {
-        // can just use the original source element for the selection and copy
-        target = elem;
-        origSelectionStart = elem.selectionStart;
-        origSelectionEnd = elem.selectionEnd;
-    } else {
-        // must use a temporary form element for the selection and copy
-        target = document.getElementById(targetId);
-        if (!target) {
-            var target = document.createElement("textarea");
-            target.style.position = "absolute";
-            target.style.left = "-9999px";
-            target.style.top = "0";
-            target.id = targetId;
-            document.body.appendChild(target);
-        }
-        target.textContent = elem.textContent;
-    }
-    // select the content
-    var currentFocus = document.activeElement;
-    target.focus();
-    target.setSelectionRange(0, target.value.length);
+	// create hidden text element, if it doesn't already exist
+	var targetId = '_hiddenCopyText_';
+	var isInput = elem.tagName === 'INPUT' || elem.tagName === 'TEXTAREA';
+	var origSelectionStart, origSelectionEnd;
+	if (isInput) {
+		// can just use the original source element for the selection and copy
+		target = elem;
+		origSelectionStart = elem.selectionStart;
+		origSelectionEnd = elem.selectionEnd;
+	} else {
+		// must use a temporary form element for the selection and copy
+		target = document.getElementById(targetId);
+		if (!target) {
+			var target = document.createElement('textarea');
+			target.style.position = 'absolute';
+			target.style.left = '-9999px';
+			target.style.top = '0';
+			target.id = targetId;
+			document.body.appendChild(target);
+		}
+		target.textContent = elem.textContent;
+	}
+	// select the content
+	var currentFocus = document.activeElement;
+	target.focus();
+	target.setSelectionRange(0, target.value.length);
 
-    // copy the selection
-    var succeed;
-    try {
-    	  succeed = document.execCommand("copy");
-    } catch(e) {
-        succeed = false;
-    }
-    // restore original focus
-    if (currentFocus && typeof currentFocus.focus === "function") {
-        currentFocus.focus();
-    }
+	// copy the selection
+	var succeed;
+	try {
+		succeed = document.execCommand('copy');
+	} catch(e) {
+		succeed = false;
+	}
+	// restore original focus
+	if (currentFocus && typeof currentFocus.focus === 'function') {
+		currentFocus.focus();
+	}
 
-    if (isInput) {
-        // restore prior selection
-        elem.setSelectionRange(origSelectionStart, origSelectionEnd);
-    } else {
-        // clear temporary content
-        target.textContent = "";
-    }
-    return succeed;
+	if (isInput) {
+		// restore prior selection
+		elem.setSelectionRange(origSelectionStart, origSelectionEnd);
+	} else {
+		// clear temporary content
+		target.textContent = '';
+	}
+	return succeed;
 }
 
 
 
 export default React.createClass({
-  propTypes: {
-   // poll: ReactPropTypes.object.isRequired
-  },
+	propTypes: {
+		// poll: ReactPropTypes.object.isRequired
+	},
 
 	getInitialState: function() {
 		return {
@@ -106,86 +90,71 @@ export default React.createClass({
 			dialogModalMessage: '',
 			showDialogModal: false,
 			showSharePollModal: false
-		}
+		};
 	},
 	mapVotesToAnswerOptions : function (votes) {
-		// console.log("in mapVotesToAnswerOptions of FullPoll")
-		var answer_option_votes = this.state.poll.answer_options.map(answer_option => 0);
+		// console.log('in mapVotesToAnswerOptions of FullPoll');
+		var answer_option_votes = this.state.poll.answer_options.map(() => 0);
 		votes.forEach(function(vote) {
-			answer_option_votes[vote.answer_option] = (parseInt(answer_option_votes[vote.answer_option]) + 1 || 1)
+			answer_option_votes[vote.answer_option] = (parseInt(answer_option_votes[vote.answer_option]) + 1 || 1);
 		});
-		return answer_option_votes
+		return answer_option_votes;
 	},
 	backToPollList: function() {
 		browserHistory.push('/polls');
 
 	},
-	handleVote: function(data) {
-		// console.log("in FullPoll handleVote. Props are" , this.props, ", data is ", data)
-		var vote = data;
-		vote.poll_id  = this.state.poll.id
-		// console.log("vote is now", vote)
-		var callback = function(vote) {
-			// console.log("in handleVote callback. vote is ", vote)
-			// this.updateChartWithVote(vote);
-		}.bind(this)
+	// handleVote: function(data) {
+	// 	// console.log('in FullPoll handleVote. Props are' , this.props, ', data is ', data);
+	// 	var vote = data;
+	// 	vote.poll_id  = this.state.poll.id;
+	// 	// console.log('vote is now', vote);
+	// 	var callback = function(vote) {
+	// 		// console.log('in handleVote callback. vote is ', vote);
+	// 		// this.updateChartWithVote(vote);
+	// 	}.bind(this);
 
-		// fire action to submit vote to server. Will control through PollActionCreators/Store
-		// this.props.handleVote(vote, callback)
-	},
-
-	renderChart : function() {
-
-	},
-	updateChartWithVote: function() {
-		// hints for updating a chart rather than  simply rerendering at
-		// http://jsbin.com/bigecinuhu/edit?html,css,js,output
-
-		// var indexToUpdate = vote.index
-
-	},
-	updateChartWithNewAnswerOption: function() {
+	// 	// fire action to submit vote to server. Will control through PollActionCreators/Store
+	// 	// this.props.handleVote(vote, callback);
+	// },
 
 
-	},
-
-  componentDidMount: function() {
-    UserStore.addAuthenticationChangeListener(this._onAuthenticationChange);
+	componentDidMount: function() {
+		UserStore.addAuthenticationChangeListener(this._onAuthenticationChange);
 		PollStore.addChangeListener(this._onPollChange);
 		PollStore.addDestroyListener(this._onPollDestroy);
 		PollStore.addVoteCreatedListener(this._onVoteCreate);
-  },
+	},
 
-  componentWillUnmount: function() {
-    UserStore.removeAuthenticationChangeListener(this._onAuthenticationChange);
-    PollStore.removeChangeListener(this._onPollChange);
+	componentWillUnmount: function() {
+		UserStore.removeAuthenticationChangeListener(this._onAuthenticationChange);
+		PollStore.removeChangeListener(this._onPollChange);
 		PollStore.removeDestroyListener(this._onPollDestroy);
 		PollStore.removeVoteCreatedListener(this._onVoteCreate);
-  },
+	},
 
 	handleAddAnswerOption: function(new_answer_option_from_answer_option_box) {
-		// console.log('in fullpoll "handleAddAnswerOption"')
-		var poll_id = this.state.poll.id
-		var new_answer_option = new_answer_option_from_answer_option_box.trim()
-		var poll = this.state.poll
-		// console.log('\n\n\n\ncurrentUser is ', this.state.currentUser)
+		// console.log('in fullpoll 'handleAddAnswerOption'');
+		var poll_id = this.state.poll.id;
+		var new_answer_option = new_answer_option_from_answer_option_box.trim();
+		var poll = this.state.poll;
+		// console.log('\n\n\n\ncurrentUser is ', this.state.currentUser);
 		if (this.state.currentUser == null || this.state.currentUser == undefined || this.state.currentUser.username == null) {
-			// console.log("User must be authenticated in order to add answer option.")
-			this.setState({form_feedback: {message: 'User must be authenticated in order to add answer option.'}})
+			// console.log('User must be authenticated in order to add answer option.');
+			this.setState({form_feedback: {message: 'User must be authenticated in order to add answer option.'}});
 
 		}
 		else if (new_answer_option == '' || new_answer_option == null) {
-			// console.log("Error. A new answer option should not be blank in an existing poll.")
-			this.setState({form_feedback: {message: 'A new answer option should not be blank in an existing poll.'}})
+			// console.log('Error. A new answer option should not be blank in an existing poll.');
+			this.setState({form_feedback: {message: 'A new answer option should not be blank in an existing poll.'}});
 
 		}
 		else if (poll.answer_options.filter(option => option == new_answer_option).length > 0 ) {
-			// console.log("Error. The new answer option should not match any existing answer option.")
-			// this.setState({form_feedback: {message: 'The new answer option should not match any existing answer options.'}})
-			this.setState({form_feedback: {message: 'Answer Option already exists!'}})
+			// console.log('Error. The new answer option should not match any existing answer option.');
+			// this.setState({form_feedback: {message: 'The new answer option should not match any existing answer options.'}});
+			this.setState({form_feedback: {message: 'Answer Option already exists!'}});
 		}
 		else {
-			var new_option = {poll_id: poll_id, new_answer_option: new_answer_option, user_name: this.state.currentUser.username}
 			//fire action
 			PollActionCreators.addAnswerOption(poll_id, new_answer_option);
 			//would like to user listener or something to handle feedback here. Client attemps to validate the input, but server might reject for some reason.
@@ -193,18 +162,19 @@ export default React.createClass({
 		}
 
 	},
-	copyPollURLToClipboard: function(e) {
-		copyToClipboard(document.getElementById("poll-URL"));
+	copyPollURLToClipboard: function() {
+	// copyPollURLToClipboard: function(e) {
+		copyToClipboard(document.getElementById('poll-URL'));
 		this.setState({showSharePollModal: false});
 	},
 
 	// handleNewAnswerOptionChange: function(e) {
-	// 	var new_answer_option = e.target.value
-	// 	this.setState({new_answer_option: e.target.value, form_feedback: null})
+	// 	var new_answer_option = e.target.value;
+	// 	this.setState({new_answer_option: e.target.value, form_feedback: null});
 	// },
 
 	deletePollRequest: function() {
-		// console.log("in deletePollRequest of FullPoll");
+		// console.log('in deletePollRequest of FullPoll');
 		if (this.state.poll != null) {
 			var poll_id = this.state.poll.id;
 			PollActionCreators.destroy(poll_id);
@@ -212,36 +182,36 @@ export default React.createClass({
 	},
 
 	closeDeletePollModal: function() {
-		// console.log('closing deletePollModal')
+		// console.log('closing deletePollModal');
 		this.setState({ showDeletePollModal: false });
 		this.setState({ deletePollModalMessage: '' });
 	},
 
 	openDeletePollModal:function() {
-		// console.log('opening deletePollModal')
+		// console.log('opening deletePollModal');
 		this.setState({ showDeletePollModal: true });
 	},
 
 
 	closeSharePollModal: function() {
-		// console.log('closing sharePollModal')
+		// console.log('closing sharePollModal');
 		this.setState({ showSharePollModal: false });
 	},
 
 	openSharePollModal:function() {
-		// console.log('opening sharePollModal')
+		// console.log('opening sharePollModal');
 		this.setState({ showSharePollModal: true });
 	},
 
 
 
 	closeDialogModal: function() {
-		// console.log('closing dialogModal')
+		// console.log('closing dialogModal');
 		this.setState({ showDialogModal: false });
 	},
 
 	openDialogModal:function() {
-		// console.log('opening dialogModal')
+		// console.log('opening dialogModal');
 		this.setState({ showDialogModal: true });
 	},
 
@@ -251,22 +221,22 @@ export default React.createClass({
 		// var poll = PollStore.getPollById(this.props.params.poll_id);
 		var poll = this.state.poll;
 
-		// console.log('rendering FullPoll')
-		var author_label = "Poll Author: "
-		var question_label = "Poll Question: "
+		// console.log('rendering FullPoll');
+		var author_label = 'Poll Author: ';
+		var question_label = 'Poll Question: ';
 		if (this.state.poll == null || this.state.poll == undefined) {
 			return (
 				<div>Currently loading data</div>
-			)
+			);
 		}
-		// var currentLocation = this.props.location.pathname
-		// var individual_poll_url = this.state.poll_url + this.state.poll.id
-		var individual_poll_url = this.props.location.pathname
-		var currentUserIsPollOwner = (this.state.currentUser == null || this.state.currentUser.username == null) ? false : (this.state.currentUser.id == this.state.poll.owner)
-		// console.log('\n\n\ncurrentUserIsPollOwner is', currentUserIsPollOwner)
+		// var currentLocation = this.props.location.pathname;
+		// var individual_poll_url = this.state.poll_url + this.state.poll.id;
+		var individual_poll_url = this.props.location.pathname;
+		var currentUserIsPollOwner = (this.state.currentUser == null || this.state.currentUser.username == null) ? false : (this.state.currentUser.id == this.state.poll.owner);
+		// console.log('\n\n\ncurrentUserIsPollOwner is', currentUserIsPollOwner);
 		var host = window.location;
-		var poll_url = host.protocol + '//' + host.hostname + ':' + host.port + individual_poll_url
-		var sharePollModalBody = <div>URL for Poll: <a href={individual_poll_url} id='poll-URL'>{poll_url}</a></div>
+		var poll_url = host.protocol + '//' + host.hostname + ':' + host.port + individual_poll_url;
+		var sharePollModalBody = <div>URL for Poll: <a href={individual_poll_url} id='poll-URL'>{poll_url}</a></div>;
 
 		var backToPollListButton = (
 			<Button
@@ -317,23 +287,23 @@ export default React.createClass({
 		var openDeletePollModalButton = (
 			<Button
 				data-toggle='tooltip'
-				title={(currentUserIsPollOwner || this.state.currentUser.role == "admin") ? 'Delete poll' : 'A poll can only be deleted by its owner/creator'}
+				title={(currentUserIsPollOwner || this.state.currentUser.role == 'admin') ? 'Delete poll' : 'A poll can only be deleted by its owner/creator'}
 				data-placement='bottom'
-				disabled={(currentUserIsPollOwner || this.state.currentUser.role == "admin") ? false: true}
+				disabled={(currentUserIsPollOwner || this.state.currentUser.role == 'admin') ? false: true}
 				bsStyle='danger'
 				onClick={this.openDeletePollModal}
 			>Delete Poll</Button>
-		)
+		);
 
 		var openSharePollModalButton = (
 			<Button
 				data-toggle='tooltip'
-				title="Get Link to Poll for sharing"
+				title='Get Link to Poll for sharing'
 				data-placement='bottom'
 				bsStyle='info'
 				onClick={this.openSharePollModal}
 			>Share Poll</Button>
-		)
+		);
 
 		var answerOptionsBox = (
 			<AnswerOptionsBox
@@ -357,7 +327,7 @@ export default React.createClass({
 					<Modal.Title>Delete Confirmation</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					{this.state.deletePollModalMessage.length > 0 ? this.state.deletePollModalMessage : "Do you wish to delete the current poll?" }
+					{this.state.deletePollModalMessage.length > 0 ? this.state.deletePollModalMessage : 'Do you wish to delete the current poll?' }
 				</Modal.Body>
 				{
 					(this.state.deletePollModalMessage.length > 0)
@@ -381,7 +351,7 @@ export default React.createClass({
 						</Modal.Footer>
 				}
 			</Modal>
-		)
+		);
 
 
 		var sharePollModal = (
@@ -395,7 +365,7 @@ export default React.createClass({
 				<Modal.Footer>
 					<Button
 						bsStyle='primary'
-						title="Copy URL to clipboard (not supported on all browsers)"
+						title='Copy URL to clipboard (not supported on all browsers)'
 						onClick={this.copyPollURLToClipboard}
 					>Copy to clipboard</Button>
 					<Button
@@ -405,7 +375,7 @@ export default React.createClass({
 					>Close</Button>
 				</Modal.Footer>
 			</Modal>
-		)
+		);
 
 		var dialogModal = (
 			<Modal show={this.state.showDialogModal} onHide={this.closeDialogModal}>
@@ -423,14 +393,14 @@ export default React.createClass({
 					>Close</Button>
 				</Modal.Footer>
 			</Modal>
-		)
+		);
 
 		return (
 			<div className={'fullPollListing'}>
 				{deletePollModal}
 				{sharePollModal}
 				{dialogModal}
-				<ReactCSSTransitionGroup transitionName="example1" transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
+				<ReactCSSTransitionGroup transitionName='example1' transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
 					<Grid>
 						<Row >
 							<Col xs={6} sm={6} md={9}>
@@ -486,7 +456,7 @@ export default React.createClass({
 			</div>
 
 
-		)
+		);
 
 	},
 
@@ -495,7 +465,7 @@ export default React.createClass({
 	},
 
 	_onAuthenticationChange: function() {
-		this.setState({currentUser: UserStore.getAuthenticatedUser()})
+		this.setState({currentUser: UserStore.getAuthenticatedUser()});
 	},
 
 	_onPollChange: function() {
@@ -503,7 +473,7 @@ export default React.createClass({
 			As long as the poll is not null, the state is updated with the poll's freshest data.
 			We attempt to verify that the poll's answer_options array now contains the new_answer_option. If so, we reset new_answer_option.
 		*/
-		// console.log("in _onPollChange of FullPoll, received notification of poll update from  PollStore");
+		// console.log('in _onPollChange of FullPoll, received notification of poll update from  PollStore');
 		var poll = PollStore.getPollById(this.props.params.poll_id);
 		var newState = {};
 		newState.poll = poll;
@@ -523,9 +493,9 @@ export default React.createClass({
 	},
 
 	_onPollDestroy: function(poll_id, success) {
-		// console.log("received notification of possible poll destroy from  PollStore");
+		// console.log('received notification of possible poll destroy from  PollStore');
 		if (this.state.poll == null || this.state.poll.id == poll_id) {
-			// console.log("poll_id == this.state.poll.id: ", poll_id == this.state.poll.id)
+			// console.log('poll_id == this.state.poll.id: ', poll_id == this.state.poll.id);
 			if (success) {
 				//the poll was just deleted. redirect to /polls
 				//in future, would like to add notification or popup showing poll was deleted succesfully before redirect.
@@ -533,7 +503,7 @@ export default React.createClass({
 			}
 			else {
 				//the poll was attempted to be deleted, but this somehow failed. Print message.
-				this.setState({deletePollModalMessage: "Failed to delete poll."});
+				this.setState({deletePollModalMessage: 'Failed to delete poll.'});
 
 			}
 		}
@@ -541,9 +511,9 @@ export default React.createClass({
 
 
 	_onVoteCreate: function(poll_id, success, message) {
-		// console.log("received notification of possible vote creation from  PollStore");
+		// console.log('received notification of possible vote creation from  PollStore');
 		if (this.state.poll == null || this.state.poll.id == poll_id) {
-			// console.log("poll_id == this.state.poll.id: ", poll_id == this.state.poll.id)
+			// console.log('poll_id == this.state.poll.id: ', poll_id == this.state.poll.id);
 			if (success) {
 				//the vote was a success
 				//the store should have updated the polls and _onPollChange will handle updating of poll
@@ -551,7 +521,7 @@ export default React.createClass({
 			else {
 				//the poll was attempted to be deleted, but this somehow failed. Print message.
 				this.setState({
-					dialogModalMessage: (message.length != null ? message : "Vote failed."),
+					dialogModalMessage: (message.length != null ? message : 'Vote failed.'),
 					showDialogModal: true,
 					showSharePollModal: false,
 					showDeletePollModal: false
@@ -559,4 +529,4 @@ export default React.createClass({
 			}
 		}
 	}
-})
+});

@@ -2,8 +2,8 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var Account = require('../models/account');
-var app = require('./index')
-var path = require('path')
+// var app = require('./index');
+// var path = require('path');
 
 
 
@@ -28,7 +28,7 @@ var path = require('path')
 
 var reqUserInfo = function(account) {
 	if (account == undefined || account == null || account.username == null) {
-		return null
+		return null;
 	}
 	else {
 		return {
@@ -36,21 +36,22 @@ var reqUserInfo = function(account) {
 			fullname: account.fullname,
 			role: account.role,
 			id: account._id
-		}
+		};
 	}
-}
+};
 
 
 /* GET users listing. */
-router.get('/users/', function(req, res, next) {
+// router.get('/users/', function(req, res, next) {
+router.get('/users/', function(req, res) {
 
-	// console.log('received request for user listing in user controller')
+	// console.log('received request for user listing in user controller');
 	Account.find(function(err, accounts) {
 		if (err) {
-			res.json(err)
+			res.json(err);
 		}
 		else {
-			res.json({error: false, users: accounts, message: 'Successfully retrieved users.', user: reqUserInfo(req.user)})
+			res.json({error: false, users: accounts, message: 'Successfully retrieved users.', user: reqUserInfo(req.user)});
 		}
 	});
 
@@ -60,14 +61,15 @@ router.get('/users/', function(req, res, next) {
 
 //I need to learn more about how this works. Not sure if I understand it.
 router.post('/users/login', function(req, res, next) {
-	console.log("received  POST request to '/api/users/login'")
-	passport.authenticate('local', function(err, user, info) {
+	console.log('received POST request to \'/api/users/login\'');
+	// passport.authenticate('local', function(err, user, info) {
+	passport.authenticate('local', function(err, user) {
 		if (err) {
 			return next(err);
 		}
 		if (!user) {
 			return res.status(401).json( {
-				message: "Invalid username or password."
+				message: 'Invalid username or password.'
 			});
 		}
 
@@ -84,29 +86,30 @@ router.post('/users/login', function(req, res, next) {
 });
 
 router.post('/users/register', function(req, res, next) {
-	console.log("Received request to register an account (a POST request to '/api/users/register')");
+	console.log('Received request to register an account (a POST request to \'/api/users/register\')');
 	// if this is the first account created for the application, it should be an admin user. Otherwise, it will be standard user.
 	var role;
 	Account.find(function(err, accounts) {
 		if (err) {
-			res.json(err)
+			res.json(err);
 		}
 		else {
 			if (accounts.length == 0) {
-				role = 'admin'
+				role = 'admin';
 			}
 			else {
-				role = 'user'
+				role = 'user';
 			}
-			Account.register(new Account({ username : req.body.username, fullname: req.body.fullname, email: req.body.email, role: role }), req.body.password, function(err, account) {
+			// Account.register(new Account({ username : req.body.username, fullname: req.body.fullname, email: req.body.email, role: role }), req.body.password, function(err, account) {
+			Account.register(new Account({ username : req.body.username, fullname: req.body.fullname, email: req.body.email, role: role }), req.body.password, function(err) {
 				if (err) {
-					res.json(err)
+					res.json(err);
 				}
 				else {
 					passport.authenticate('local') (req, res, function () {
 						req.session.save(function (err) {
 							if (err) {
-								return next(err)
+								return next(err);
 							}
 							else {
 								res.json({error: false, message: 'Successfully registered.', user: reqUserInfo(req.user)});
@@ -116,55 +119,53 @@ router.post('/users/register', function(req, res, next) {
 				}
 			});
 		}
-	})
+	});
 });
 
 
-router.get('/users/logout', function(req, res, next) {
-	console.log("Received get request to '/api/users/logout'. Logging off user");
+// router.get('/users/logout', function(req, res, next) {
+router.get('/users/logout', function(req, res) {
+	console.log('Received get request to \'/api/users/logout\'. Logging off user');
 	req.logout();
-	res.json({error: false, message: 'User logged off successfully.', user: null})
+	res.json({error: false, message: 'User logged off successfully.', user: null});
 });
 
 
 
 //update property of specific user. Can only be done by admin or by the specific user.
 //note, this currently will create an error if we try to update the user password and another property (both will try to have the server respond).
-router.post('/users/:user_id', function(req, res, next) {
-	console.log("trying to update user account. req.body is ", req.body)
+// router.post('/users/:user_id', function(req, res, next) {
+router.post('/users/:user_id', function(req, res) {
+	console.log('trying to update user account. req.body is ', req.body);
 
 	//this is a long string if if/else statements that I would like to get rid off or simplify.
 	if (!req.isAuthenticated()) {
-		// console.log("in 'if' branch of user UPDATE request")
-		var message = "User update can only be performed by authenticated user.";
+		// console.log('in 'if' branch of user UPDATE request');
+		let message = 'User update can only be performed by authenticated user.';
 		console.log(message);
 		res.json({message: message });
 	}
 	else if (req.user._id != req.params.user_id && req.user.role != 'admin') {
-		// console.log("in 'else if 0' branch of user UPDATE request")
-		var message = 'User update can only be performed by the same user or by an admin user.';
+		// console.log('in 'else if 0' branch of user UPDATE request');
+		let message = 'User update can only be performed by the same user or by an admin user.';
 		console.log(message);
 		res.json({message: message });
 	}
 	else if (req.body.new_role == 'admin' && req.user.role != 'admin') {
-		// console.log("in 'else if 1' branch of user UPDATE request")
-		var message = "User role update can only be changed to 'admin' by a current admin";
+		// console.log('in 'else if 1' branch of user UPDATE request');
+		let message = 'User role update can only be changed to \'admin\' by a current admin';
 		console.log(message);
 		res.json({message: message });
 	}
 	else if (req.body.new_role != null && req.body.new_role != 'admin' && req.body.new_role != 'user') {
-		// console.log("in 'else if 2' branch of user UPDATE request")
-		message = "User role can only be 'admin' or 'user.'";
+		// console.log('in 'else if 2' branch of user UPDATE request');
+		let message = 'User role can only be \'admin\' or \'user.\'';
 		console.log(message);
 		res.json({message: message });
 	}
 	else {
-		// console.log("in else branch of user UPDATE request")
-		var cb = function(response) {
-
-			res.json (response)
-		}
-		var updates = {}
+		// console.log('in else branch of user UPDATE request');
+		let updates = {};
 		updates.user_to_update = req.params.user_id || null; //this should not be null, otherwise this route would not trigger.
 		updates.role = req.body.new_role || null;
 		updates.fullname = req.body.new_fullname || null;
@@ -174,94 +175,94 @@ router.post('/users/:user_id', function(req, res, next) {
 		updates.current_password = req.body.current_password || null;
 
 
-		console.log('updates are', updates)
-		var cb = function(err, output) {
+		console.log('updates are', updates);
+		let cb = function(err, response) {
 			if (err) {
-				res.json(err)
+				res.json(err);
 			}
 			else {
-				res.json(output)
+				res.json(response);
 			}
-		}
+		};
 		if (updates.user_to_update) {
-			updateUser(updates.user_to_update, updates, cb)
+			updateUser(updates.user_to_update, updates, cb);
 		}
-
 	}
 });
 
 
 
 
-var updatePassword = function(username, password, cb) {
-	Account.findByUsername(username, function(err, account) {
-		if (err) {
-			cb(err)
-		}
-		else {
-			account.setPassword(password, function(err1, account1) {
-				if (err1) {
-					cb (err1)
-				}
-				else {
-					account1.save(function(err2) {
-						if (err2) {
-							cb(err2)
-						}
-						else {
-							console.log('Account saved with new password.')
-						}
-					})
-				}
-			})
-		}
-	})
-}
+// var updatePassword = function(username, password, cb) {
+// var updatePassword = function(username, password, cb) {
+// 	Account.findByUsername(username, function(err, account) {
+// 		if (err) {
+// 			cb(err);
+// 		}
+// 		else {
+// 			account.setPassword(password, function(err1, account1) {
+// 				if (err1) {
+// 					cb (err1);
+// 				}
+// 				else {
+// 					account1.save(function(err2) {
+// 						if (err2) {
+// 							cb(err2);
+// 						}
+// 						else {
+// 							console.log('Account saved with new password.');
+// 						}
+// 					});
+// 				}
+// 			});
+// 		}
+// 	});
+// }
 
 
 //note, this currently will create an error if we try to update the user password and another property (both will try to have the server respond).
 //The app does not currently send more than one property to update at a time, but I should fix this.
 var updateUser = function(user_id, attributes, cb) {
 	Account.findById(user_id, function(err, account) {
-		if (err) cb(err)
+		if (err) { cb(err); }
 		else {
 			if (attributes.password) {
 				account.setPassword(attributes.password, function(err1, account1) {
 					if (err1) {
-						cb (err1)
+						cb (err1);
 					}
 					else {
 						account1.save(function(err2) {
 							if (err2) {
-								cb(err2)
+								cb(err2);
 							}
 							else {
-								cb(null, {message: 'Account saved with new password.', user: reqUserInfo(account1)})
+								cb(null, {message: 'Account saved with new password.', user: reqUserInfo(account1)});
 							}
-						})
+						});
 					}
-				})
+				});
 			}
 			else {
 				Object.keys(attributes).forEach(function(attrib) {
 					if (attributes[attrib]) {
 						if (attrib != 'password' && attrib != 'current_password') {
-							account[attrib] = attributes[attrib]
+							account[attrib] = attributes[attrib];
 						}
 					}
-				})
+				});
 				account.save(function(err2) {
 					if (err2) {
-						cb(err2)
+						cb(err2);
 					}
 					else {
-						cb(null, {message: 'Account saved.', user: account})
+						cb(null, {message: 'Account saved.', user: account});
 					}
-				})
+				});
 			}
 		}
-	})
-}
+	});
+};
 
 
 

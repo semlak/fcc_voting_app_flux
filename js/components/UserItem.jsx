@@ -16,39 +16,40 @@ import {browserHistory} from 'react-router';
 
 var UserItem = React.createClass({
 
-  propTypes: {
-   user: ReactPropTypes.object.isRequired
-  },
+	propTypes: {
+		user: ReactPropTypes.object.isRequired
+	},
 
 
-  handleUserSelect: function(e) {
-    // console.log("running handleUserSelect.")
-    browserHistory.push('/users/' + this.props.user.username);
-  },
-  /**
-  /**
-   * @return {object}
-   */
-  render: function() {
-    var user = this.props.user;
+	// handleUserSelect: function(e) {
+	handleUserSelect: function() {
+		// console.log('running handleUserSelect.');
+		browserHistory.push('/users/' + this.props.user.username);
+	},
+	/**
+	/**
+	 * @return {object}
+	 */
+	render: function() {
+		var user = this.props.user;
 
 
 
-    // List items should get the class 'editing' when editing
-    // and 'completed' when marked as completed.
-    // Note that 'completed' is a classification while 'complete' is a state.
-    // This differentiation between classification and state becomes important
-    // in the naming of view actions toggleComplete() vs. destroyCompleted().
-    return (
-      // <div className='user-item well poll' key={user.id}>
-      //       <NavLink to={'/users/' + user.username}>{user.username}</NavLink>
-      // </div>
+		// List items should get the class 'editing' when editing
+		// and 'completed' when marked as completed.
+		// Note that 'completed' is a classification while 'complete' is a state.
+		// This differentiation between classification and state becomes important
+		// in the naming of view actions toggleComplete() vs. destroyCompleted().
+		return (
+			// <div className='user-item well poll' key={user.id}>
+			//       <NavLink to={'/users/' + user.username}>{user.username}</NavLink>
+			// </div>
 
-      <div className='poll well' onClick={this.handleUserSelect}>
-          {"User: " + user.username}
-      </div>
-    );
-  }
+			<div className='poll well' onClick={this.handleUserSelect}>
+					{'User: ' + user.username}
+			</div>
+		);
+	}
 });
 
 module.exports = UserItem;

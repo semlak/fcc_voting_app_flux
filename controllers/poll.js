@@ -2,15 +2,15 @@
 
 var express = require('express');
 var router = express.Router();
-var Account = require('../models/account');
+// var Account = require('../models/account');
 var Poll = require('../models/poll');
-var Vote = require('../models/vote')
+// var Vote = require('../models/vote');
 
-var app = require('./index')
+// var app = require('./index');
 
 var reqUserInfo = function(account) {
 	if (account == undefined || account == null || account.username == null) {
-		return null
+		return null;
 	}
 	else {
 		return {
@@ -18,9 +18,9 @@ var reqUserInfo = function(account) {
 			fullname: account.fullname,
 			role: account.role,
 			id: account._id
-		}
+		};
 	}
-}
+};
 
 
 
@@ -57,34 +57,35 @@ var reqUserInfo = function(account) {
 			if the user has already voted. It would be nice for the client to proactively tell the user. (a user can only vote for each poll once).
 	*/
 
-router.get('/polls/', function(req, res, next) {
-	console.log("Received GET request for all polls listing.")
-		Poll.find().sort({'_id': -1}).populate('votes').exec(function(err, polls) {
-			if (err) {
-				res.json(err);
-			}
-			else {
-				var message = polls.length < 0 ? "No polls found." : "Polls retrieved succesfully.";
-				res.json({error: (polls.length < 0), polls: polls, message: message, user: reqUserInfo(req.user)});
-			}
-		});
+// router.get('/polls/', function(req, res, next) {
+router.get('/polls/', function(req, res) {
+	console.log('Received GET request for all polls listing.');
+	Poll.find().sort({'_id': -1}).populate('votes').exec(function(err, polls) {
+		if (err) {
+			res.json(err);
+		}
+		else {
+			var message = polls.length < 0 ? 'No polls found.' : 'Polls retrieved succesfully.';
+			res.json({error: (polls.length < 0), polls: polls, message: message, user: reqUserInfo(req.user)});
+		}
+	});
 });
 
 
 // get a single poll, retried by its poll id, via a GET request to /polls/:poll_id
 // Not necessary due to single page app functionality. Could be added back if I ever implement server-side rendering.
 // router.get('/polls/:poll_id', function(req, res, next) {
-// 	console.log("Received GET request for single poll listing.")
-// 	var isAjaxRequest = req.xhr || req.headers.accept.indexOf('json') > -1 || req.headers["x-requested-with"] == 'XMLHttpRequest';
+// 	console.log('Received GET request for single poll listing.')
+// 	var isAjaxRequest = req.xhr || req.headers.accept.indexOf('json') > -1 || req.headers['x-requested-with'] == 'XMLHttpRequest';
 // 	if (isAjaxRequest) {
-// 		// console.log("poll_id is ", poll_id)
+// 		// console.log('poll_id is ', poll_id)
 // 		var poll_id = req.params.poll_id
 // 		Poll.findById(poll_id).populate('votes').exec(function(err, poll) {
 // 			if (err) {
 // 				res.json(err)
 // 			}
 // 			else {
-// 				var message = polls.length < 0 ? "No poll found with id of '" + poll_id + "'." : "Poll retrieved succesfully.";
+// 				var message = polls.length < 0 ? 'No poll found with id of '' + poll_id + ''.' : 'Poll retrieved succesfully.';
 // 				res.json({error: (polls.length < 0), poll: poll, message: message, initialSinglePollId: poll_id, user: reqUserInfo(req.user)});
 // 			}
 // 		});
@@ -119,30 +120,31 @@ router.get('/polls/', function(req, res, next) {
 		I should make sure to cleanse the data strings provided by the user; shouldn't trust user.
 */
 
-router.post('/polls/', function(req, res, next) {
-	// console.log("received post request");
-	// console.log("request body is ", req.body, "user is ", req.user )
+// router.post('/polls/', function(req, res, next) {
+router.post('/polls/', function(req, res) {
+	// console.log('received post request');
+	// console.log('request body is ', req.body, 'user is ', req.user )
 	var poll = new Poll();
-	poll.author = req.body.author
+	poll.author = req.body.author;
 	poll.question = req.body.question;
 	poll.answer_options = req.body['answer_options\[\]'] || req.body.answer_options || [];
-	poll.owner = req.user._id
+	poll.owner = req.user._id;
 
 	// for (var key in req.body) {
-	// 	console.log("key is ", key, "val is ", req.body[key])
+	// 	console.log('key is ', key, 'val is ', req.body[key])
 	// }
 
 	if (!req.isAuthenticated()) {
-		res.json({error: true, message: "User must be authenticated in order to create poll answer_option"})
+		res.json({error: true, message: 'User must be authenticated in order to create poll answer_option'});
 	}
 	else if (poll.author == null || poll.question == null || poll.owner == null) {
-		res.json({error: true, message: "Poll Author or Question cannot be null", user: reqUserInfo(req.user)})
+		res.json({error: true, message: 'Poll Author or Question cannot be null', user: reqUserInfo(req.user)});
 	}
 	else {
 		// other logic
 		poll.save(function(err) {
 			if (err) {
-				res.json(err)
+				res.json(err);
 			}
 			Poll.find(function(err, polls) {
 				if (err) {
@@ -151,11 +153,11 @@ router.post('/polls/', function(req, res, next) {
 				else {
 					// need more logic here
 					// send back all polls, but also include id of new poll.
-					var data = {error: false, polls: polls, new_poll_id: poll._id, message: "Poll created successfully.", user: reqUserInfo(req.user)}
+					var data = {error: false, polls: polls, new_poll_id: poll._id, message: 'Poll created successfully.', user: reqUserInfo(req.user)};
 					res.json(data);
 				}
 			});
-		})
+		});
 	}
 });
 
@@ -187,47 +189,48 @@ router.post('/polls/', function(req, res, next) {
 */
 
 
-router.post('/polls/:poll_id/new_answer_option', function(req, res, next) {
-	// console.log("received post request");
-	// console.log("request body is ", req.body )
+// router.post('/polls/:poll_id/new_answer_option', function(req, res, next) {
+router.post('/polls/:poll_id/new_answer_option', function(req, res) {
+	// console.log('received post request');
+	// console.log('request body is ', req.body )
 	// var poll_id = req.body.poll_id
-	var poll_id = req.params.poll_id
-	var user_name = req.body.user_name
-	var new_answer_option = req.body.new_answer_option
+	var poll_id = req.params.poll_id;
+	// var user_name = req.body.user_name;
+	var new_answer_option = req.body.new_answer_option;
 
 	if (!req.isAuthenticated()) {
-		res.json({error: true, message: "User must be authenticated in order to create poll answer_option", user: null})
+		res.json({error: true, message: 'User must be authenticated in order to create poll answer_option', user: null});
 	}
 	else if (new_answer_option == '' || new_answer_option == null) {
-		res.json({error: true, message: "New answer option cannot be blank/null.", user: reqUserInfo(req.user)})
+		res.json({error: true, message: 'New answer option cannot be blank/null.', user: reqUserInfo(req.user)});
 	}
 	else {
 		Poll.findById(poll_id, function(err, poll) {
 			if (err) {
-				res.json(err)
+				res.json(err);
 			}
 			else if (poll == null) {
-				res.json({error: true, message: "Poll with id '" + poll_id + "' unable to be found", user: reqUserInfo(req.user)})
+				res.json({error: true, message: 'Poll with id \'' + poll_id + '\' unable to be found', user: reqUserInfo(req.user)});
 			}
 			else {
-				var answer_options = poll.answer_options
-				answer_options.push(new_answer_option)
-				poll.answer_options = answer_options
+				var answer_options = poll.answer_options;
+				answer_options.push(new_answer_option);
+				poll.answer_options = answer_options;
 				poll.save(function(err) {
 					if (err) {
-						res.json(err)
+						res.json(err);
 					}
 					else {
-						var message = "Successfully updated poll " + poll_id.toString() + " with new_answer_option '" + new_answer_option.toString() + "'.";
+						var message = 'Successfully updated poll ' + poll_id.toString() + ' with new_answer_option \'' + new_answer_option.toString() + '\'.';
 						console.log(message);
-						// console.log("Successfully updated poll ", poll_id, " with new_answer_option", new_answer_option, ", all answer options are ", poll.answer_options)
-						// res.json({poll_id: poll._id, answer_options: poll.answer_options})
+						// console.log('Successfully updated poll ', poll_id, ' with new_answer_option', new_answer_option, ', all answer options are ', poll.answer_options)
+						// res.json({poll_id: poll._id, answer_options: poll.answer_options});
 						Poll.find(function(err, polls) {
 							if (err) {
 								res.json(err);
 							}
 							else {
-								var data = {error: false, polls: polls, message: message, user: reqUserInfo(req.user)}
+								var data = {error: false, polls: polls, message: message, user: reqUserInfo(req.user)};
 								res.json(data);
 							}
 						});
@@ -254,37 +257,38 @@ router.post('/polls/:poll_id/new_answer_option', function(req, res, next) {
 			thinking passport might offer a way of building this concept into a model/schema's functionality.
 */
 
-router.delete('/polls/:poll_id',  function(req, res, next) {
-	console.log("Received request to delete poll! poll_id is ", req.params.poll_id)
-	var poll_id = req.params.poll_id
+// router.delete('/polls/:poll_id',  function(req, res, next) {
+router.delete('/polls/:poll_id',  function(req, res) {
+	console.log('Received request to delete poll! poll_id is ', req.params.poll_id);
+	var poll_id = req.params.poll_id;
 	Poll.findById(poll_id, function(err, poll) {
 		if (err) {
-			console.log(err)
-			res.status(404).json(err)
+			console.log(err);
+			res.status(404).json(err);
 		}
 		else if (poll == null) {
-			console.log("On poll delete request, unable to find poll with id " + poll_id)
-			res.status(404).json({error: true, message: 'poll with id ' + poll_id + ' was not found.', user: reqUserInfo(req.user)})
+			console.log('On poll delete request, unable to find poll with id ' + poll_id);
+			res.status(404).json({error: true, message: 'poll with id ' + poll_id + ' was not found.', user: reqUserInfo(req.user)});
 		}
 		else if (req.user && (String(poll.owner) == String(req.user._id) || req.user.role === 'admin')) {
 			// delete poll
 			Poll.remove({_id: poll_id}, function(err) {
 				if (err) {
-					console.log(err)
+					console.log(err);
 					res.status(403).json(err);
 				}
 				else {
 					var message = 'poll with id ' + poll_id + ' deleted successfully, user was ' + req.user.username;
-					console.log(message)
+					console.log(message);
 					res.status(200).json({error: false, message: message, user: reqUserInfo(req.user)});
 				}
-			})
+			});
 		}
 		else {
-			console.log("Unknown error while attempting to delete poll with id " + poll_id)
-			res.status(403).json({error: true, message: 'a poll can only be deleted by its owner', user: reqUserInfo(req.user)})
+			console.log('Unknown error while attempting to delete poll with id ' + poll_id);
+			res.status(403).json({error: true, message: 'a poll can only be deleted by its owner', user: reqUserInfo(req.user)});
 		}
-	})
+	});
 });
 
 
@@ -296,28 +300,28 @@ router.delete('/polls/:poll_id',  function(req, res, next) {
 	Note, the Poll schema is defined such that all associated votes will be automatically deleted before removing the poll,
 	meaning that explicitly deleting the votes separately is not necessary.
 */
-var deleteAllPolls = function() {
-	Poll.find(function(err, polls) {
-		if (err) {
-			console.log (err);
-		}
-		else {
-			polls.forEach(function(poll) {
-				Poll.remove({
-					_id: poll._id
-				}, function(err) {
-					if (err) {
-						console.log( err)
-					}
-					else {
-						console.log("deleted Poll with id ", poll._id)
-					}
+// var deleteAllPolls = function() {
+// 	Poll.find(function(err, polls) {
+// 		if (err) {
+// 			console.log (err);
+// 		}
+// 		else {
+// 			polls.forEach(function(poll) {
+// 				Poll.remove({
+// 					_id: poll._id
+// 				}, function(err) {
+// 					if (err) {
+// 						console.log( err);
+// 					}
+// 					else {
+// 						console.log('deleted Poll with id ', poll._id);
+// 					}
 
-				});
-			});
-		}
-	});
-};
+// 				});
+// 			});
+// 		}
+// 	});
+// };
 
 
 /*

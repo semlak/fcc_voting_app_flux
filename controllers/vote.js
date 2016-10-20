@@ -4,11 +4,11 @@
 
 var express = require('express');
 var router = express.Router();
-var Account = require('../models/account');
+// var Account = require('../models/account');
 var Poll = require('../models/poll');
-var Vote = require('../models/vote')
+var Vote = require('../models/vote');
 
-var app = require('./index')
+// var app = require('./index');
 
 	/* Note:
 			This controller only expects to handles AJAX requests. All responses are via json.
@@ -22,7 +22,8 @@ var app = require('./index')
 
 
 // this does not require an authenticated user.
-router.get('/votes/', function(req, res, next) {
+// router.get('/votes/', function(req, res, next) {
+router.get('/votes/', function(req, res) {
 	Vote.find().sort({'_id': -1}).exec(function(err, votes) {
 		if (err) {
 			res.json(err);
@@ -35,42 +36,43 @@ router.get('/votes/', function(req, res, next) {
 
 
 // submit a vote (a response to a poll).
-router.post('/votes', function(req, res, next) {
-	// console.log("received post request for a vote");
-	console.log("request body is ", req.body )
+// router.post('/votes', function(req, res, next) {
+router.post('/votes', function(req, res) {
+	// console.log('received post request for a vote');
+	console.log('request body is ', req.body );
 	var vote = new Vote();
 	// need to change this to look up user
 	vote.owner = req.user || null;
 	vote.poll = req.body.poll_id;
 	vote.answer_option = req.body.index;
-	vote.ip_address = req.headers['x-forwarded-for'] || req.connection.remoteAddress;;
-	var vote_text = req.body.answer_option_text;
+	vote.ip_address = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+	// var vote_text = req.body.answer_option_text;
 	// vote.question = req.body.question || '';
 	// vote.answer_options = req.body['answer_options\[\]'] || [];
 	// for (var key in req.body) {
-	// 	// console.log("key is ", key, "val is ", req.body[key])
+	// 	// console.log('key is ', key, 'val is ', req.body[key]);
 	// }
 
 	//check to see if user has already voted
-	var props = {poll: vote.poll}
+	var props = {poll: vote.poll};
 	if (vote.owner) {
-		props.owner = vote.owner
+		props.owner = vote.owner;
 	}
 	else {
-		props.ip_address = vote.ip_address
+		props.ip_address = vote.ip_address;
 	}
 
 	Vote.find(props, function(err, votes) {
 		if (err) {
-			res.json(err)
+			res.json(err);
 		}
 		else if (votes.length > 0 && (req.user == null || req.user.role != 'admin')) {
-			res.json({message: 'You have already voted once for this poll.', votes: null})
+			res.json({message: 'You have already voted once for this poll.', votes: null});
 		}
 		else {
 			vote.save(function(err) {
 				if (err) {
-					res.json(err)
+					res.json(err);
 				}
 				// add vote to poll's votes array
 				Poll.findById(vote.poll, function(err, poll) {
@@ -78,14 +80,14 @@ router.post('/votes', function(req, res, next) {
 						res.json(err);
 					}
 					else if (poll == null) {
-						res.json({message: 'No poll found corresponding to your vote.'})
+						res.json({message: 'No poll found corresponding to your vote.'});
 					}
 					else {
-						// console.log('poll is', poll)
+						// console.log('poll is', poll);
 						poll.votes.push(vote);
 						poll.save(function(err) {
 							if (err) {
-								res.json(err)
+								res.json(err);
 							}
 							else {
 								// good. poll object is updated. Now return all votes associated with that poll
@@ -95,17 +97,17 @@ router.post('/votes', function(req, res, next) {
 									}
 									else {
 										// need more logic here
-										// console.log("responding with votes", votes)
+										// console.log('responding with votes', votes);
 										res.json({message: 'Vote was successful', votes: votes});
 									}
 								});
 							}
-						})
+						});
 					}
 				});
-			})
+			});
 		}
-	})
+	});
 });
 
 
@@ -123,10 +125,10 @@ router.post('/votes', function(req, res, next) {
 // 					}
 // 					else {
 // 						polls.forEach(function(poll) {
-// 							poll.votes = poll.votes.filter(poll_vote => poll_vote != vote._id )
+// 							poll.votes = poll.votes.filter(poll_vote => poll_vote != vote._id );
 // 							poll.save(function(err) {
 // 								if (err) {
-// 									console.log(err)
+// 									console.log(err);
 // 								}
 // 							});
 // 						});
@@ -134,10 +136,10 @@ router.post('/votes', function(req, res, next) {
 // 				});
 // 				Vote.remove({_id: vote._id }, function(err) {
 // 					if (err) {
-// 						console.log( err)
+// 						console.log( err);
 // 					}
 // 					else {
-// 						console.log("deleted Vote with id ", vote._id)
+// 						console.log('deleted Vote with id ', vote._id);
 // 					}
 // 				});
 // 			});
@@ -148,14 +150,14 @@ router.post('/votes', function(req, res, next) {
 // router.get('/votes/delete', function(req, res, next) {
 // 	// just for testing. Wanted to make it easy to delete vote database. Any user could just visit this route and all votes for all polls would be deleted.
 // 	deleteVotes();
-// 	res.json({})
+// 	res.json({});
 
 // });
 
 
 
 // router.get('/votes/new', function(req, res, next) {
-// 	res.render('create_vote', { user: req.user, title: 'Create New Vote'})
-// })
+// 	res.render('create_vote', { user: req.user, title: 'Create New Vote'});
+// });
 
 module.exports = router;

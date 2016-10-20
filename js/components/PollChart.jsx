@@ -3,31 +3,30 @@
 using react-d3-basic library
 */
 
-import React from 'react'
-import UserStore from '../stores/UserStore';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import React from 'react';
+// import UserStore from '../stores/UserStore';
+// import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import {BarChart, Cell, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts';
 import ReactPropTypes from 'react/lib/ReactPropTypes';
-// import AnswerOptionsBox from './AnswerOptionsBox'
+// import AnswerOptionsBox from './AnswerOptionsBox';
 
-import PollStore from '../stores/PollStore';
-import PollActionCreators from '../actions/PollActionCreators';
+// import PollStore from '../stores/PollStore';
+// import PollActionCreators from '../actions/PollActionCreators';
 
 
 // import React from 'React/addons',
-// import addons from 'react-addons'
-  // var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+// import addons from 'react-addons';
+	// var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
-// var ReactCSSTransitionGroup =
 
 function shadeColor(color, percent) {
 //from http://stackoverflow.com/questions/5560248/programmatically-lighten-or-darken-a-hex-color-or-rgb-and-blend-colors
-    var f=parseInt(color.slice(1),16),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=f>>16,G=f>>8&0x00FF,B=f&0x0000FF;
-    return "#"+(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);
+	var f=parseInt(color.slice(1),16),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=f>>16,G=f>>8&0x00FF,B=f&0x0000FF;
+	return '#'+(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);
 }
 
 var truncateString = function(string, length) {
-	//if the input string is more than 'length' characters long, this will take the first 'length - 3' characters and append "..." to those.
+	//if the input string is more than 'length' characters long, this will take the first 'length - 3' characters and append '...' to those.
 	//otherwise, return original string
 	//might look a little strange if split is in word boundary but I am not attempting to address some things
 
@@ -38,60 +37,60 @@ var truncateString = function(string, length) {
 		return string;
 	}
 	else {
-		var newString = string.substring(0, maxLength) + "...";
+		var newString = string.substring(0, maxLength) + '...';
 		return newString ;
 	}
-}
+};
 
 var rgb2hex = function(rgb){
 	//from http://jsfiddle.net/Mottie/xcqpF/1/light/
- rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
- return (rgb && rgb.length === 4) ? "#" +
-  ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
-  ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
-  ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
-}
+	rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+	return (rgb && rgb.length === 4) ? '#' +
+	('0' + parseInt(rgb[1],10).toString(16)).slice(-2) +
+	('0' + parseInt(rgb[2],10).toString(16)).slice(-2) +
+	('0' + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
+};
 
 
 
 var getRandomColor = function() {
 	//don't remember source of this.
-	var arr = []
+	var arr = [];
 	for (var i = 0 ; i < 3; i++) {
-		arr.push(Math.floor(Math.random() * 256).toString())
+		arr.push(Math.floor(Math.random() * 256).toString());
 	}
-	var color = {backgroundColor: 'rgba(' + arr.join(', ') + ', 0.2)', borderColor: 'rgba(' + arr.join(', ') + ', 1)'}
+	var color = {backgroundColor: 'rgba(' + arr.join(', ') + ', 0.2)', borderColor: 'rgba(' + arr.join(', ') + ', 1)'};
 	var color1 = rgb2hex(color.backgroundColor);
-	color = {backgroundColor: shadeColor(color1, 0.5), borderColor: color1}
+	color = {backgroundColor: shadeColor(color1, 0.5), borderColor: color1};
 	return color;
-}
+};
 
 
 
 export default React.createClass({
-  propTypes: {
-   poll: ReactPropTypes.object.isRequired
-  },
-  getInitialState: function() {
-  	// console.log("getting initial state for PollChart");
-  	return {
-  		poll: this.props.poll
-  	};
-  },
-	componentWillReceiveProps: function(nextProps) {
-		// console.log("in 'componentWillReceiveProps' of PollChart. nextProps: ", nextProps)
-		//We expect to receive PropUpdates that don't really call for a new rendering of the chart. (user logging in, form_feedback change, sharing poll)
-
-		//Only update if there is a new answer_option or a new vote.
-		// if (nextProps.poll && (nextProps.poll.votes > this.state.poll.votes || nextProps.answer_options > this.state.answer_options)) {
-			// this.setState({poll: this.props.poll});
-		// }
+	propTypes: {
+		poll: ReactPropTypes.object.isRequired
 	},
+	getInitialState: function() {
+		// console.log('getting initial state for PollChart');
+		return {
+			poll: this.props.poll
+		};
+	},
+	// componentWillReceiveProps: function(nextProps) {
+	// 	// console.log('in 'componentWillReceiveProps' of PollChart. nextProps: ', nextProps);
+	// 	//We expect to receive PropUpdates that don't really call for a new rendering of the chart. (user logging in, form_feedback change, sharing poll)
+
+	// 	//Only update if there is a new answer_option or a new vote.
+	// 	// if (nextProps.poll && (nextProps.poll.votes > this.state.poll.votes || nextProps.answer_options > this.state.answer_options)) {
+	// 		// this.setState({poll: this.props.poll});
+	// 	// }
+	// },
 	colors: [],
 
 	mapVotesToAnswerOptions : function (answer_options, votes) {
-		// console.log("in mapVotesToAnswerOptions of PollChart")
-		var answer_option_votes = answer_options.map(answer_option => 0);
+		// console.log('in mapVotesToAnswerOptions of PollChart');
+		var answer_option_votes = answer_options.map(() => 0);
 		votes.forEach(function(vote) {
 			answer_option_votes[vote.answer_option]++;
 		});
@@ -116,67 +115,57 @@ export default React.createClass({
 		// var poll = PollStore.getPollById(this.props.params.poll_id);
 		var poll = this.state.poll;
 
-		// console.log('rendering PollChart')
+		// console.log('rendering PollChart');
 
-		// var currentUserIsPollOwner = (this.state.currentUser == null || this.state.currentUser.username == null) ? false : (this.state.currentUser.id == this.state.poll.owner)
-		// console.log('\n\n\ncurrentUserIsPollOwner is', currentUserIsPollOwner)
+		// var currentUserIsPollOwner = (this.state.currentUser == null || this.state.currentUser.username == null) ? false : (this.state.currentUser.id == this.state.poll.owner);
+		// console.log('\n\n\ncurrentUserIsPollOwner is', currentUserIsPollOwner);
 		// const {BarChart, Cell, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} = Recharts;
 
 
-    var mappedVotes = this.mapVotesToAnswerOptions(poll.answer_options, poll.votes);
-    var data = mappedVotes.map(function(answer_option_votes, i ) {
+		var mappedVotes = this.mapVotesToAnswerOptions(poll.answer_options, poll.votes);
+		var data = mappedVotes.map(function(answer_option_votes, i ) {
 			return {
 				answer_option: truncateString(poll.answer_options[i], 25),
 				votes: answer_option_votes
-			}
+			};
 		});
 
-		var maxNumVotes = Math.max.apply(null, mappedVotes);
-
-		// console.log("maxNumVotes:", maxNumVotes, ", mappedVotes:", mappedVotes);
+		// var maxNumVotes = Math.max.apply(null, mappedVotes);
+		// console.log('maxNumVotes:', maxNumVotes, ', mappedVotes:', mappedVotes);
 
 		while (this.colors.length < poll.answer_options.length) {
 			this.colors[this.colors.length] = getRandomColor();
 		}
-		// console.log("colors: ", this.colors);
+		// console.log('colors: ', this.colors);
 
 		var containerHeight = data.length * 36 + 30 + 120;
-		// console.log("containerHeight will be set to:", containerHeight)
-  	return (
-  		<div>
-	  		<div className="chart-title poll-label">Current Poll Results:</div>
-	  		<ResponsiveContainer height={containerHeight} >
-		    	<BarChart data={data} layout='vertical'
-		            margin={{top: 0, right: 30, left: 20, bottom: 5}}>
-						<YAxis dataKey="answer_option" type="category" />
-						<XAxis type="number" domain={[0, 'auto']} allowDecimals={false} />
-						<CartesianGrid strokeDasharray="3 3"/>
+		// console.log('containerHeight will be set to:', containerHeight);
+		return (
+			<div>
+				<div className='chart-title poll-label'>Current Poll Results:</div>
+				<ResponsiveContainer height={containerHeight} >
+					<BarChart data={data} layout='vertical'
+								margin={{top: 0, right: 30, left: 20, bottom: 5}}>
+						<YAxis dataKey='answer_option' type='category' />
+						<XAxis type='number' domain={[0, 'auto']} allowDecimals={false} />
+						<CartesianGrid strokeDasharray='3 3'/>
 						<Tooltip/>
 						<Legend />
-						<Bar dataKey="votes" isAnimationActive={false}>
+						<Bar dataKey='votes' isAnimationActive={false}>
 							{
 								data.map(function(entry, index) {
 									var color = this.colors[index];
-									// console.log("color: ", color);
-									// console.log("entry:", entry)
+									// console.log('color: ', color);
+									// console.log('entry:', entry);
 									return (
 										<Cell key={'cell-' + index} stroke={color.borderColor} strokeWidth={entry.votes > 0 ? 2 : 0 } fill={color.backgroundColor} />
-									)
+									);
 								}.bind(this))
 							}
 						</Bar>
-		      </BarChart>
-	      </ResponsiveContainer>
-      </div>
-    );
-
-		// return (
-		// 	<div />
-		// );
-
-
-
-
+					</BarChart>
+				</ResponsiveContainer>
+			</div>
+		);
 	}
-
-})
+});

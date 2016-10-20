@@ -1,19 +1,19 @@
-import React from 'react'
-import { render } from 'react-dom'
-import App from './components/App'
-import {Router, Route, browserHistory, IndexRoute} from 'react-router'
-import About from './components/About'
-import Home from './components/Home'
-import RegistrationForm from './components/RegistrationForm'
-import LoginForm from './components/LoginForm'
-import UserListContainer from './components/UserListContainer'
-import FullUser from './components/FullUser'
-import UserActionCreators from './actions/UserActionCreators'
+import React from 'react';
+import { render } from 'react-dom';
+import App from './components/App';
+import {Router, Route, browserHistory, IndexRoute} from 'react-router';
+import About from './components/About';
+import Home from './components/Home';
+import RegistrationForm from './components/RegistrationForm';
+import LoginForm from './components/LoginForm';
+import UserListContainer from './components/UserListContainer';
+import FullUser from './components/FullUser';
+import UserActionCreators from './actions/UserActionCreators';
 import PollActionCreators from './actions/PollActionCreators';
 
-import PollBox from './components/PollBox'
-import FullPoll from './components/FullPoll'
-import NewPollForm from './components/NewPollForm'
+import PollBox from './components/PollBox';
+import FullPoll from './components/FullPoll';
+import NewPollForm from './components/NewPollForm';
 // render(<App/>, document.getElementById('app'))
 
 // render((
@@ -41,7 +41,7 @@ render((
 
 		</Route>
 	</Router>
-), document.getElementById('app'))
+), document.getElementById('app'));
 
 UserActionCreators.getAllFromServer();
 PollActionCreators.getAllFromServer();

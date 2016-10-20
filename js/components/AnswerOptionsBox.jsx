@@ -1,10 +1,9 @@
-import React from 'react'
-import {Button, Grid, Row, Col, Form, FormGroup, FormControl,  ControlLabel, HelpBlock} from 'react-bootstrap'
+import React from 'react';
+import {Button, Grid, Row, Col, FormGroup, FormControl, HelpBlock} from 'react-bootstrap';
 
-import PollStore from '../stores/PollStore';
+// import PollStore from '../stores/PollStore';
 import VoteActionCreators from '../actions/VoteActionCreators';
-import ReactPropTypes from 'react/lib/ReactPropTypes';
-
+// import ReactPropTypes from 'react/lib/ReactPropTypes';
 
 
 var AnswerOption = React.createClass({
@@ -15,9 +14,11 @@ var AnswerOption = React.createClass({
 	//Also, in order to handle a vote (user pressing the button), the AnswerOption needs either
 	//the this.prop.handleVote function or this.props.index value to be defined
 	getInitialState: function() {
-		return {hoverOn: false}
+		return {hoverOn: false};
 	},
-	vote: function(e) {
+
+	// vote: function(e) {
+	vote: function() {
 		// This is only used for uneditable AnswerOption (meaning, not a new poll form)
 
 		//Ideally, I will add logic here to check if user has already voted in this poll
@@ -27,51 +28,55 @@ var AnswerOption = React.createClass({
 			I have tried to set this up so the call to the vote_action can occur from here,
 			or a function can be passed as a prop to handle the vote
 		*/
-		var data = {index: this.props.index, answer_option_text: this.props.answer_option}
+		var data = {index: this.props.index, answer_option_text: this.props.answer_option};
 		if (this.props.poll_id != null) {
 			data.poll_id = this.props.poll_id;
 			//fire vote action
-			// console.log("firing vote action creator from AnswerOption");
+			// console.log('firing vote action creator from AnswerOption');
 			VoteActionCreators.create(data);
 		}
 
 		else if (typeof this.props.handleVote == 'function') {
-			// console.log("passing vote data to parent object from AnswerOption");
+			// console.log('passing vote data to parent object from AnswerOption');
 			this.props.handleVote(data);
 		}
 
 		else {
-			// console.log("problem submitting vote");
+			// console.log('problem submitting vote');
 		}
 
 	},
 
 	handleExistingAnswerOptionChange: function(e) {
 		// only used for editable AnswerOption (on a NewPollForm)
-		this.props.handleAnswerOptionChange(e.target.value, this.props.index)
+		this.props.handleAnswerOptionChange(e.target.value, this.props.index);
 	},
-	onButtonMouseIn: function(e) {
+
+	// onButtonMouseIn: function(e) {
+	onButtonMouseIn: function() {
 		// this is used to highlight or put border around entire answer option but only when the vote button is covered
 		// the goal is to help the user see what option being voted for when hovering on vote button
-		this.setState({hoverOn: true})
+		this.setState({hoverOn: true});
 	},
-	onButtonMouseOut: function(e) {
-		this.setState({hoverOn: false})
+
+	// onButtonMouseOut: function(e) {
+	onButtonMouseOut: function() {
+		this.setState({hoverOn: false});
 	},
 	render: function() {
-		// console.log("rendering answerOption")
-		var className = "";
+		// console.log('rendering answerOption');
+		// var className = '';
 		var editableAnswerOption = (
-      <FormGroup controlId="answerOption">
-        <FormControl
+			<FormGroup controlId='answerOption'>
+				<FormControl
 					type='text'
 					value={this.props.answer_option}
 					onChange={this.handleExistingAnswerOptionChange}
 					onKeyPress={this.props.handleKeyPress}
 					className={'form-control'}
-					autoComplete="off"
-        />
-      </FormGroup>
+					autoComplete='off'
+				/>
+			</FormGroup>
 		);
 
 		if (this.props.option_is_editable) {
@@ -116,7 +121,7 @@ var AnswerOption = React.createClass({
 							<div>{this.props.answer_option}</div>
 						</Col>
 					</Row>
-				)
+				);
 			}.bind(this);
 			return uneditableAnswerOption();
 		}
@@ -128,10 +133,10 @@ var AnswerOptionsList = React.createClass({
 	// The votes for each answer_option are passed in case the developer wishes to display them in the answer_option
 	render: function() {
 		// console.log('rendering AnswerOptionsList. props are', this.props)
-		var numAnswerOptions = this.props.answer_options.length;
+		// var numAnswerOptions = this.props.answer_options.length;
 		var answerOptionNodes = this.props.answer_options.map(function(answer_option, i) {
-			// console.log('this.props.options_are_editable', this.props.options_are_editable)
-			var answer_option_votes = (this.props.options_are_editable == true) ? [] : this.props.answer_option_votes
+			// console.log('this.props.options_are_editable', this.props.options_are_editable);
+			var answer_option_votes = (this.props.options_are_editable == true) ? [] : this.props.answer_option_votes;
 			return (
 				//could pass this.props.handleVote to AnswerOption, or let AnswerOption handle vote (then you need to pass index)
 				<AnswerOption
@@ -150,7 +155,7 @@ var AnswerOptionsList = React.createClass({
 		return (
 			<div className='answer_options_list'>
 				<Grid>
-					{answerOptionNodes.length > 0 ? answerOptionNodes : "None"}
+					{answerOptionNodes.length > 0 ? answerOptionNodes : 'None'}
 				</Grid>
 			</div>
 		);
@@ -162,27 +167,27 @@ var AnswerOptionsList = React.createClass({
 
 var NewAnswerOptionForm = React.createClass({
 	getInitialState: function() {
-		// console.log("in getInitialState for AnswerOptionsBox")
+		// console.log('in getInitialState for AnswerOptionsBox');
 		return {
 			new_answer_option: this.props.initial_new_answer_option,
 			form_feedback: this.props.form_feedback
 		};
 	},
-	handleAnswerOptionAdd: function(e) {
-		if (e) {
-			// e.preventDefault()
-		}
+
+	// handleAnswerOptionAdd: function(e) {
+	handleAnswerOptionAdd: function() {
 		this.props.handleAddAnswerOption(this.state.new_answer_option);
 	},
+
 	handleNewAnswerOptionChange: function(e) {
 		var new_answer_option = e.target.value;
 		var newState = {new_answer_option: new_answer_option, form_feedback: null};
 		this.setState(newState);
 	},
 	componentWillReceiveProps: function(nextProps) {
-		// console.log("in 'componentWillReceiveProps' of AnswerOptionsBox. nextProps: ", nextProps)
+		// console.log('in 'componentWillReceiveProps' of AnswerOptionsBox. nextProps: ', nextProps);
 		var newState = {};
-		newState.form_feedback = nextProps.form_feedback
+		newState.form_feedback = nextProps.form_feedback;
 
 		if (nextProps.form_feedback == null && nextProps.initial_new_answer_option != null) {
 			//initial_new_answer_option will likely be '', but set to whatever is provided
@@ -192,7 +197,7 @@ var NewAnswerOptionForm = React.createClass({
 		this.setState(newState);
 	},
 	handleKeyPress: function(e) {
-		// console.log('\n\n\n\n\ndetected key press')
+		// console.log('\n\n\n\n\ndetected key press');
 		if (e.key === 'Enter') {
 			// e.preventDefault();
 			this.props.handleAddAnswerOption(this.state.new_answer_option);
@@ -200,27 +205,27 @@ var NewAnswerOptionForm = React.createClass({
 	},
 
 	render: function() {
-		var validationState = this.state.form_feedback == null ? null : "error";
-		var validationMessage = this.state.form_feedback == null ? "" : this.state.form_feedback.message;
+		var validationState = this.state.form_feedback == null ? null : 'error';
+		var validationMessage = this.state.form_feedback == null ? '' : this.state.form_feedback.message;
 
 		var userIsAuthenticated = this.props.user != null && this.props.user.username != null;
-		// console.log("userIsAuthenticated:", userIsAuthenticated, ", this.props.user: ", this.props.user);
+		// console.log('userIsAuthenticated:', userIsAuthenticated, ', this.props.user: ', this.props.user);
 		return (
 			<Grid className='newAnswerOptionForm'>
-        <FormGroup controlId="newAnswerOptionForm" validationState={validationState}>
-        	<FormGroup controlId='newAnswerOptionField' validationState={validationState}>
-	          <FormControl
-							type="text"
+				<FormGroup controlId='newAnswerOptionForm' validationState={validationState}>
+					<FormGroup controlId='newAnswerOptionField' validationState={validationState}>
+						<FormControl
+							type='text'
 							value={this.state.new_answer_option}
 							title={userIsAuthenticated ? 'Enter a new poll answer option here' : 'Login to add a poll answer option'}
 							placeholder={userIsAuthenticated ? 'Enter a new poll answer option here' : 'Login to add a poll answer option'}
 							onChange={this.handleNewAnswerOptionChange}
-							autoComplete="off"
+							autoComplete='off'
 							disabled={userIsAuthenticated ? null : 'disabled'}
-	          />
-	          <FormControl.Feedback />
-	        </FormGroup>
-	        <FormGroup controlId='newAnswerOptionButton'>
+						/>
+						<FormControl.Feedback />
+					</FormGroup>
+					<FormGroup controlId='newAnswerOptionButton'>
 						<Button
 							onClick={this.handleAnswerOptionAdd}
 							bsStyle='default'
@@ -229,8 +234,8 @@ var NewAnswerOptionForm = React.createClass({
 							>Add Answer Option</Button>
 						{this.state.form_feedback == null ? null : <HelpBlock>{validationMessage}</HelpBlock> }
 					</FormGroup>
-        </FormGroup>
-    </Grid>
+				</FormGroup>
+		</Grid>
 		);
 	}
 });
@@ -243,17 +248,16 @@ var NewAnswerOptionForm = React.createClass({
 var AnswerOptionsBox = React.createClass({
 	//this is the updated AnswerOptionsBox that uses the separate NewAnswerOptionForm component rather than builds its own newAnswerOptionForm
 	getInitialState: function() {
-		// console.log("in getInitialState for AnswerOptionsBox")
+		// console.log('in getInitialState for AnswerOptionsBox')
 		return {
 			new_answer_option: this.props.initial_new_answer_option,
 			form_feedback: this.props.form_feedback
 		};
 	},
-	handleAnswerOptionAdd: function(e) {
-		if (e) {
-			// e.preventDefault()
-		}
-		// console.log("in 'handleAnswerOptionAdd' of AnswerOptionsBoxNew, props is", this.props)
+
+	// handleAnswerOptionAdd: function(e) {
+	handleAnswerOptionAdd: function() {
+		// console.log('in 'handleAnswerOptionAdd' of AnswerOptionsBoxNew, props is', this.props);
 
 		this.props.handleAddAnswerOption(this.state.new_answer_option);
 	},
@@ -263,9 +267,9 @@ var AnswerOptionsBox = React.createClass({
 		this.setState(newState);
 	},
 	componentWillReceiveProps: function(nextProps) {
-		// console.log("in 'componentWillReceiveProps' of AnswerOptionsBox. nextProps: ", nextProps)
+		// console.log('in 'componentWillReceiveProps' of AnswerOptionsBox. nextProps: ', nextProps);
 		var newState = {};
-		newState.form_feedback = nextProps.form_feedback
+		newState.form_feedback = nextProps.form_feedback;
 
 		if (nextProps.form_feedback == null && nextProps.initial_new_answer_option != null) {
 			//initial_new_answer_option will likely be '', but set to whatever is provided
@@ -275,7 +279,7 @@ var AnswerOptionsBox = React.createClass({
 		this.setState(newState);
 	},
 	handleKeyPress: function(e) {
-		// console.log('\n\n\n\n\ndetected key press')
+		// console.log('\n\n\n\n\ndetected key press');
 		if (e.key === 'Enter') {
 			// e.preventDefault();
 			this.props.handleAddAnswerOption(this.state.new_answer_option);
@@ -283,17 +287,17 @@ var AnswerOptionsBox = React.createClass({
 	},
 
 	render: function() {
-		// console.log("rendering AnswerOptionsBoxNew, props are ", this.props)
+		// console.log('rendering AnswerOptionsBoxNew, props are ', this.props);
 
-		// var validationState = this.state.form_feedback == null ? null : "error";
-		// var validationMessage = this.state.form_feedback == null ? "" : this.state.form_feedback.message;
-		// console.log("this.state.form_feedback", this.state.form_feedback);
+		// var validationState = this.state.form_feedback == null ? null : 'error';
+		// var validationMessage = this.state.form_feedback == null ? '' : this.state.form_feedback.message;
+		// console.log('this.state.form_feedback', this.state.form_feedback);
 
 
 
 	// 					placeholder={(this.props.user == null ? 'Login to add a poll answer option' : 'Enter a new poll answer option here')}
 		// var userIsAuthenticated = this.props.user != null && this.props.user.username != null;
-		// console.log("userIsAuthenticated:", userIsAuthenticated, ", this.props.user: ", this.props.user);
+		// console.log('userIsAuthenticated:', userIsAuthenticated, ', this.props.user: ', this.props.user);
 		var newAnswerOptionForm = (
 			<NewAnswerOptionForm
 				initial_new_answer_option={this.props.initial_new_answer_option}
@@ -301,7 +305,7 @@ var AnswerOptionsBox = React.createClass({
 				handleAddAnswerOption={this.props.handleAddAnswerOption}
 				user={this.props.user}
 			/>
-		)
+		);
 
 		return (
 			<div className='answerOptionBox'>
@@ -323,5 +327,5 @@ var AnswerOptionsBox = React.createClass({
 });
 
 
-// module.exports = AnswerOptionsBox
-export {AnswerOptionsBox, AnswerOptionsList, AnswerOption, NewAnswerOptionForm}
+// module.exports = AnswerOptionsBox;
+export {AnswerOptionsBox, AnswerOptionsList, AnswerOption, NewAnswerOptionForm};

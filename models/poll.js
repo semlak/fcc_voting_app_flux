@@ -6,7 +6,7 @@ var Vote = require('./vote');
 var PollSchema = new Schema({
 	// author: { type: Schema.Types.ObjectId, ref: 'Account' },
 	author: String,
-	owner: { type: Schema.Types.ObjectId, ref: 'Account' },
+	owner: { type: Schema.Types.ObjectId, ref: Account },
 	title: String,
 	question: String,
 	answer_options: [String],
@@ -15,10 +15,10 @@ var PollSchema = new Schema({
 
 
 PollSchema.pre('remove', function(next) {
-    // 'this' is the client being removed. Provide callbacks here if you want
-    // to be notified of the calls' result.
-    Vote.remove({poll: this._id}).exec();
-    next();
+	// 'this' is the client being removed. Provide callbacks here if you want
+	// to be notified of the calls' result.
+	Vote.remove({poll: this._id}).exec();
+	next();
 });
 
 

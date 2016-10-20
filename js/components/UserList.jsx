@@ -9,63 +9,63 @@
 
 import React from 'react';
 import ReactPropTypes from 'react/lib/ReactPropTypes';
-import UserActionCreators from '../actions/UserActionCreators';
+// import UserActionCreators from '../actions/UserActionCreators';
 import UserItem from './UserItem';
-import {Row, Col, Grid} from 'react-bootstrap'
+import {Row, Col, Grid} from 'react-bootstrap';
 
 var UserList = React.createClass({
 
-  propTypes: {
-    allUsers: ReactPropTypes.object.isRequired
-  },
+	propTypes: {
+		allUsers: ReactPropTypes.object.isRequired
+	},
 
-  /**
-   * @return {object}
-   */
-  render: function() {
-    // console.log("rendering <UserList />")
-    // if (Object.keys(this.props.allUsers).length < 1) {
-    //   return null;
-    // }
+	/**
+	 * @return {object}
+	 */
+	render: function() {
+		// console.log("rendering <UserList />")
+		// if (Object.keys(this.props.allUsers).length < 1) {
+		//   return null;
+		// }
 
-    var allUsers = this.props.allUsers;
-    var userNodes = []
-    // var users = allUsers.map(user => (<li><UserItem key={user.id} user={user}/></li>));
+		var allUsers = this.props.allUsers;
+		var userNodes = [];
+		// var users = allUsers.map(user => (<li><UserItem key={user.id} user={user}/></li>));
 
-    for (var key in allUsers) {
-      userNodes.push(
-        <Col key={key} xs={12} sm={6} md={3} className=''>
-          <UserItem  user={allUsers[key]} />
-        </Col>
-        // <li key={key}><UserItem user={allUsers[key]} /></li>
-        );
-    }
+		for (var key in allUsers) {
+			userNodes.push(
+				<Col key={key} xs={12} sm={6} md={3} className=''>
+					<UserItem  user={allUsers[key]} />
+				</Col>
+				// <li key={key}><UserItem user={allUsers[key]} /></li>
+				);
+		}
 
-    // This function should return null when there are no users to list.
-    if (userNodes.length == 0) {
-      userNodes.push(
-        <Col key={1} xs={12} sm={12} md={12} className=''>
-          <div>No users.</div>
-        </Col>
-      )
-    }
+		// This function should return null when there are no users to list.
+		if (userNodes.length == 0) {
+			userNodes.push(
+				<Col key={1} xs={12} sm={12} md={12} className=''>
+					<div>No users.</div>
+				</Col>
+			);
+		}
 
 
-    return (
-      <div>
-        <div id="user-list" className='pollBoxHeader'>
-          <h2 className='displayInline'>Listing of all Users:</h2>
-        </div>
-        <br />
-        <Grid>
-          <Row className='userList pollList'>
-            {userNodes}
-          </Row>
-        </Grid>
-      </div>
+		return (
+			<div>
+				<div id="user-list" className='pollBoxHeader'>
+					<h2 className='displayInline'>Listing of all Users:</h2>
+				</div>
+				<br />
+				<Grid>
+					<Row className='userList pollList'>
+						{userNodes}
+					</Row>
+				</Grid>
+			</div>
 
-    );
-  }
+		);
+	}
 
 });
 
