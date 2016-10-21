@@ -10,6 +10,8 @@ import VoteServerActionCreators from '../actions/VoteServerActionCreators';
 // import PollWebAPIUtils from '../utils/PollWebAPIUtils';
 import PollActionCreators from '../actions/PollActionCreators';
 import PollStore from '../stores/PollStore';
+import ModalActionCreators from '../actions/ModalActionCreators';
+
 
 var votesURL = PollStore.getVotesURL();
 
@@ -57,17 +59,21 @@ module.exports = {
 				var responseJSON = JSON.parse(xhr.responseText);
 				// console.log('Submitted Vote creation request via ajax xhr! xhr.responseText is', responseJSON);
 				if (responseJSON.votes == null || responseJSON.votes.length == 0) {
-					VoteServerActionCreators.createVoteFailed(data.poll_id, responseJSON.message || 'Vote failed.');
+					// VoteServerActionCreators.createVoteFailed(data.poll_id, responseJSON.message || 'Vote failed.');
+					ModalActionCreators.open('dialog', (responseJSON.message || 'Vote failed.'));
 					//ideally, launch modal with responseJSON.message as text.
 				}
-				// should receive new array of votes for this poll
-				// would like to update poll with this array. For now, just request all polls.
-				// PollWebAPIUtils.getAllPolls();
-				PollActionCreators.getAllFromServer();
-
+				else {
+					// should receive new array of votes for this poll
+					// would like to update poll with this array. For now, just request all polls.
+					// PollWebAPIUtils.getAllPolls();
+					PollActionCreators.getAllFromServer();
+				}
 			}
 			else {
 				VoteServerActionCreators.createVoteFailed(data.poll_id, 'Vote failed.');
+				ModalActionCreators.open('dialog', 'Vote failed');
+
 				// console.log('Registration xrh request failed.  Returned status is ' + xhr.status);
 				// console.log('full xhr content is:', xhr);
 			}

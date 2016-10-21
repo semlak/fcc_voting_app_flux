@@ -1,11 +1,4 @@
 /*
- * Copyright (c) 2014, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
  * PollStore
  */
 
@@ -165,30 +158,16 @@ function destroy(id) {
 }
 
 /**
- * Delete all the completed POLL items.
+ * Delete all POLL items.
  */
-// function destroyCompleted() {
+// function destroyAll() {
 //   for (var id in _polls) {
-//     if (_polls[id].complete) {
-//       destroy(id);
-//     }
+//     destroy(id);
 //   }
 // }
 
 var PollStore = assign({}, EventEmitter.prototype, {
 
-	/**
-	 * Tests whether all the remaining POLLs items are marked as completed.
-	 * @return {boolean}
-	 */
-	// areAllComplete: function() {
-	//   for (var id in _polls) {
-	//     if (!_polls[id].complete) {
-	//       return false;
-	//     }
-	//   }
-	//   return true;
-	// },
 
 	/**
 	 * Get the entire collection of POLLs.

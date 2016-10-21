@@ -5,15 +5,12 @@
 
 import React from 'react';
 import {Button, Row, Col, Grid, ButtonToolbar, Modal} from 'react-bootstrap';
-import {browserHistory} from 'react-router';
-import UserStore from '../stores/UserStore';
+
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import {AnswerOptionsBox} from './AnswerOptionsBox';
-import PollStore from '../stores/PollStore';
 // import AnswerOptionsBox from './AnswerOptionsBox';
 import PollChart from './PollChart';
-import PollActionCreators from '../actions/PollActionCreators';
-// import ReactPropTypes from 'react/lib/ReactPropTypes';
+import ReactPropTypes from 'react/lib/ReactPropTypes';
 
 
 // import React from 'React/addons',
@@ -75,83 +72,38 @@ function copyToClipboard(elem) {
 
 export default React.createClass({
 	propTypes: {
-		// poll: ReactPropTypes.object.isRequired
+		poll: ReactPropTypes.object.isRequired,
+		openDeletePollModal: React.PropTypes.func.isRequired,
+		openSharePollModal: React.PropTypes.func.isRequired,
+		currentUser: ReactPropTypes.object.isRequired,
+		backToPollList: React.PropTypes.func.isRequired,
+		handleAddAnswerOption: React.PropTypes.func.isRequired,
+		closeModal: React.PropTypes.func.isRequired,
+		modalToShow: React.PropTypes.string.isRequired,
+		modalMessage: React.PropTypes.string.isRequired,
+		new_answer_option: React.PropTypes.string.isRequired,
+		deletePollRequest: React.PropTypes.func.isRequired
 	},
 
-	getInitialState: function() {
-		return {
-			new_answer_option: '',
-			form_feedback: null,
-			poll: PollStore.getPollById(this.props.poll_id),
-			currentUser: this.getCurrentUser(),
-			showDeletePollModal: false,
-			deletePollModalMessage: '',
-			dialogModalMessage: '',
-			showDialogModal: false,
-			showSharePollModal: false
-		};
-	},
-	mapVotesToAnswerOptions : function (votes) {
+
+
+	mapVotesToAnswerOptions : function () {
 		// console.log('in mapVotesToAnswerOptions of FullPoll');
-		var answer_option_votes = this.state.poll.answer_options.map(() => 0);
+		var answer_options = this.props.poll.answer_options;
+		var votes = this.props.poll.votes;
+		var answer_option_votes = answer_options.map(() => 0);
 		votes.forEach(function(vote) {
 			answer_option_votes[vote.answer_option] = (parseInt(answer_option_votes[vote.answer_option]) + 1 || 1);
 		});
 		return answer_option_votes;
 	},
 
-	backToPollList: function() {
-		browserHistory.push('/polls');
 
-	},
-
-	componentDidMount: function() {
-		UserStore.addAuthenticationChangeListener(this._onAuthenticationChange);
-		PollStore.addChangeListener(this._onPollChange);
-		PollStore.addDestroyListener(this._onPollDestroy);
-		PollStore.addVoteCreatedListener(this._onVoteCreate);
-	},
-
-	componentWillUnmount: function() {
-		UserStore.removeAuthenticationChangeListener(this._onAuthenticationChange);
-		PollStore.removeChangeListener(this._onPollChange);
-		PollStore.removeDestroyListener(this._onPollDestroy);
-		PollStore.removeVoteCreatedListener(this._onVoteCreate);
-	},
-
-	handleAddAnswerOption: function(new_answer_option_from_answer_option_box) {
-		// console.log('in fullpoll 'handleAddAnswerOption'');
-		var poll_id = this.state.poll.id;
-		var new_answer_option = new_answer_option_from_answer_option_box.trim();
-		var poll = this.state.poll;
-		// console.log('\n\n\n\ncurrentUser is ', this.state.currentUser);
-		if (this.state.currentUser == null || this.state.currentUser == undefined || this.state.currentUser.username == null) {
-			// console.log('User must be authenticated in order to add answer option.');
-			this.setState({form_feedback: {message: 'User must be authenticated in order to add answer option.'}});
-
-		}
-		else if (new_answer_option == '' || new_answer_option == null) {
-			// console.log('Error. A new answer option should not be blank in an existing poll.');
-			this.setState({form_feedback: {message: 'A new answer option should not be blank in an existing poll.'}});
-
-		}
-		else if (poll.answer_options.filter(option => option == new_answer_option).length > 0 ) {
-			// console.log('Error. The new answer option should not match any existing answer option.');
-			// this.setState({form_feedback: {message: 'The new answer option should not match any existing answer options.'}});
-			this.setState({form_feedback: {message: 'Answer Option already exists!'}});
-		}
-		else {
-			//fire action
-			PollActionCreators.addAnswerOption(poll_id, new_answer_option);
-			//would like to user listener or something to handle feedback here. Client attemps to validate the input, but server might reject for some reason.
-			this.setState({form_feedback: null});
-		}
-	},
 
 	copyPollURLToClipboard: function() {
 	// copyPollURLToClipboard: function(e) {
 		copyToClipboard(document.getElementById('poll-URL'));
-		this.setState({showSharePollModal: false});
+		// this.setState({showSharePollModal: false});
 	},
 
 	// handleNewAnswerOptionChange: function(e) {
@@ -159,78 +111,45 @@ export default React.createClass({
 	// 	this.setState({new_answer_option: e.target.value, form_feedback: null});
 	// },
 
-	deletePollRequest: function() {
-		// console.log('in deletePollRequest of FullPoll');
-		if (this.state.poll != null) {
-			var poll_id = this.state.poll.id;
-			PollActionCreators.destroy(poll_id);
-		}
-	},
 
-	closeDeletePollModal: function() {
-		// console.log('closing deletePollModal');
-		this.setState({ showDeletePollModal: false });
-		this.setState({ deletePollModalMessage: '' });
-	},
-
-	openDeletePollModal:function() {
-		// console.log('opening deletePollModal');
-		this.setState({ showDeletePollModal: true });
-	},
-
-
-	closeSharePollModal: function() {
-		// console.log('closing sharePollModal');
-		this.setState({ showSharePollModal: false });
-	},
-
-	openSharePollModal:function() {
-		// console.log('opening sharePollModal');
-		this.setState({ showSharePollModal: true });
-	},
-
-	closeDialogModal: function() {
-		// console.log('closing dialogModal');
-		this.setState({ showDialogModal: false });
-	},
-
-	openDialogModal:function() {
-		// console.log('opening dialogModal');
-		this.setState({ showDialogModal: true });
-	},
 
 	render: function() {
 		// var poll = PollStore.getPollById(this.props.poll_id);
-		var poll = this.state.poll;
+		var poll = this.props.poll;
 
 		// console.log('rendering FullPoll');
+		// console.log('props in Fullpoll are', this.props);
 		var author_label = 'Poll Author: ';
 		var question_label = 'Poll Question: ';
-		if (this.state.poll == null || this.state.poll == undefined) {
+		if (this.props.poll == null || this.props.poll == undefined || this.props.poll.id == null) {
 			return (
 				<div>Currently loading data</div>
 			);
 		}
 		// var currentLocation = this.props.location.pathname;
-		// var individual_poll_url = this.state.poll_url + this.state.poll.id;
+		// var individual_poll_url = this.props.poll_url + this.props.poll.id;
 		// var individual_poll_url = this.props.location.pathname;
-		var individual_poll_url = 'this.props.location.pathname';
-		var currentUserIsPollOwner = (this.state.currentUser == null || this.state.currentUser.username == null) ? false : (this.state.currentUser.id == this.state.poll.owner);
+		// var individual_poll_url = '/this.props.location.pathname';
+		var currentUserIsPollOwner = (this.props.currentUser == null || this.props.currentUser.username == null) ? false : (this.props.currentUser.id == this.props.poll.owner);
 		// console.log('\n\n\ncurrentUserIsPollOwner is', currentUserIsPollOwner);
 		var host = window.location;
-		var poll_url = host.protocol + '//' + host.hostname + ':' + host.port + individual_poll_url;
+		// var poll_url = host.protocol + '//' + host.hostname + ':' + host.port + individual_poll_url;
+		var poll_url = host.href;
+		var individual_poll_url = host.href;
+		// console.log('host in fullpoll is:', host);
 		var sharePollModalBody = <div>URL for Poll: <a href={individual_poll_url} id='poll-URL'>{poll_url}</a></div>;
 
 		var backToPollListButton = (
 			<Button
 				type='button'
 				bsStyle='default'
-				onClick={this.backToPollList}
+				onClick={this.props.backToPollList}
 				data-toggle='tooltip'
 				title='Back to Poll Listing'
 				data-placement='bottom'
 			>Back To Poll List</Button>
 		);
+		//{this.props.blah}
 		// var sharePollButton = (
 		// 	<Button
 		// 		type='button'
@@ -263,18 +182,18 @@ export default React.createClass({
 		// 		data-placement='bottom'
 		// 		disabled={currentUserIsPollOwner ? false: true}
 		// 		bsStyle='danger'
-		// 		onClick={this.deletePollRequest}
+		// 		onClick={this.props.deletePollRequest}
 		// 	>Delete</Button>
 		// );
 
 		var openDeletePollModalButton = (
 			<Button
 				data-toggle='tooltip'
-				title={(currentUserIsPollOwner || this.state.currentUser.role == 'admin') ? 'Delete poll' : 'A poll can only be deleted by its owner/creator'}
+				title={(currentUserIsPollOwner || this.props.currentUser.role == 'admin') ? 'Delete poll' : 'A poll can only be deleted by its owner/creator'}
 				data-placement='bottom'
-				disabled={(currentUserIsPollOwner || this.state.currentUser.role == 'admin') ? false: true}
+				disabled={(currentUserIsPollOwner || this.props.currentUser.role == 'admin') ? false: true}
 				bsStyle='danger'
-				onClick={this.openDeletePollModal}
+				onClick={this.props.openDeletePollModal}
 			>Delete Poll</Button>
 		);
 
@@ -284,52 +203,54 @@ export default React.createClass({
 				title='Get Link to Poll for sharing'
 				data-placement='bottom'
 				bsStyle='info'
-				onClick={this.openSharePollModal}
+				onClick={this.props.openSharePollModal}
 			>Share Poll</Button>
 		);
 
 		var answerOptionsBox = (
 			<AnswerOptionsBox
-				poll_id={this.state.poll.id}
+				poll_id={this.props.poll.id}
 				answer_options={poll.answer_options}
 				votes={poll.votes}
 				options_are_editable={false}
-				handleAddAnswerOption={this.handleAddAnswerOption}
-				handleVote={this.handleVote}
-				user={this.state.currentUser}
+				handleAddAnswerOption={this.props.handleAddAnswerOption}
+				handleVote={this.props.handleVote}
+				user={this.props.currentUser}
 				mapVotesToAnswerOptions={this.mapVotesToAnswerOptions}
-				initial_new_answer_option={this.state.new_answer_option}
-				form_feedback={this.state.form_feedback}
+				initial_new_answer_option={this.props.new_answer_option}
+				form_feedback={this.props.form_feedback}
 			/>
 		);
 
+		// {this.props.modalMessage.length > 0 ? this.props.modalMessage : 'Do you wish to delete the current poll?' }
 
 		var deletePollModal = (
-			<Modal show={this.state.showDeletePollModal} onHide={this.closeDeletePollModal}>
+			<Modal show={this.props.modalToShow == 'deletepoll'} onHide={this.props.closeModal}>
 				<Modal.Header closeButton>
 					<Modal.Title>Delete Confirmation</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					{this.state.deletePollModalMessage.length > 0 ? this.state.deletePollModalMessage : 'Do you wish to delete the current poll?' }
+					{this.props.modalMessage}
+					{/*this.props.modalMessage.length > 0 ? this.props.modalMessage : 'Do you wish to delete the current poll?' */}
 				</Modal.Body>
 				{
-					(this.state.deletePollModalMessage.length > 0)
+					(this.props.modalMessage != 'Do you wish to delete the current poll?')
 						?
 						<Modal.Footer>
 							<Button
 								bsStyle='default'
-								onClick={this.closeDeletePollModal}
+								onClick={this.props.closeModal}
 								>Close</Button>
 						</Modal.Footer>
 						:
 						<Modal.Footer>
 							<Button
 								bsStyle='danger'
-								onClick={this.deletePollRequest}
+								onClick={this.props.deletePollRequest}
 							>Delete</Button>
 							<Button
 								bsStyle='default'
-								onClick={this.closeDeletePollModal}
+								onClick={this.props.closeModal}
 								>Cancel</Button>
 						</Modal.Footer>
 				}
@@ -338,7 +259,7 @@ export default React.createClass({
 
 
 		var sharePollModal = (
-			<Modal show={this.state.showSharePollModal} onHide={this.closeSharePollModal}>
+			<Modal show={this.props.modalToShow == 'sharepoll'} onHide={this.props.closeModal}>
 				<Modal.Header closeButton>
 					<Modal.Title>Share Poll</Modal.Title>
 				</Modal.Header>
@@ -349,30 +270,30 @@ export default React.createClass({
 					<Button
 						bsStyle='primary'
 						title='Copy URL to clipboard (not supported on all browsers)'
-						onClick={this.copyPollURLToClipboard}
+						onClick={this.props.copyPollURLToClipboard}
 					>Copy to clipboard</Button>
 					<Button
 						bsStyle='default'
 						title='Close this window'
-						onClick={this.closeSharePollModal}
+						onClick={this.props.closeModal}
 					>Close</Button>
 				</Modal.Footer>
 			</Modal>
 		);
 
 		var dialogModal = (
-			<Modal show={this.state.showDialogModal} onHide={this.closeDialogModal}>
+			<Modal show={this.props.modalToShow == 'dialog'} onHide={this.props.closeModal}>
 				<Modal.Header closeButton>
 					<Modal.Title>FCC Voting App</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					{this.state.dialogModalMessage}
+					{this.props.modalMessage}
 				</Modal.Body>
 				<Modal.Footer>
 					<Button
 						bsStyle='default'
 						title='Close this window'
-						onClick={this.closeDialogModal}
+						onClick={this.props.closeModal}
 					>Close</Button>
 				</Modal.Footer>
 			</Modal>
@@ -396,7 +317,7 @@ export default React.createClass({
 					</Grid>
 					<br />
 
-					<div className='poll well' id={'poll_' + this.state.poll.id}>
+					<div className='poll well' id={'poll_' + this.props.poll.id}>
 						<Grid>
 							<Row >
 								<Col xs={12} sm={6} md={6} className='' id='poll-text-div'>
@@ -417,7 +338,7 @@ export default React.createClass({
 									</div>
 								</Col>
 								<Col xs={12} sm={6} md={6} className='' id=''>
-									<PollChart poll={this.state.poll}/>
+									<PollChart poll={this.props.poll}/>
 								</Col>
 							</Row>
 							<Row>
@@ -440,76 +361,5 @@ export default React.createClass({
 
 
 		);
-
-	},
-
-	getCurrentUser: function() {
-		return UserStore.getAuthenticatedUser();
-	},
-
-	_onAuthenticationChange: function() {
-		this.setState({currentUser: UserStore.getAuthenticatedUser()});
-	},
-
-	_onPollChange: function() {
-		/*
-			As long as the poll is not null, the state is updated with the poll's freshest data.
-			We attempt to verify that the poll's answer_options array now contains the new_answer_option. If so, we reset new_answer_option.
-		*/
-		// console.log('in _onPollChange of FullPoll, received notification of poll update from  PollStore');
-		var poll = PollStore.getPollById(this.props.poll_id);
-		var newState = {};
-		newState.poll = poll;
-		if (poll != null && poll != undefined) {
-			if (poll.answer_options[poll.answer_options.length - 1] == this.state.new_answer_option) {
-				//new_answer_option has been properly added to the poll.
-				newState.new_answer_option = '';
-				newState.form_feedback = null;
-			} else if (poll.answer_options.indexOf(this.state.new_answer_option) >= 0) {
-				//Presumably, the answer option submitted was added to the poll but is just not the last answer_option on the updated poll.
-				//(Possible due to multiple users submitting new answer_options.)
-				newState.new_answer_option = '';
-				newState.form_feedback = null;
-			}
-			this.setState(newState);
-		}
-	},
-
-	_onPollDestroy: function(poll_id, success) {
-		// console.log('received notification of possible poll destroy from  PollStore');
-		if (this.state.poll == null || this.state.poll.id == poll_id) {
-			// console.log('poll_id == this.state.poll.id: ', poll_id == this.state.poll.id);
-			if (success) {
-				//the poll was just deleted. redirect to /polls
-				//in future, would like to add notification or popup showing poll was deleted succesfully before redirect.
-				this.backToPollList();
-			}
-			else {
-				//the poll was attempted to be deleted, but this somehow failed. Print message.
-				this.setState({deletePollModalMessage: 'Failed to delete poll.'});
-
-			}
-		}
-	},
-
-
-	_onVoteCreate: function(poll_id, success, message) {
-		// console.log('received notification of possible vote creation from  PollStore');
-		if (this.state.poll == null || this.state.poll.id == poll_id) {
-			// console.log('poll_id == this.state.poll.id: ', poll_id == this.state.poll.id);
-			if (success) {
-				//the vote was a success
-				//the store should have updated the polls and _onPollChange will handle updating of poll
-			}
-			else {
-				//the poll was attempted to be deleted, but this somehow failed. Print message.
-				this.setState({
-					dialogModalMessage: (message.length != null ? message : 'Vote failed.'),
-					showDialogModal: true,
-					showSharePollModal: false,
-					showDeletePollModal: false
-				});
-			}
-		}
 	}
 });
