@@ -9,25 +9,20 @@
 
 import React from 'react';
 import ReactPropTypes from 'react/lib/ReactPropTypes';
-import PollActionCreators from '../actions/PollActionCreators';
 import {Row, Col, Grid} from 'react-bootstrap';
 import PollItem from './PollItem';
 
 var PollList = React.createClass({
 
 	propTypes: {
-		allPolls: ReactPropTypes.object.isRequired
+		allPolls: ReactPropTypes.object.isRequired,
+		handlePollSelect: ReactPropTypes.func.isRequired
 	},
 
 	/**
 	 * @return {object}
 	 */
 	render: function() {
-		// if (Object.keys(this.props.allPolls).length < 1) {
-		//   return null;
-		// }
-
-
 		var allPolls = this.props.allPolls;
 		var pollNodes = [];
 		// var polls = allPolls.map(poll => (<li><PollItem key={poll.id} poll={poll}/></li>));
@@ -36,7 +31,7 @@ var PollList = React.createClass({
 			// console.log("poll:", allPolls[key]);
 			pollNodes.push(
 				<Col key={key} xs={12} sm={6} md={6} className=''>
-					<PollItem  poll={allPolls[key]} />
+					<PollItem  poll={allPolls[key]} handlePollSelect={this.props.handlePollSelect} />
 				</Col>
 				);
 		}
@@ -54,7 +49,7 @@ var PollList = React.createClass({
 			//   <ul id="poll-list">{polls}</ul>
 			// </div>
 			<div>
-				<div className='pollBoxHeader'>
+				<div className='pollContainerHeader'>
 					<h2 className='displayInline'>{this.props.header || 'Listing of all polls'}</h2>
 				</div>
 				<br />
@@ -66,15 +61,7 @@ var PollList = React.createClass({
 			</div>
 
 		);
-	},
-
-	/**
-	 * Event handler to mark all POLLs as complete
-	 */
-	_onToggleCompleteAll: function() {
-		PollActionCreators.toggleCompleteAll();
 	}
-
 });
 
 module.exports = PollList;

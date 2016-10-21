@@ -11,10 +11,6 @@
 
 // jest.autoMockOff();
 // jest.autoMockOn();
-// import UserConstants from '../../constants/UserConstants';
- // import UserConstants from '../../constants/UserConstants.js';
-		// console.log("\n\n\nUserConstants is", UserConstants)
-
 
 // jest.dontMock('../../constants/UserConstants');
 // jest.dontMock('../UserStore');
@@ -26,25 +22,6 @@ var generateTempId = function() {
 
 import UserConstants from '../../constants/UserConstants';
 
-//jest.dontMock('object-assign');
-
-
-// jest.mock('../../dispatcher/AppDispatcher')
-// import MyDispatcher from '../../dispatcher/AppDispatcher';
-
-// var mockRegister = MyDispatcher.register;
-// var mockRegisterInfo = mockRegister.mock;
-// var callsToRegister = mockRegisterInfo.calls;
-// var firstCall = callsToRegister[0];
-// var firstArgument = firstCall[0];
-// var callback = firstArgument;
-
-	// var UserConstants = require('./UserConstants.js');
-	// var AppDispatcher;
-	// var UserStore;
-	// var callback;
-	// console.log("UserConstants are", UserConstants)
-
 describe('UserStore', function() {
 	it('should be a sample test', function() {
 		expect(1).toEqual(1);
@@ -52,11 +29,9 @@ describe('UserStore', function() {
 
 
 
-	// var UserConstants = require('../../constants/UserConstants');
 	var AppDispatcher;
 	var UserStore;
 	var callback;
-	// console.log("UserConstants are", UserConstants)
 
 	// mock actions
 	var actionUserCreate = {
@@ -70,8 +45,6 @@ describe('UserStore', function() {
 		rawUser: {username: '', fullname: 'bar', role: 'user', id: generateTempId()}
 		// text: 'foo'
 	};
-
-
 
 	var actionUserCreateAdmin = {
 		actionType: UserConstants.USER_CREATE,

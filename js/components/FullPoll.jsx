@@ -81,9 +81,8 @@ export default React.createClass({
 	getInitialState: function() {
 		return {
 			new_answer_option: '',
-			chart: null,
 			form_feedback: null,
-			poll: PollStore.getPollById(this.props.params.poll_id),
+			poll: PollStore.getPollById(this.props.poll_id),
 			currentUser: this.getCurrentUser(),
 			showDeletePollModal: false,
 			deletePollModalMessage: '',
@@ -100,24 +99,11 @@ export default React.createClass({
 		});
 		return answer_option_votes;
 	},
+
 	backToPollList: function() {
 		browserHistory.push('/polls');
 
 	},
-	// handleVote: function(data) {
-	// 	// console.log('in FullPoll handleVote. Props are' , this.props, ', data is ', data);
-	// 	var vote = data;
-	// 	vote.poll_id  = this.state.poll.id;
-	// 	// console.log('vote is now', vote);
-	// 	var callback = function(vote) {
-	// 		// console.log('in handleVote callback. vote is ', vote);
-	// 		// this.updateChartWithVote(vote);
-	// 	}.bind(this);
-
-	// 	// fire action to submit vote to server. Will control through PollActionCreators/Store
-	// 	// this.props.handleVote(vote, callback);
-	// },
-
 
 	componentDidMount: function() {
 		UserStore.addAuthenticationChangeListener(this._onAuthenticationChange);
@@ -160,8 +146,8 @@ export default React.createClass({
 			//would like to user listener or something to handle feedback here. Client attemps to validate the input, but server might reject for some reason.
 			this.setState({form_feedback: null});
 		}
-
 	},
+
 	copyPollURLToClipboard: function() {
 	// copyPollURLToClipboard: function(e) {
 		copyToClipboard(document.getElementById('poll-URL'));
@@ -203,8 +189,6 @@ export default React.createClass({
 		this.setState({ showSharePollModal: true });
 	},
 
-
-
 	closeDialogModal: function() {
 		// console.log('closing dialogModal');
 		this.setState({ showDialogModal: false });
@@ -215,10 +199,8 @@ export default React.createClass({
 		this.setState({ showDialogModal: true });
 	},
 
-
 	render: function() {
-		// var pollname = this.props.params.pollName;
-		// var poll = PollStore.getPollById(this.props.params.poll_id);
+		// var poll = PollStore.getPollById(this.props.poll_id);
 		var poll = this.state.poll;
 
 		// console.log('rendering FullPoll');
@@ -231,7 +213,8 @@ export default React.createClass({
 		}
 		// var currentLocation = this.props.location.pathname;
 		// var individual_poll_url = this.state.poll_url + this.state.poll.id;
-		var individual_poll_url = this.props.location.pathname;
+		// var individual_poll_url = this.props.location.pathname;
+		var individual_poll_url = 'this.props.location.pathname';
 		var currentUserIsPollOwner = (this.state.currentUser == null || this.state.currentUser.username == null) ? false : (this.state.currentUser.id == this.state.poll.owner);
 		// console.log('\n\n\ncurrentUserIsPollOwner is', currentUserIsPollOwner);
 		var host = window.location;
@@ -474,7 +457,7 @@ export default React.createClass({
 			We attempt to verify that the poll's answer_options array now contains the new_answer_option. If so, we reset new_answer_option.
 		*/
 		// console.log('in _onPollChange of FullPoll, received notification of poll update from  PollStore');
-		var poll = PollStore.getPollById(this.props.params.poll_id);
+		var poll = PollStore.getPollById(this.props.poll_id);
 		var newState = {};
 		newState.poll = poll;
 		if (poll != null && poll != undefined) {

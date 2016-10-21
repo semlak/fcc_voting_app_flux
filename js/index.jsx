@@ -6,12 +6,12 @@ import About from './components/About';
 import Home from './components/Home';
 import RegistrationForm from './components/RegistrationForm';
 import LoginForm from './components/LoginForm';
-import UserListContainer from './components/UserListContainer';
+import UserListContainer from './containers/UserListContainer';
 import FullUser from './components/FullUser';
 import UserActionCreators from './actions/UserActionCreators';
 import PollActionCreators from './actions/PollActionCreators';
 
-import PollBox from './components/PollBox';
+import PollContainer from './containers/PollContainer';
 import FullPoll from './components/FullPoll';
 import NewPollForm from './components/NewPollForm';
 // render(<App/>, document.getElementById('app'))
@@ -28,11 +28,12 @@ render((
 		<Route path='/' component={App}>
 			<IndexRoute component={Home} />
 			<Route path='/about' component={About}/>
-			<Route path='/polls' component={PollBox}>
-				<Route path='/users/:userPollsToRender/polls' component={PollBox} />
+			<Route path='/polls' component={PollContainer}>
+				<Route path='/users/:userPollsToRender/polls' component={PollContainer} />
 			</Route>
 			<Route path='/new_poll' component={NewPollForm} />
-			<Route path='/polls/:poll_id' component={FullPoll} />
+			<Route path='/polls/:poll_id' component={PollContainer} />
+			<Route path='/polls1/:poll_id' component={FullPoll} />
 			<Route path='/register' component={RegistrationForm} />
 			<Route path='/login' component={LoginForm} />
 			<Route path='/users' component={UserListContainer}>

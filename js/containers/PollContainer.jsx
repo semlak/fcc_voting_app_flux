@@ -13,7 +13,9 @@
  */
 
 import React from 'react';
-import PollList from './PollList';
+import {browserHistory} from 'react-router';
+import PollList from '../components/PollList';
+import FullPoll from '../components/FullPoll';
 import PollStore from '../stores/PollStore';
 import UserStore from '../stores/UserStore';
 // import ReactPropTypes from 'react/lib/ReactPropTypes';
@@ -56,11 +58,11 @@ export default React.createClass({
 		PollStore.removeChangeListener(this._onChange);
 	},
 
-	/**
-	 * @return {object}
-	 */
-	render: function() {
-		// console.log('rendering Pollbox, props are', this.props, ', allPolls are', this.state.allPolls);
+	handlePollSelect: function(poll_id) {
+		browserHistory.push('/polls/' + poll_id);
+	},
+
+	renderPollList: function() {
 		var pollsToRender;
 		if (this.props.params && this.props.params.userPollsToRender && this.props.params.userPollsToRender != null) {
 			pollsToRender = filterPollsByOwner(this.state.allPolls, this.props.params.userPollsToRender);
@@ -71,17 +73,37 @@ export default React.createClass({
 		// console.log('polls to render are ', pollsToRender);
 		var pollListHeader = this.props.params == null || this.props.params.userPollsToRender == null ? 'Listing of All Polls:' : 'Listing of ' + this.props.params.userPollsToRender + '\'s Polls:';
 		return (
-				<div id='pollapp'  className='pollBox'>
-					<PollList allPolls={pollsToRender} header={pollListHeader}/>
+				<div id='pollapp'  className='pollContainer'>
+					<PollList allPolls={pollsToRender} header={pollListHeader} handlePollSelect={this.handlePollSelect} />
 				</div>
 		);
+	},
+
+	renderSingleFullPoll: function() {
+		//var poll_id = this.props.params.poll_id;
+		return (
+			<FullPoll poll_id={this.props.params.poll_id} poll={PollStore.getPollById(this.props.params.poll_id)} />
+		);
+
+	},
+
+
+	render: function() {
+		// console.log('rendering PollContainer, props are', this.props, ', allPolls are', this.state.allPolls);
+		console.log('props:', this.props);
+		if (this.props.params != null && this.props.params.poll_id != null) {
+			return this.renderSingleFullPoll();
+		}
+		else {
+			return this.renderPollList();
+		}
 	},
 
 	/**
 	 * Event handler for 'change' events coming from the PollStore
 	 */
 	_onChange: function() {
-		// console.log('received CHANGE signal for poll in PollBox. Updating state with allPolls.');
+		// console.log('received CHANGE signal for poll in PollContainer. Updating state with allPolls.');
 		this.setState(getPollState());
 	}
 

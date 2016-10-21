@@ -26,13 +26,13 @@ a {
 	/*box-sizing: border-box;*/
 }
 /*
-.pollBox.pollList {
+.pollContainer.pollList {
 	margin: -200px;
 }
 
 */
 
-.pollBox {
+.pollContainer {
 	/*margin-left: -15px;*/
 }
 

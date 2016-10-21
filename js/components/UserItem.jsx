@@ -26,25 +26,11 @@ var UserItem = React.createClass({
 		// console.log('running handleUserSelect.');
 		browserHistory.push('/users/' + this.props.user.username);
 	},
-	/**
-	/**
-	 * @return {object}
-	 */
+
+
 	render: function() {
 		var user = this.props.user;
-
-
-
-		// List items should get the class 'editing' when editing
-		// and 'completed' when marked as completed.
-		// Note that 'completed' is a classification while 'complete' is a state.
-		// This differentiation between classification and state becomes important
-		// in the naming of view actions toggleComplete() vs. destroyCompleted().
 		return (
-			// <div className='user-item well poll' key={user.id}>
-			//       <NavLink to={'/users/' + user.username}>{user.username}</NavLink>
-			// </div>
-
 			<div className='poll well' onClick={this.handleUserSelect}>
 					{'User: ' + user.username}
 			</div>

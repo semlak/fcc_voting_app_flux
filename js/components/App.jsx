@@ -1,6 +1,6 @@
 import React from 'react';
 // import {IndexLink } from 'react-router';
-import PollBox from './PollBox';
+import PollContainer from '../containers/PollContainer';
 import Navbar from './Navbar';
 import ReactPropTypes from 'react/lib/ReactPropTypes';
 
@@ -19,7 +19,7 @@ export default React.createClass({
 				<Navbar location={this.props.location.pathname}/>
 				<br />
 				<div className='app_body container jumbotron well'>
-					{this.props.location.pathname == '/' ? <PollBox /> : this.props.children}
+					{this.props.location.pathname == '/' ? <PollContainer /> : this.props.children}
 				</div>
 			</div>
 		);

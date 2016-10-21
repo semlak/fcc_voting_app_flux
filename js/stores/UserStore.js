@@ -425,7 +425,6 @@ UserStore.dispatchToken = AppDispatcher.register(function(action) {
 			let rawUser = action.rawUser;
 			// console.log('rawUser in rawUser set is ', _users[rawUser.id]);
 
-			let id = rawUser.id;
 			updatesMade = updateSingleUser(rawUser);
 
 			// if (true || updatesMade) {

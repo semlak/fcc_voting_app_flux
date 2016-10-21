@@ -19,29 +19,21 @@ var UserList = React.createClass({
 		allUsers: ReactPropTypes.object.isRequired
 	},
 
-	/**
-	 * @return {object}
-	 */
 	render: function() {
-		// console.log("rendering <UserList />")
-		// if (Object.keys(this.props.allUsers).length < 1) {
-		//   return null;
-		// }
-
 		var allUsers = this.props.allUsers;
 		var userNodes = [];
 		// var users = allUsers.map(user => (<li><UserItem key={user.id} user={user}/></li>));
+
 
 		for (var key in allUsers) {
 			userNodes.push(
 				<Col key={key} xs={12} sm={6} md={3} className=''>
 					<UserItem  user={allUsers[key]} />
 				</Col>
-				// <li key={key}><UserItem user={allUsers[key]} /></li>
 				);
 		}
 
-		// This function should return null when there are no users to list.
+		// If there are no uses, push a div onto the empty userNodes with text "No users."
 		if (userNodes.length == 0) {
 			userNodes.push(
 				<Col key={1} xs={12} sm={12} md={12} className=''>
@@ -50,10 +42,9 @@ var UserList = React.createClass({
 			);
 		}
 
-
 		return (
 			<div>
-				<div id="user-list" className='pollBoxHeader'>
+				<div id="user-list" className='pollContainerHeader'>
 					<h2 className='displayInline'>Listing of all Users:</h2>
 				</div>
 				<br />
