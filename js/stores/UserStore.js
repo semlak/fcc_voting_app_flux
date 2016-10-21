@@ -31,8 +31,8 @@ function addUsers(rawUsers) {
 	// console.log('in UserStore., addUsers.  adding raw users to _users, rawUsers are', rawUsers);
 	rawUsers.forEach(function(user) {
 		if (!_users[user.id]) {
-			_users[user.id] = UserUtils.convertRawUser(user);
-			_usersByUsername[user.username] = _users[user.id];
+			// console.log('adding users');
+			return addUser(user);
 		}
 	});
 	// console.log('in userStore. _users are now ', _users);
@@ -43,26 +43,26 @@ function addUser(rawUser) {
 	var user = UserUtils.convertRawUser(rawUser);
 	_users[user.id] = user;
 	_usersByUsername[user.username] = _users[user.id];
+	// _users = assign({}, _users, {user.id: newUser} );
+	// _usersByUsername = Object.assign(_usersByUsername, {user.username : user[user.id]};
 	return true;
 }
 
 
-function deleteLocalUser(id) {
-	if (_users[id]) {
-		_usersByUsername[_users[id].username] = null;
-	}
-	delete _users[id];
-	return true;
-}
 
 function updateUsername(rawUser) {
 	var user = UserUtils.convertRawUser(rawUser);
 	var newUsername = user.username;
 	var oldUsername = _users[user.id].username;
-	_usersByUsername[oldUsername] = null;
-	_usersByUsername[newUsername] = _users[user.id];
-	_users[user.id] = newUsername;
-	return true;
+	if (newUsername == null || newUsername.length < 1) {
+		return false;
+	}
+	else {
+		_usersByUsername[oldUsername] = null;
+		_usersByUsername[newUsername] = _users[user.id];
+		_users[user.id] = user;
+		return true;
+	}
 }
 
 function updateFullname(rawUser) {
@@ -78,6 +78,24 @@ function updateRole(rawUser) {
 }
 
 
+function updateSingleUser(rawUser) {
+	var user = UserUtils.convertRawUser(rawUser);
+	// var localUser = Object.assign({}, _users[user.id]);
+	var localUser = Object.assign({}, _users[user.id]);
+	// console.log(local)
+	var updatesNeeded = false;
+	if (localUser.username != user.username) {
+		updatesNeeded = updateUsername(user);
+	}
+	if (localUser.fullname != user.fullname) {
+		updatesNeeded = updateFullname(user);
+	}
+	if (localUser.role != user.role) {
+		updatesNeeded = updateRole(user);
+	}
+	return updatesNeeded;
+}
+
 function updateUserSet(rawUsers) {
 	/*
 		Makes sure the current user set is in sync with rawUsers (which was provided by server)
@@ -87,16 +105,13 @@ function updateUserSet(rawUsers) {
 		Overall, the function returns true if updates were needed, false if no change.
 	*/
 
-	//This first line just makes sure the 'id' is set from '_id' for each user. I would like to move this to the UserUtils functions
-	rawUsers.forEach(function(user) {user.id = user._id ;});
-
 	//If there are currently no users in the user set (_users), then add all users and return true
 	if (Object.keys(_users).length  == 0 ) {
 		addUsers(rawUsers);
 		return true;
 	}
 
-	//Otherwise, we want to delete user from _users who is no longer on the list, add user to _users who was not on list, and update existing user info
+	//Otherwise, we want to delete user from _users who is no longer on the updated list, add user to _users who was not on list, and update existing user info
 	//This variable will keep track if updates were needed (for the return value of the function)
 	var updatesNeeded = false;
 
@@ -107,26 +122,17 @@ function updateUserSet(rawUsers) {
 	// console.log('new_user_set is', new_user_set);
 	for (var id in _users) {
 		if (!new_user_set[id]) {
-			updatesNeeded = deleteLocalUser(id);
+			updatesNeeded = destroy(id);
 		}
 	}
 
-	// check if user already exists. If not, add, if so, veryify data is up to date
+	// check if user already exists. If not, addUser, if so, veryify data is up to date (updateSingleUser)
 	rawUsers.forEach(function(rawUser) {
 		if (!_users[rawUser.id]) {
 			updatesNeeded = addUser(rawUser);
 		}
 		else {
-			var localUser = _users[rawUser.id];
-			if (localUser.username != rawUser.username) {
-				updatesNeeded = updateUsername(rawUser);
-			}
-			if (localUser.fullname != rawUser.fullname) {
-				updatesNeeded = updateFullname(rawUser);
-			}
-			if (localUser.role!= rawUser.role) {
-				updatesNeeded = updateRole(rawUser);
-			}
+			updatesNeeded = updateSingleUser(rawUser);
 		}
 	});
 	return updatesNeeded;
@@ -154,28 +160,25 @@ function addToUserSet(rawUser) {
 
 	/**
 	 * Create user
-	 * @param  {object} user, containing a username, password,  fullname, role.
-					The password will be hashed on the server. password will not be stored in plaintext after creation
+	 * @param  {object} user, containing a username, fullname, role.
+		 		This is occurring after the new user info has been sent to the server via ajax request.
+		 		No password information is involved in the create request at this time.
 	 */
-function create(user) {
-	//create new user.
-	//This will typically be done after the ajax request has been sent to the server to create user, and server responded with newly created user object.
-
-	if (user.username != null && user.username != '' && user.password != null && user.password != '' && _usersByUsername[user.username] == null) {
-		var id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
-		_users[id] = {
-			id: id,
-			username: user.username,
-			password: user.password,
-			fullname: user.fullname,
-			role: user.role
-		};
-		_usersByUsername[user.username] = _users[id];
-	}
-	else {
-		// console.log('error creating user. Either username or password was blank, or username already taken');
-	}
-}
+// function create(user) {
+// 	if (user.username != null && user.username != '' &&  _usersByUsername[user.username] == null) {
+// 		var id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
+// 		_users[id] = {
+// 			id: id,
+// 			username: user.username,
+// 			fullname: user.fullname,
+// 			role: user.role
+// 		};
+// 		_usersByUsername[user.username] = _users[id];
+// 	}
+// 	else {
+// 		console.error('error creating user. Either username or password was blank, or username already taken.');
+// 	}
+// }
 
 /**
  * Update a USER item.
@@ -214,22 +217,28 @@ function create(user) {
 /**
  * Delete a USER item.
  * @param  {string} id
+
+ 	User has been deleted on the server, and that ajax call's callback sends dispatch to store to destroy local user
  */
 function destroy(id) {
+	if (_users[id]) {
+		delete _usersByUsername[_users[id].username];
+	}
 	delete _users[id];
+	return true;
 }
 
+
 /**
- * Delete all the completed USER items.
+ * Delete all the USER items.
  */
-// function destroyCompleted() {
-//   for (var id in _users) {
-//     if (_users[id].complete) {
-//       destroy(id);
-//     }
-//   }
-// }
-// console.log('hey');
+function destroyAll() {
+	for (var id in _users) {
+		if (_users[id] != null) {
+			destroy(id);
+		}
+	}
+}
 
 var UserStore = assign({}, EventEmitter.prototype, {
 
@@ -370,9 +379,9 @@ UserStore.dispatchToken = AppDispatcher.register(function(action) {
 		break;
 
 
-	case UserConstants.USER_RECEIVE_RAW_CREATED_USER:
-		// console.log('\n\nIn UserStore, dispatch receiving. received 'USER_RECEIVE_RAW_CREATED_USER' action signal, rawUser is', action.rawUser);
-		if (action.rawUser != null) {
+	case UserConstants.USER_CREATE:
+		// console.log('\n\nIn UserStore, dispatch receiving. received 'USER_CREATE' action signal, rawUser is', action.rawUser);
+		if (action.rawUser != null && action.rawUser.username != '' && action.rawUser.username != null) {
 			updatesMade = addToUserSet(action.rawUser);
 			// console.log('updatesMade in USER_RECEIVE_RAW_CREATED_USER is :', updatesMade)
 			if (updatesMade) {
@@ -390,45 +399,38 @@ UserStore.dispatchToken = AppDispatcher.register(function(action) {
 		}
 		break;
 
-	case UserConstants.USER_CREATE:
-		var user = action.user;
-		for (var key in user) {
-			user[key] = user[key].trim();
-		}
-		if (user.username == '' || user.password == '') {
-			//this allows user.fullname and or role to be empty
-			// console.log('error creating user');
-		}
-		else {
-			create(user);
-			UserStore.emitChange(null);
-		}
-		break;
+
+	// case UserConstants.USER_CREATE:
+	// 	var rawUser = action.rawUser;
+	// 	if (rawUser != null) {
+	// 		for (var key in rawUser) {
+	// 			rawUser[key] = rawUser[key].trim();
+	// 		}
+	// 		if (rawUser.username != '' & rawUsername != null) {
+	// 			//this allows rawUser.fullname and or rawUser.role to be empty. Neither the web site UI nor the server should have allowed, either
+	// 			create(rawUser);
+	// 			UserStore.emitChange(null);
+	// 		}
+	// 		else {
+	// 			console.error('error creating user');
+	// 		}
+	// 	}
+	// 	break;
 
 
 	case UserConstants.USER_UPDATE:
 		// console.log('\n\nIn UserStore, dispatch receiving. received 'USER_UPDATE' action signal, action is', action);
 		if (action.rawUser != null) {
 			updatesMade = false;
-			let user = action.rawUser;
-			if (user.id == null && user._id != null)  {
-				user.id = user._id;
-			}
-			// console.log('user in user set is ', _users[user.id]);
+			let rawUser = action.rawUser;
+			// console.log('rawUser in rawUser set is ', _users[rawUser.id]);
 
-			let id = user.id;
-			if (user.username != _users[id].username) {
-				updatesMade = updateUsername(user);
-			}
-			if (user.fullname != _users[id].fullname) {
-				updatesMade = updateFullname(user);
-			}
-			if (user.role != _users[id].role) {
-				updatesMade = updateRole(user);
-			}
+			let id = rawUser.id;
+			updatesMade = updateSingleUser(rawUser);
 
 			// if (true || updatesMade) {
-			UserStore.emitChange({error: false, message_text: action.message_obj.message_text});
+			let message_text =  action.message_obj != null ?  action.message_obj.message_text : null;
+			UserStore.emitChange({error: false, message_text: message_text});
 				// console.log('user in user set is now', _users[id]);
 			// }
 		}
@@ -442,15 +444,21 @@ UserStore.dispatchToken = AppDispatcher.register(function(action) {
 
 		// //This is just for debugging.
 		// if (action.rawUser != null) {
-		//   console.log('user in user set is now', _users[action.rawUser._id]);
+		//   console.log('user in user set is now', _users[action.rawUser.id]);
 		// }
 		break;
+
 
 	case UserConstants.USER_DESTROY:
 		destroy(action.id);
 		UserStore.emitChange(null);
 		break;
 
+
+	case UserConstants.USER_DESTROY_ALL:
+		destroyAll();
+		UserStore.emitChange(null);
+		break;
 
 
 	case UserConstants.USER_SET_AUTHENTICATED_USER_STATE:
@@ -462,7 +470,6 @@ UserStore.dispatchToken = AppDispatcher.register(function(action) {
 		var message_obj = action.message_obj;
 		// console.log('currentUser: ', currentUser, 'previousAuth: ', previousAuthenticatedUser, 'message_obj:', message_obj );
 		if (currentUser == null || currentUser == undefined)    { currentUser = {}; }
-		if (currentUser._id != null && currentUser.id == null)  { currentUser.id = currentUser._id; }
 
 		if (currentUser.id == null && message_obj.error) {
 			//Login was attempted but failed.

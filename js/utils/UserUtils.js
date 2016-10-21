@@ -21,6 +21,7 @@ module.exports = {
 		};
 	},
 
+// I currently don't seem to use this function. Will probably delete.
 	getCreatedUserData: function(username, password, fullname, role) {
 		var timestamp = Date.now();
 		return {

@@ -13,7 +13,7 @@ var Account = require('../models/account');
 			Each account holds the information for that 'user'.
 			Accounts only exist for an authorized user. Anonymous users do not have accounts.
 
-			When the server is providing a list of 'users', it is actually providing a list of accounts
+			When the server is providing a list of 'users', it is actually providing a list of accounts,
 			with some information (password hashes, salts) filtered out.
 
 			The client-side app refers to them as users, not accounts.
@@ -51,7 +51,8 @@ router.get('/users/', function(req, res) {
 			res.json(err);
 		}
 		else {
-			res.json({error: false, users: accounts, message: 'Successfully retrieved users.', user: reqUserInfo(req.user)});
+			var users = accounts.map(user => reqUserInfo(user));
+			res.json({error: false, users: users, message: 'Successfully retrieved users.', user: reqUserInfo(req.user)});
 		}
 	});
 
@@ -79,7 +80,7 @@ router.post('/users/login', function(req, res, next) {
 				return next(err);
 			}
 			else {
-				return res.json({ message: 'User authenticated.', username: user.username, user: reqUserInfo(req.user)});
+				return res.json({ message: 'User authenticated.', user: reqUserInfo(req.user)});
 			}
 		});
 	})(req, res, next);
@@ -101,7 +102,12 @@ router.post('/users/register', function(req, res, next) {
 				role = 'user';
 			}
 			// Account.register(new Account({ username : req.body.username, fullname: req.body.fullname, email: req.body.email, role: role }), req.body.password, function(err, account) {
-			Account.register(new Account({ username : req.body.username, fullname: req.body.fullname, email: req.body.email, role: role }), req.body.password, function(err) {
+			Account.register(new Account({
+				username : req.body.username,
+				fullname: req.body.fullname,
+				email: req.body.email,
+				role: role
+			}), req.body.password, function(err) {
 				if (err) {
 					res.json(err);
 				}

@@ -9,233 +9,351 @@
  * UserStore-test
  */
 
-jest.autoMockOff();
-import UserConstants from '../../constants/UserConstants';
+// jest.autoMockOff();
+// jest.autoMockOn();
+// import UserConstants from '../../constants/UserConstants';
  // import UserConstants from '../../constants/UserConstants.js';
-    // console.log("\n\n\nUserConstants is", UserConstants)
+		// console.log("\n\n\nUserConstants is", UserConstants)
 
 
-//jest.dontMock('../../constants/UserConstants');
-//jest.dontMock('../UserStore');
+// jest.dontMock('../../constants/UserConstants');
+// jest.dontMock('../UserStore');
+jest.mock('../../dispatcher/AppDispatcher');
+var generateTempId = function() {
+	var id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
+	return id;
+}
+
+import UserConstants from '../../constants/UserConstants';
+
 //jest.dontMock('object-assign');
-jest.mock('../../dispatcher/AppDispatcher')
 
 
-  // import UserConstants from './UserConstants.js';
-  // var AppDispatcher;
-  // var UserStore;
-  // var callback;
-  // console.log("UserConstants are", UserConstants)
+// jest.mock('../../dispatcher/AppDispatcher')
+// import MyDispatcher from '../../dispatcher/AppDispatcher';
+
+// var mockRegister = MyDispatcher.register;
+// var mockRegisterInfo = mockRegister.mock;
+// var callsToRegister = mockRegisterInfo.calls;
+// var firstCall = callsToRegister[0];
+// var firstArgument = firstCall[0];
+// var callback = firstArgument;
+
+	// var UserConstants = require('./UserConstants.js');
+	// var AppDispatcher;
+	// var UserStore;
+	// var callback;
+	// console.log("UserConstants are", UserConstants)
 
 describe('UserStore', function() {
-  it('should be a sample test                 ', function() {
-    expect(1).toEqual(1);
-  })
+	it('should be a sample test', function() {
+		expect(1).toEqual(1);
+	})
 
 
 
-  // var UserConstants = require('../../constants/UserConstants');
-  var AppDispatcher;
-  var UserStore;
-  var callback;
-  // console.log("UserConstants are", UserConstants)
+	// var UserConstants = require('../../constants/UserConstants');
+	var AppDispatcher;
+	var UserStore;
+	var callback;
+	// console.log("UserConstants are", UserConstants)
 
-  // mock actions
-  var actionUserCreate = {
-    actionType: UserConstants.USER_CREATE,
-    user: {username: 'foo', fullname: 'bar', password: 'password'}
-    // text: 'foo'
-  };
+	// mock actions
+	var actionUserCreate = {
+		actionType: UserConstants.USER_CREATE,
+		rawUser: {username: 'foo', fullname: 'bar', role: 'user', id: generateTempId()}
+		// text: 'foo'
+	};
 
-
-  var actionUserCreate2 = {
-    actionType: UserConstants.USER_CREATE,
-    user: {username: '', fullname: 'bar', password: 'password'}
-    // text: 'foo'
-  };
-
-
-
-  var actionUserCreate3 = {
-    actionType: UserConstants.USER_CREATE,
-    user: {username: 'foo', fullname: 'bar', password : ''}
-    // text: 'foo'
-  };
-
-  var actionUserDestroy = {
-    actionType: UserConstants.USER_DESTROY,
-    id: 'replace me in test'
-  };
-
-  var actionUserUpdate0 = {
-    actionType: UserConstants.USER_UPDATE,
-    //update this 'userUpdates' object during test
-    userUpdates: {username: null, fullname: null},
-    id: 'replace me in test'
-  };
-
-  var actionUserUpdate1 = {
-    actionType: UserConstants.USER_UPDATE,
-    //update this 'userUpdates' object during test
-    userUpdates: {username: null, fullname: null},
-    id: 'replace me in test'
-  };
-
-    var actionUserUpdate2 = {
-    actionType: UserConstants.USER_UPDATE,
-    //update this 'userUpdates' object during test
-    userUpdates: {username: null, fullname: null},
-    id: 'replace me in test'
-  };
-
- var actionUserUpdate3 = {
-    actionType: UserConstants.USER_UPDATE,
-    //update this 'userUpdates' object during test
-    userUpdates: {username: null, fullname: null},
-    id: 'replace me in test'
-  };
-
- var actionUserUpdate4 = {
-    actionType: UserConstants.USER_UPDATE,
-    //update this 'userUpdates' object during test
-    userUpdates: {username: null, fullname: null},
-    id: 'replace me in test'
-  };
+	var actionUserCreateEmptyUsername = {
+		actionType: UserConstants.USER_CREATE,
+		rawUser: {username: '', fullname: 'bar', role: 'user', id: generateTempId()}
+		// text: 'foo'
+	};
 
 
 
-  beforeEach(function() {
-    AppDispatcher = require('../../dispatcher/AppDispatcher');
-    UserStore = require('../UserStore');
-    // console.log("user store is:", UserStore.getAll());
-    // console.log('\n\n\nAppDispatcher.register is', AppDispatcher.register)
-    // console.log('\n\n\nAppDispatcher.register is', AppDispatcher.register.mock)
-    callback = AppDispatcher.register.mock.calls[0][0];
+	var actionUserCreateAdmin = {
+		actionType: UserConstants.USER_CREATE,
+		rawUser: {username: 'john', fullname: 'john doe', role: 'admin', id: generateTempId()}
+	};
 
-    // callback = AppDispatcher.register.mock.calls[0][0];
-  });
+	var actionUserDestroy = {
+		actionType: UserConstants.USER_DESTROY,
+		id: 'replace me in test'
+	};
 
-  it('registers a callback with the dispatcher', function() {
-    expect(AppDispatcher.register.mock.calls.length).toBe(1);
-  });
 
-  it('should initialize with no user items', function() {
-    var all = UserStore.getAll();
-    expect(all).toEqual({});
-  });
+	var actionUserDestroyAll = {
+		actionType: UserConstants.USER_DESTROY_ALL,
+	};
 
-  it('creates a user', function() {
+
+	var actionUserUpdate = {
+		actionType: UserConstants.USER_UPDATE,
+		//update this 'rawUser' object during test
+		rawUser: {username: null, fullname: null, role: null, id: 'replace me in test'}
+	};
+
+
+	beforeEach(function() {
+		AppDispatcher = require('../../dispatcher/AppDispatcher');
+		UserStore = require('../UserStore');
+
+		// console.log("user store is:", UserStore.getAll());
+		// console.log('\n\n\nAppDispatcher.register is', AppDispatcher.register)
+		// console.log('\n\n\nAppDispatcher.register is', AppDispatcher.register.mock)
+		callback = AppDispatcher.register.mock.calls[0][0];
+
+		//clear user store.
+		callback(actionUserDestroyAll);
+	});
+
+	it('registers a callback with the dispatcher', function() {
+		expect(AppDispatcher.register.mock.calls.length).toBe(1);
+	});
+
+	it('should initialize with no user items', function() {
+		var all = UserStore.getAll();
+		expect(all).toEqual({});
+	});
+
+	it('creates a user', function() {
+		callback(actionUserCreate);
+		var all = UserStore.getAll();
+		var keys = Object.keys(all);
+		// console.log("all:", all);
+		expect(keys.length).toBe(1);
+		expect(all[keys[0]].username).toEqual('foo');
+    expect(all[keys[0]].fullname).toEqual('bar');
+		expect(all[keys[0]].role).toEqual('user');
+
+		//test UserByUsername
+		var userByUsername = UserStore.getUserByUsername('foo');
+		expect(userByUsername.username).toEqual('foo');
+		expect(userByUsername.fullname).toEqual('bar');
+    expect(userByUsername.role).toEqual('user');
+
+	});
+
+
+	it('does not create a user if username is empty', function() {
+		callback(actionUserCreateEmptyUsername);
+		var all = UserStore.getAll();
+		var keys = Object.keys(all);
+		// console.log("all:", all);
+		expect(keys.length).toBe(0);
+	});
+
+
+	it('does not create two users if usernames are the same', function() {
+		callback(actionUserCreate);
+		callback(actionUserCreate);
+		var all = UserStore.getAll();
+		var keys = Object.keys(all);
+		expect(keys.length).toBe(1);
+		expect(all[keys[0]].username).toEqual('foo');
+		expect(all[keys[0]].fullname).toEqual('bar');
+    expect(all[keys[0]].role).toEqual('user');
+	});
+
+
+	it('destroys a user item', function() {
+		callback(actionUserCreate);
+		var all = UserStore.getAll();
+		var keys = Object.keys(all);
+		expect(keys.length).toBe(1);
+		actionUserDestroy.id = keys[0];
+		callback(actionUserDestroy);
+
+    var all_1 = UserStore.getAll();
+    var keys_1 = Object.keys(all_1);
+    expect(keys_1.length).toBe(0);
+		expect(all_1[keys_1[0]]).toBeUndefined();
+	});
+
+	it('edits a username', function() {
+		callback(actionUserCreate);
+		var all = UserStore.getAll();
+		var keys = Object.keys(all);
+		expect(keys.length).toBe(1);
+
+		// update username
+		let newUsername = 'foofoo'
+		actionUserUpdate.rawUser = Object.assign ({}, all[keys[0]], {username: newUsername});
+		callback(actionUserUpdate);
+
+		// verify
+		expect(all[keys[0]].username).toEqual('foofoo');
+		expect(all[keys[0]].fullname).toEqual('bar');
+    expect(all[keys[0]].role).toEqual('user');
+	});
+
+
+	it('edits a fullname', function() {
+		callback(actionUserCreate);
+		var all = UserStore.getAll();
+		var keys = Object.keys(all)
+		expect(keys.length).toBe(1);
+
+		// update fullname
+		let newFullname = 'barbar'
+		actionUserUpdate.rawUser = Object.assign ({}, all[keys[0]], {fullname: newFullname});
+		callback(actionUserUpdate);
+
+		keys = Object.keys(UserStore.getAll());
+		expect(all[keys[0]].username).toEqual('foo');
+		expect(all[keys[0]].fullname).toEqual('barbar');
+    expect(all[keys[0]].role).toEqual('user');
+	});
+
+
+	it('edits a username and fullname at the same time', function() {
+		callback(actionUserCreate);
+		var all = UserStore.getAll();
+		var keys = Object.keys(all)
+		expect(keys.length).toBe(1);
+
+		// update username and fullname
+		let newUsername = 'foofoo'
+		let newFullname = 'barbar'
+		actionUserUpdate.rawUser = Object.assign ({}, all[keys[0]], {username: newUsername, fullname: newFullname});
+		callback(actionUserUpdate);
+
+		keys = Object.keys(UserStore.getAll());
+		expect(all[keys[0]].username).toEqual('foofoo');
+		expect(all[keys[0]].fullname).toEqual('barbar');
+    expect(all[keys[0]].role).toEqual('user');
+	});
+
+
+	it('does not allow a username to be edited to an empty string', function() {
+		callback(actionUserCreate);
+		var all = UserStore.getAll();
+		var keys = Object.keys(all);
+		expect(keys.length).toBe(1);
+
+		// update username
+		let newUsername = ''
+		actionUserUpdate.rawUser = Object.assign ({}, all[keys[0]], {username: newUsername});
+		callback(actionUserUpdate);
+
+		// verify
+		all = UserStore.getAll();
+		keys = Object.keys(all);
+		expect(all[keys[0]].username).toEqual('foo');
+		expect(all[keys[0]].fullname).toEqual('bar');
+    expect(all[keys[0]].role).toEqual('user');
+	});
+
+
+	it('does allow a fullname to be edited to an empty string', function() {
     callback(actionUserCreate);
     var all = UserStore.getAll();
     var keys = Object.keys(all);
     expect(keys.length).toBe(1);
+
+    // update username
+    let newFullname = ''
+    actionUserUpdate.rawUser = Object.assign ({}, all[keys[0]], {fullname: newFullname});
+    callback(actionUserUpdate);
+
+    // verify
+    all = UserStore.getAll();
+    keys = Object.keys(all);
     expect(all[keys[0]].username).toEqual('foo');
-    expect(all[keys[0]].fullname).toEqual('bar');
+    expect(all[keys[0]].fullname).toEqual('');
+    expect(all[keys[0]].role).toEqual('user');
+	});
+
+
+
+  it('creates an \'admin\' user', function() {
+    //Note: server will not allow non-admin to create an 'admin' user
+    callback(actionUserCreateAdmin);
+    var all = UserStore.getAll();
+    var keys = Object.keys(all);
+    // console.log("all:", all);
+    expect(keys.length).toBe(1);
+    expect(all[keys[0]].username).toEqual('john');
+    expect(all[keys[0]].fullname).toEqual('john doe');
+    expect(all[keys[0]].role).toEqual('admin');
   });
 
 
-  // it('FIX THIS - does not create a user if username is empty', function() {
-  //   callback(actionUserCreate2);
-  //   var all = UserStore.getAll();
-  //   var keys = Object.keys(all);
-  //   //THIS SHOULD BE 0, NOT 1
-  //   expect(keys.length).toBe(1);
-  // });
+  it('changes a user role to \'admin\'', function() {
+    callback(actionUserCreate);
+    var all = UserStore.getAll();
+    var keys = Object.keys(all)
+    expect(keys.length).toBe(1);
+    expect(all[keys[0]].role).toEqual('user');
 
-  // it('FIX THIS - does not create a user if password is empty', function() {
-  //   callback(actionUserCreate3);
-  //   var all = UserStore.getAll();
-  //   var keys = Object.keys(all);
-  //   //THIS SHOULD BE 0, NOT 1
-  //   expect(keys.length).toBe(1);
-  // });
+    // update role. Note: server will not allow non-admin to update user to 'admin'
+    let newRole = 'admin'
+    actionUserUpdate.rawUser = Object.assign ({}, all[keys[0]], {role: newRole});
+    callback(actionUserUpdate);
 
+    expect(all[keys[0]].username).toEqual('foo');
+    expect(all[keys[0]].fullname).toEqual('bar');
+    expect(all[keys[0]].role).toEqual('admin');
+  });
 
+  it('changes a user role to \'user\'', function() {
+    callback(actionUserCreateAdmin);
+    var all = UserStore.getAll();
+    var keys = Object.keys(all)
+    expect(keys.length).toBe(1);
 
-  // it('does not create two users if usernames is the same', function() {
-  //   callback(actionUserCreate);
-  //   callback(actionUserCreate);
-  //   var all = UserStore.getAll();
-  //   var keys = Object.keys(all);
-  //   expect(keys.length).toBe(1);
-  //   expect(all[keys[0]].username).toEqual('foo');
-  //   expect(all[keys[0]].fullname).toEqual('bar');
-  // });
+    // update role. Note: server will not allow non-admin to update user to 'admin'
+    let newRole = 'user'
+    actionUserUpdate.rawUser = Object.assign ({}, all[keys[0]], {role: newRole});
+    callback(actionUserUpdate);
 
+    keys = Object.keys(UserStore.getAll());
+    expect(all[keys[0]].username).toEqual('john');
+    expect(all[keys[0]].fullname).toEqual('john doe');
+    expect(all[keys[0]].role).toEqual('user');
+  });
 
-  // it('destroys a user item', function() {
-  //   callback(actionUserCreate);
-  //   var all = UserStore.getAll();
-  //   var keys = Object.keys(all);
-  //   expect(keys.length).toBe(1);
-  //   actionUserDestroy.id = keys[0];
-  //   callback(actionUserDestroy);
-  //   expect(all[keys[0]]).toBeUndefined();
-  // });
+  it('creates two users', function() {
+    callback(actionUserCreate);
+    callback(actionUserCreateAdmin);
 
-  // it('edits a username', function() {
-  //   callback(actionUserCreate);
-  //   var all = UserStore.getAll();
-  //   var keys = Object.keys(all)
-  //   expect(keys.length).toBe(1);
-  //   actionUserUpdate0.id = keys[0];
-  //   actionUserUpdate0.userUpdates = {username: 'foofoo'}
-  //   callback(actionUserUpdate0);
-  //   expect(all[keys[0]].username).toEqual('foofoo');
-  //   expect(all[keys[0]].fullname).toEqual('bar');
-  // })
+    var all = UserStore.getAll();
+    var keys = Object.keys(all);
+    // console.log("all:", all);
+    expect(keys.length).toBe(2);
+    expect(all[keys[0]].username).toEqual('foo');
+    expect(all[keys[0]].fullname).toEqual('bar');
+    expect(all[keys[0]].role).toEqual('user');
+    expect(all[keys[1]].username).toEqual('john');
+    expect(all[keys[1]].fullname).toEqual('john doe');
+    expect(all[keys[1]].role).toEqual('admin');
+  });
 
+  it('destroys one user without removing other users', function() {
+    callback(actionUserCreate);
+    callback(actionUserCreateAdmin);
 
-  // it('edits a fullname', function() {
-  //   callback(actionUserCreate);
-  //   var all = UserStore.getAll();
-  //   var keys = Object.keys(all)
-  //   expect(keys.length).toBe(0);
-  //   // actionUserUpdate1.id = keys[0];
-  //   // actionUserUpdate1.userUpdates = {fullname: 'barbar'}
-  //   // callback(actionUserUpdate1);
-  //   // expect(all[keys[0]].username).toEqual('foo');
-  //   // expect(all[keys[0]].fullname).toEqual('barbar');
-  // })
+    var all = UserStore.getAll();
+    var keys = Object.keys(all);
+    // console.log("all:", all);
+    expect(keys.length).toBe(2);
+    expect(all[keys[0]].username).toEqual('foo');
+    expect(all[keys[0]].fullname).toEqual('bar');
+    expect(all[keys[0]].role).toEqual('user');
+    expect(all[keys[1]].username).toEqual('john');
+    expect(all[keys[1]].fullname).toEqual('john doe');
+    expect(all[keys[1]].role).toEqual('admin');
 
+    actionUserDestroy.id = keys[0];
+    callback(actionUserDestroy);
 
-  // it('edits a username and fullname', function() {
-  //   callback(actionUserCreate);
-  //   var all = UserStore.getAll();
-  //   var keys = Object.keys(all)
-  //   expect(keys.length).toBe(0);
-  //   // actionUserUpdate2.id = keys[0];
-  //   // actionUserUpdate2.userUpdates = {username: 'foofoo', fullname: 'barbar'}
-  //   // callback(actionUserUpdate2);
-  //   // expect(all[keys[0]].username).toEqual('foofoo');
-  //   // expect(all[keys[0]].fullname).toEqual('barbar');
-  // })
-
-
-  // it('does not allow a username to be edited to an empty string', function() {
-  //   callback(actionUserCreate);
-  //   var all = UserStore.getAll();
-  //   var keys = Object.keys(all)
-  //   expect(keys.length).toBe(1);
-  //   actionUserUpdate3.id = keys[0];
-  //   actionUserUpdate3.userUpdates = {username: ''}
-  //   callback(actionUserUpdate3);
-  //   expect(all[keys[0]].username).toEqual('foo');
-  //   expect(all[keys[0]].fullname).toEqual('bar');
-  // })
-
-
-  // it('does allow a fullname to be edited to an empty string', function() {
-  //   callback(actionUserCreate);
-  //   var all = UserStore.getAll();
-  //   var keys = Object.keys(all)
-  //   expect(keys.length).toBe(1);
-  //   actionUserUpdate4.id = keys[0];
-  //   actionUserUpdate4.userUpdates = {fullname: ''}
-  //   callback(actionUserUpdate4);
-  //   expect(all[keys[0]].username).toEqual('foo');
-  //   expect(all[keys[0]].fullname).toEqual('');
-  // })
-
-
+    var all_1 = UserStore.getAll();
+    var keys_1 = Object.keys(all_1);
+    expect(keys_1.length).toBe(1);
+    expect(all_1[keys_1[0]].username).toEqual('john');
+    expect(all_1[keys_1[0]].fullname).toEqual('john doe');
+    expect(all_1[keys_1[0]].role).toEqual('admin');
+  });
 });
