@@ -103,7 +103,7 @@ export default React.createClass({
 	copyPollURLToClipboard: function() {
 	// copyPollURLToClipboard: function(e) {
 		copyToClipboard(document.getElementById('poll-URL'));
-		// this.setState({showSharePollModal: false});
+		this.props.closeModal();
 	},
 
 	// handleNewAnswerOptionChange: function(e) {
@@ -114,11 +114,9 @@ export default React.createClass({
 
 
 	render: function() {
-		// var poll = PollStore.getPollById(this.props.poll_id);
 		var poll = this.props.poll;
-
 		// console.log('rendering FullPoll');
-		// console.log('props in Fullpoll are', this.props);
+		console.log('props in Fullpoll are', this.props);
 		var author_label = 'Poll Author: ';
 		var question_label = 'Poll Question: ';
 		if (this.props.poll == null || this.props.poll == undefined || this.props.poll.id == null) {
@@ -270,7 +268,7 @@ export default React.createClass({
 					<Button
 						bsStyle='primary'
 						title='Copy URL to clipboard (not supported on all browsers)'
-						onClick={this.props.copyPollURLToClipboard}
+						onClick={this.copyPollURLToClipboard}
 					>Copy to clipboard</Button>
 					<Button
 						bsStyle='default'

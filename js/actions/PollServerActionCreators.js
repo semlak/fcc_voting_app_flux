@@ -28,12 +28,11 @@ module.exports = {
 		});
 	},
 
-	receiveCreatedPoll: function(rawPolls, new_poll_id) {
+	receiveCreatedPoll: function(rawPoll) {
 		// console.log("in PollServerActionCreators.receiveCreatedPoll, rawPolls is ", rawPolls);
 		AppDispatcher.dispatch({
 			actionType: PollConstants.POLL_RECEIVE_RAW_CREATED_POLL,
-			new_poll_id: new_poll_id,
-			rawPolls: rawPolls
+			rawPoll: rawPoll
 		});
 	},
 
@@ -42,6 +41,14 @@ module.exports = {
 		AppDispatcher.dispatch({
 			actionType: PollConstants.POLL_DESTROY,
 			id: poll_id
+		});
+	},
+
+	receiveUpdatedPoll: function(rawPoll) {
+		console.log('in receiveUpdatedPoll of PollServerActionCreators. dispatching POLL_UPDATE signal with rawPoll.id:', rawPoll.id);
+		AppDispatcher.dispatch({
+			actionType: PollConstants.POLL_UPDATE,
+			updatedPoll: rawPoll
 		});
 	},
 

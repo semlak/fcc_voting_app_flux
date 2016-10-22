@@ -24,6 +24,32 @@ var reqUserInfo = function(account) {
 
 
 
+var cleanseVote = function (vote) {
+	/*
+		A vote object has an _id, owner, poll (a poll_id), answer_option , and ip_address.
+			-answer_option is an index referring to position in answer_options array of poll
+		Only the vote's answer_option and poll need to be sent to the client.
+	*/
+	return {
+		answer_option: vote.answer_option,
+		poll: vote.poll
+	};
+
+}
+
+var cleansePoll = function (poll) {
+	return {
+		id: poll._id,
+		_id: poll._id,
+		author: poll.author,
+		owner: poll.owner,
+		question: poll.question,
+		answer_options: poll.answer_options,
+		votes: poll.votes.map(vote => cleanseVote(vote))
+	};
+}
+
+
 /*
 	This controller only expects to handles AJAX requests. All responses are via json.
 	I do have some old routes commented out that include non-json responses (I initially created this app as a non-single-page-app)
@@ -66,14 +92,17 @@ router.get('/polls/', function(req, res) {
 		}
 		else {
 			var message = polls.length < 0 ? 'No polls found.' : 'Polls retrieved succesfully.';
-			res.json({error: (polls.length < 0), polls: polls, message: message, user: reqUserInfo(req.user)});
+			var cleansedPolls = polls.map(poll => cleansePoll(poll));
+			res.json({error: (polls.length < 0), polls: cleansedPolls, message: message, user: reqUserInfo(req.user)});
 		}
 	});
 });
 
 
-// get a single poll, retried by its poll id, via a GET request to /polls/:poll_id
-// Not necessary due to single page app functionality. Could be added back if I ever implement server-side rendering.
+// get a single poll, retrieved by its poll id, via a GET request to /polls/:poll_id
+// // This route has been made unnecessary due to the single page app functionality.
+// // Instead, the webapp retrieve all polls regardless of the initial URL, and react-router tells the app to render the individual poll if that is the intial route.
+// // I could be added back if I ever implement server-side rendering.
 // router.get('/polls/:poll_id', function(req, res, next) {
 // 	console.log('Received GET request for single poll listing.')
 // 	var isAjaxRequest = req.xhr || req.headers.accept.indexOf('json') > -1 || req.headers['x-requested-with'] == 'XMLHttpRequest';
@@ -146,17 +175,9 @@ router.post('/polls/', function(req, res) {
 			if (err) {
 				res.json(err);
 			}
-			Poll.find(function(err, polls) {
-				if (err) {
-					res.json(err);
-				}
-				else {
-					// need more logic here
-					// send back all polls, but also include id of new poll.
-					var data = {error: false, polls: polls, new_poll_id: poll._id, message: 'Poll created successfully.', user: reqUserInfo(req.user)};
-					res.json(data);
-				}
-			});
+			var singlePoll = cleansePoll(poll);
+			var data = {error: false, poll: singlePoll, message: 'Poll created successfully.', user: reqUserInfo(req.user)};
+			res.json(data);
 		});
 	}
 });
@@ -205,7 +226,7 @@ router.post('/polls/:poll_id/new_answer_option', function(req, res) {
 		res.json({error: true, message: 'New answer option cannot be blank/null.', user: reqUserInfo(req.user)});
 	}
 	else {
-		Poll.findById(poll_id, function(err, poll) {
+		Poll.findById(poll_id).populate('votes').exec(function(err, poll) {
 			if (err) {
 				res.json(err);
 			}
@@ -225,15 +246,9 @@ router.post('/polls/:poll_id/new_answer_option', function(req, res) {
 						console.log(message);
 						// console.log('Successfully updated poll ', poll_id, ' with new_answer_option', new_answer_option, ', all answer options are ', poll.answer_options)
 						// res.json({poll_id: poll._id, answer_options: poll.answer_options});
-						Poll.find(function(err, polls) {
-							if (err) {
-								res.json(err);
-							}
-							else {
-								var data = {error: false, polls: polls, message: message, user: reqUserInfo(req.user)};
-								res.json(data);
-							}
-						});
+						var singlePoll = cleansePoll(poll);
+						var data = {error: false, poll: singlePoll, message: message, user: reqUserInfo(req.user)};
+						res.json(data);
 					}
 				});
 			}

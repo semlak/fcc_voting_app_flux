@@ -1,15 +1,10 @@
 /**
- * Copyright (c) 2014-2015, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+PollContainer.jsx
  */
 
 /**
  * This component operates as a 'Controller-View'.  It listens for changes in
- * the PollStore and passes the new data to its children.
+ * the PollStore and passes the new data to its children. It will render either a PollList or FullPoll as its child element.
  */
 
 import React from 'react';
@@ -231,7 +226,6 @@ export default React.createClass({
 
 		return (
 			<FullPoll
-				poll_id={this.props.params.poll_id}
 				poll={poll}
 				currentUser={currentUser}
 				modalToShow={modalToShow}

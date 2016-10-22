@@ -8,11 +8,12 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 
 
+
 describe('FullPoll', function() {
   var FullPoll;
 
   beforeEach(function() {
-    FullPoll = require('../PollItem');
+    FullPoll = require('../FullPoll');
     // console.log("\n\n\Pll is", Poll)
     // done()
   });

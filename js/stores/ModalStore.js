@@ -55,7 +55,7 @@ var ModalStore = assign({}, EventEmitter.prototype, {
 
 // Register callback to handle all updates
 ModalStore.dispatchToken = AppDispatcher.register(function(action) {
-	console.log('received dispatch signal in ModalStore. action is:', action);
+	// console.log('received dispatch signal in ModalStore. action is:', action);
 
 	switch(action.actionType) {
 

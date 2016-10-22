@@ -19,7 +19,30 @@ var Vote = require('../models/vote');
 			THIS APPLICATION MIGHT SEND SENSTIVE USER DATA TO CLIENT. This should be cleaned up before production use. Votes contain IP addresses and USER ids.
 	*/
 
+var cleanseVote = function (vote) {
+	/*
+		A vote object has an _id, owner, poll (a poll_id), answer_option , and ip_address.
+			-answer_option is an index referring to position in answer_options array of poll
+		Only the vote's answer_option and poll need to be sent to the client.
+	*/
+	return {
+		answer_option: vote.answer_option,
+		poll: vote.poll
+	};
 
+}
+
+var cleansePoll = function (poll) {
+	return {
+		id: poll._id,
+		_id: poll._id,
+		author: poll.author,
+		owner: poll.owner,
+		question: poll.question,
+		answer_options: poll.answer_options,
+		votes: poll.votes.map(vote => cleanseVote(vote))
+	};
+}
 
 // this does not require an authenticated user.
 // router.get('/votes/', function(req, res, next) {
@@ -29,6 +52,7 @@ router.get('/votes/', function(req, res) {
 			res.json(err);
 		}
 		else {
+			var cleansedVotes = votes.map(vote => cleanseVote(vote));
 			res.json(votes);
 		}
 	});
@@ -67,7 +91,7 @@ router.post('/votes', function(req, res) {
 			res.json(err);
 		}
 		else if (votes.length > 0 && (req.user == null || req.user.role != 'admin')) {
-			res.json({message: 'You have already voted once for this poll.', votes: null});
+			res.json({message: 'You have already voted once for this poll.', poll: null, votes: null});
 		}
 		else {
 			vote.save(function(err) {
@@ -75,12 +99,12 @@ router.post('/votes', function(req, res) {
 					res.json(err);
 				}
 				// add vote to poll's votes array
-				Poll.findById(vote.poll, function(err, poll) {
+				Poll.findById(vote.poll).populate('votes').exec(function(err, poll) {
 					if (err) {
 						res.json(err);
 					}
 					else if (poll == null) {
-						res.json({message: 'No poll found corresponding to your vote.'});
+						res.json({message: 'No poll found corresponding to your vote.', poll: null, votes: null});
 					}
 					else {
 						// console.log('poll is', poll);
@@ -90,17 +114,9 @@ router.post('/votes', function(req, res) {
 								res.json(err);
 							}
 							else {
-								// good. poll object is updated. Now return all votes associated with that poll
-								Vote.find({poll: vote.poll}, function(err, votes) {
-									if (err) {
-										res.json(err);
-									}
-									else {
-										// need more logic here
-										// console.log('responding with votes', votes);
-										res.json({message: 'Vote was successful', votes: votes});
-									}
-								});
+								var updatedPoll = cleansePoll(poll);
+								// console.log('updatedPoll:', updatedPoll)
+								res.json({message: 'Vote was successful', poll: updatedPoll, votes: updatedPoll.votes});
 							}
 						});
 					}

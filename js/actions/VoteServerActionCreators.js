@@ -15,10 +15,11 @@ module.exports = {
 		});
 	},
 
-	receiveCreatedVote: function(createdVote) {
+	receiveCreatedVote: function(poll_id, allVotesForPoll) {
 		AppDispatcher.dispatch({
 			actionType: VoteConstants.VOTE_RECEIVE_RAW_CREATED_VOTE,
-			rawVote: createdVote
+			poll_id: poll_id,
+			allVotesForPoll: allVotesForPoll
 		});
 	},
 

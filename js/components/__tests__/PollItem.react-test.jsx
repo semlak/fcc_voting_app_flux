@@ -8,6 +8,11 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 
 
+
+var handlePollSelectFunc = function() {
+    return true;
+}
+
 describe('Poll', function() {
   var Poll;
 
@@ -21,7 +26,7 @@ describe('Poll', function() {
     // Note: Xena is my cat. I use her for examples.
     var poll = {author: 'Xena', question: 'How cute is Xena?', answer_options: [], _id: 1, votes: []}
     const component = renderer.create(
-      <Poll poll={poll} key={poll._id} id={poll._id} handlePollSelect={null} />
+      <Poll poll={poll} key={poll._id} id={poll._id} handlePollSelect={handlePollSelectFunc} />
     );
 
     let tree = component.toJSON();

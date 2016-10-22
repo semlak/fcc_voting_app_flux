@@ -7,6 +7,8 @@ import PollServerActionCreators from '../actions/PollServerActionCreators';
 // import PollActionCreators from '../actions/PollActionCreators';
 
 import PollStore from '../stores/PollStore';
+import ModalActionCreators from '../actions/ModalActionCreators';
+
 var pollsURL = PollStore.getPollsURL();
 
 // !!! Please Note !!!
@@ -59,9 +61,10 @@ module.exports = {
 				else {
 					// should receive object with polls array (polls) as well as new_poll_id for the new_poll, and user
 					// We want to update the polls in the PollStore and then direct the browser to view that poll as a FullPoll
-					var rawPolls = responseJSON.polls;
-					var new_poll_id = responseJSON.new_poll_id;
-					PollServerActionCreators.receiveCreatedPoll(rawPolls, new_poll_id);
+					// var rawPolls = responseJSON.polls;
+					// var new_poll_id = responseJSON.new_poll_id;
+					var rawPoll = responseJSON.poll;
+					PollServerActionCreators.receiveCreatedPoll(rawPoll);
 				}
 
 			}
@@ -77,6 +80,7 @@ module.exports = {
 	addAnswerOption: function(data) {
 		//data contains id (poll_id) and newAnswerOption
 		var xhr = new XMLHttpRequest();
+		// This seems like this could be a PUT request
 		// xhr.open('POST', VoteConstants.VOTE_URL);
 		xhr.open('POST', pollsURL + '/' + data.poll_id + '/new_answer_option');
 		xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
@@ -88,17 +92,22 @@ module.exports = {
 				console.log('Submitted Poll answer_option creation request via ajax xhr! xhr.responseText is:', responseJSON);
 				if (responseJSON.error) {
 					console.log('Error occurred sumbiting a new answer_option for a poll. response is', responseJSON);
+					ModalActionCreators.open('dialog', responseJSON.message || 'Failed to add new answer option to poll.');
 					//ideally, launch modal with responseJSON.message as text.
 				}
 				else {
 					//this used to just receive the poll\'s updated answer_options array, but now I have it receive all raw polls.
 					//I would like to switch it back to just receiving the updated poll, or maybe the the updated poll's answer options.
-					var rawPolls = responseJSON.polls;
-					PollServerActionCreators.receiveAll(rawPolls);
+					// var rawPolls = responseJSON.polls;
+					// PollServerActionCreators.receiveAll(rawPolls);
+					var rawPoll = responseJSON.poll;
+					PollServerActionCreators.receiveUpdatedPoll(rawPoll);
 				}
 			}
 			else {
 				// console.log('Registration xrh request failed.  Returned status is ' + xhr.status);
+				ModalActionCreators.open('dialog', 'Failed to add new answer option to poll.');
+
 			}
 		}.bind(this);
 

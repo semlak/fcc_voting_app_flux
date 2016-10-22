@@ -19,11 +19,11 @@ import ReactPropTypes from 'react/lib/ReactPropTypes';
 	// var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
 
-function shadeColor(color, percent) {
+var shadeColor = function (color, percent) {
 //from http://stackoverflow.com/questions/5560248/programmatically-lighten-or-darken-a-hex-color-or-rgb-and-blend-colors
 	var f=parseInt(color.slice(1),16),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=f>>16,G=f>>8&0x00FF,B=f&0x0000FF;
 	return '#'+(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);
-}
+};
 
 var truncateString = function(string, length) {
 	//if the input string is more than 'length' characters long, this will take the first 'length - 3' characters and append '...' to those.
@@ -71,18 +71,18 @@ export default React.createClass({
 	propTypes: {
 		poll: ReactPropTypes.object.isRequired
 	},
-	getInitialState: function() {
-		// console.log('getting initial state for PollChart');
-		return {
-			poll: this.props.poll
-		};
-	},
+	// getInitialState: function() {
+	// 	// console.log('getting initial state for PollChart');
+	// 	return {
+	// 		poll: this.props.poll
+	// 	};
+	// },
 	// componentWillReceiveProps: function(nextProps) {
 	// 	// console.log('in 'componentWillReceiveProps' of PollChart. nextProps: ', nextProps);
 	// 	//We expect to receive PropUpdates that don't really call for a new rendering of the chart. (user logging in, form_feedback change, sharing poll)
 
 	// 	//Only update if there is a new answer_option or a new vote.
-	// 	// if (nextProps.poll && (nextProps.poll.votes > this.state.poll.votes || nextProps.answer_options > this.state.answer_options)) {
+	// 	// if (nextProps.poll && (nextProps.poll.votes > this.props.poll.votes || nextProps.answer_options > this.state.answer_options)) {
 	// 		// this.setState({poll: this.props.poll});
 	// 	// }
 	// },
@@ -113,16 +113,17 @@ export default React.createClass({
 	render: function() {
 		// var pollname = this.props.params.pollName;
 		// var poll = PollStore.getPollById(this.props.params.poll_id);
-		var poll = this.state.poll;
+		var poll = this.props.poll;
 
-		// console.log('rendering PollChart');
+		console.log('rendering PollChart');
 
-		// var currentUserIsPollOwner = (this.state.currentUser == null || this.state.currentUser.username == null) ? false : (this.state.currentUser.id == this.state.poll.owner);
+		// var currentUserIsPollOwner = (this.state.currentUser == null || this.state.currentUser.username == null) ? false : (this.state.currentUser.id == this.props.poll.owner);
 		// console.log('\n\n\ncurrentUserIsPollOwner is', currentUserIsPollOwner);
 		// const {BarChart, Cell, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} = Recharts;
 
 
 		var mappedVotes = this.mapVotesToAnswerOptions(poll.answer_options, poll.votes);
+		console.log('mappedVotes:', mappedVotes);
 		var data = mappedVotes.map(function(answer_option_votes, i ) {
 			return {
 				answer_option: truncateString(poll.answer_options[i], 25),

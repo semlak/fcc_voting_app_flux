@@ -45,7 +45,7 @@ function deleteLocalPoll(id) {
 }
 
 function updatePoll(rawPoll) {
-	//console.log("in updatePoll of PollStore helper functions, rawPoll is ", rawPoll);
+	console.log('in updatePoll of PollStore helper functions, rawPoll is ', rawPoll);
 	var poll = PollUtils.convertRawPoll(rawPoll);
 	var currentPoll = _polls[poll.id];
 	// the only update allowed for polls are a additional answer options (existing ones don't change) and votes
@@ -64,7 +64,7 @@ function updatePollSet(rawPolls) {
 	// returns true if updates were needed, false if no change
 	rawPolls.forEach(function(poll) {poll.id = poll._id; });
 	var updatesNeeded = false;
-	if (Object.keys(_polls).length  == 0 ) {
+	if (Object.keys(_polls).length == 0 ) {
 		addPolls(rawPolls);
 		return true;
 	}
@@ -92,7 +92,7 @@ function updatePollSet(rawPolls) {
 		}
 		if (updateMade) { updatesNeeded = true ;}
 	});
-	// console.log("after checking for updated polls, updatesNeeded is ", updatesNeeded);
+	// console.log('after checking for updated polls, updatesNeeded is ', updatesNeeded);
 	return updatesNeeded;
 }
 
@@ -269,6 +269,7 @@ var PollStore = assign({}, EventEmitter.prototype, {
 // Register callback to handle all updates
 PollStore.dispatchToken = AppDispatcher.register(function(action) {
 	var updatesMade = false;
+
 	switch(action.actionType) {
 		//this case is currently not used. POLL_RECEIVE_RAW_CREATED_POLL is used instead (called by PollServerActionCreators).
 	case PollConstants.POLL_CREATE:
@@ -286,22 +287,21 @@ PollStore.dispatchToken = AppDispatcher.register(function(action) {
 		break;
 
 
-	// case PollConstants.POLL_UPDATE:
-	// //would like to use this to handle new answer_option or vote that is added to existing poll. Currently, I just receive all rawpolls.
-	//   // console.log("action is ", action);
-	//   var pollUpdates = action.pollUpdates
-	//   // console.log('pollUpdates is ', pollUpdates)
-	//   for (var key in pollUpdates) {
-	//     pollUpdates[key] = pollUpdates[key].trim()
-	//   }
-	//   if (pollUpdates.author != '' && pollUpdates.question != '') {
-	//     update(action.id, pollUpdates);
-	//     PollStore.emitChange();
-	//   }
-	//   break;
+	case PollConstants.POLL_UPDATE:
+	// An update to the poll. The application does not currently support changing the author name or question for an existing poll, so this primarily is
+	// for when a new answer_option or vote is created for the poll.
+
+	//would like to use this to handle new answer_option or vote that is added to existing poll. Currently, I just receive all rawpolls.
+		console.log('in POLL_UPDATE case. action is ', action);
+		var updatedPoll = action.updatedPoll;
+		// console.log('pollUpdates is ', pollUpdates)
+		updatePoll(updatedPoll);
+		console.log('poll, after update:', _polls[action.updatedPoll.id]);
+		PollStore.emitChange();
+		break;
 
 	case PollConstants.POLL_DESTROY:
-		// console.log("in PollStore, received POLL_DESTROY dispatch signal");
+		// console.log('in PollStore, received POLL_DESTROY dispatch signal');
 		destroy(action.id);
 		PollStore.emitChange();
 		//action.id is the id of poll that is destroyed.
@@ -309,12 +309,12 @@ PollStore.dispatchToken = AppDispatcher.register(function(action) {
 		break;
 
 	case PollConstants.POLL_DESTROY_FAIL:
-		// console.log("in PollStore, received POLL_DESTROY_FAIL dispatch signal");
+		// console.log('in PollStore, received POLL_DESTROY_FAIL dispatch signal');
 		PollStore.emitDestroy(action.id, false);
 		break;
 
 	case PollConstants.POLL_RECEIVE_RAW_POLLS:
-		// console.log("\n\nIn PollStore, dispatch receiving. received 'RECEIVE_RAW_POLLS' action signal, rawPolls are", action.rawPolls);
+		// console.log('\n\nIn PollStore, dispatch receiving. received 'RECEIVE_RAW_POLLS' action signal, rawPolls are', action.rawPolls);
 		updatesMade = updatePollSet(action.rawPolls);
 		// AppDispatcher.waitFor([ThreadStore.dispatchToken]);
 		// _markAllInThreadRead(ThreadStore.getCurrentID());
@@ -328,8 +328,8 @@ PollStore.dispatchToken = AppDispatcher.register(function(action) {
 		break;
 
 	case PollConstants.POLL_RECEIVE_RAW_CREATED_POLL:
-		// console.log("\n\nIn PollStore, dispatch receiving. received 'POLL_RECEIVE_RAW_CREATED_POLL' action signal, rawPolls are", action.rawPolls)
-		updatesMade = updatePollSet(action.rawPolls);
+		// console.log('\n\nIn PollStore, dispatch receiving. received 'POLL_RECEIVE_RAW_CREATED_POLL' action signal, rawPolls are', action.rawPolls)
+		updatesMade = addPoll(action.rawPoll);
 		// AppDispatcher.waitFor([ThreadStore.dispatchToken]);
 		// _markAllInThreadRead(ThreadStore.getCurrentID());
 
@@ -337,16 +337,16 @@ PollStore.dispatchToken = AppDispatcher.register(function(action) {
 		// also, the addpoll function only adds poll if they are not already in _polls. It does not update their data if it has changed.
 		// add, it does not remove polls from _polls that are no longer registered.
 		if (updatesMade) {
-			// console.log("emitting CREATED_EVENT signal from POLL_RECEIVE_RAW_CREATED_POLL case")
-			PollStore.emitCreated(action.new_poll_id);
-			// console.log("emitting CHANGE_EVENT signal from POLL_RECEIVE_RAW_CREATED_POLL case")
+			// console.log('emitting CREATED_EVENT signal from POLL_RECEIVE_RAW_CREATED_POLL case')
+			PollStore.emitCreated(action.rawPoll.id);
+			// console.log('emitting CHANGE_EVENT signal from POLL_RECEIVE_RAW_CREATED_POLL case')
 			PollStore.emitChange();
 		}
 
 		break;
 
 	case VoteConstants.VOTE_CREATE_FAIL:
-		// console.log("\n\nIn PollStore, dispatch receiving. received 'VOTE_CREATE_FAIL' action signal")
+		// console.log('\n\nIn PollStore, dispatch receiving. received 'VOTE_CREATE_FAIL' action signal')
 		PollStore.emitVoteCreated(action.poll_id, false, action.message);
 		break;
 
