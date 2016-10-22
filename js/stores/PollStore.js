@@ -23,7 +23,6 @@ var _votesURL = '/api/votes';
 function addPolls(rawPolls) {
 	// console.log('in PollStore., addPolls.  adding raw polls to _polls, rawPolls are', rawPolls);
 	rawPolls.forEach(function(poll) {
-		// poll.id = poll._id;
 		if (!_polls[poll.id]) {
 			_polls[poll.id] = PollUtils.convertRawPoll(poll);
 		}
@@ -62,7 +61,6 @@ function updatePoll(rawPoll) {
 
 function updatePollSet(rawPolls) {
 	// returns true if updates were needed, false if no change
-	rawPolls.forEach(function(poll) {poll.id = poll._id; });
 	var updatesNeeded = false;
 	if (Object.keys(_polls).length == 0 ) {
 		addPolls(rawPolls);
