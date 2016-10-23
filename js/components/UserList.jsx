@@ -44,12 +44,12 @@ var UserList = React.createClass({
 
 		return (
 			<div>
-				<div id="user-list" className='pollContainerHeader'>
-					<h2 className='displayInline'>Listing of all Users:</h2>
+				<div id="user-list" className='poll-container-header'>
+					<h2 className='display-inline'>Listing of all Users:</h2>
 				</div>
 				<br />
 				<Grid>
-					<Row className='userList pollList'>
+					<Row className='user-list poll-list'>
 						{userNodes}
 					</Row>
 				</Grid>

@@ -4,7 +4,6 @@ jest.autoMockOff();
 
 
 import React from 'react';
-// import Link from '../Link.react';
 import renderer from 'react-test-renderer';
 
 
@@ -18,15 +17,13 @@ describe('Poll', function() {
 
   beforeEach(function() {
     Poll = require('../PollItem');
-    // console.log("\n\n\Pll is", Poll)
-    // done()
   });
 
   it('has an author and a question', () => {
     // Note: Xena is my cat. I use her for examples.
-    var poll = {author: 'Xena', question: 'How cute is Xena?', answer_options: [], _id: 1, votes: []}
+    var poll = {author: 'Xena', question: 'How cute is Xena?', answer_options: [], id: 1, votes: []}
     const component = renderer.create(
-      <Poll poll={poll} key={poll._id} id={poll._id} handlePollSelect={handlePollSelectFunc} />
+      <Poll poll={poll} handlePollSelect={handlePollSelectFunc} />
     );
 
     let tree = component.toJSON();
@@ -34,7 +31,7 @@ describe('Poll', function() {
     // console.log("tree.children:", tree.children);
     expect(tree.children.length).toBe(2);
 
-    expect(tree.children[0].props.className).toBe("pollAuthor poll-label");
+    expect(tree.children[0].props.className).toBe("poll-author poll-label");
     expect(tree.children[0].children.length).toBe(2);
     expect(tree.children[0].children[0]).toBe("Poll Author: ");
     expect(tree.children[0].children[1].children[0]).toBe("Xena");

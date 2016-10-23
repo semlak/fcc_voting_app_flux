@@ -151,7 +151,7 @@ export default React.createClass({
 		);
 
 		return (
-			<div id='password_change' className=''>
+			<div id='password-change' className=''>
 					{passwordForm}
 			</div>
 		);

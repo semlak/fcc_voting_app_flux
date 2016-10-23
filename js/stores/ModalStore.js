@@ -61,7 +61,8 @@ ModalStore.dispatchToken = AppDispatcher.register(function(action) {
 
 	case ModalConstants.MODAL_SHOW:
 		console.log('triggered MODAL_SHOW case in ModalStore dispatch receiving. action is ', action);
-		if (action.modalToShow != 'none' && action.modalToShow != 'sharepoll' && action.modalToShow != 'deletepoll' && action.modalToShow != 'dialog') {
+		// check that action.modalToShow is in the list of valid options (_modalToShowOptions array)
+		if (_modalToShowOptions.indexOf(action.modalToShow) < 0) {
 			console.error('\'modalToShow\' variable dispatched to ModalStore is not a valid option');
 		}
 

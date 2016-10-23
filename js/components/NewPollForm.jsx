@@ -195,13 +195,13 @@ export default React.createClass({
 						<FormControl.Feedback />
 						{questionField.validationMessage == null ? <HelpBlock>You can enter any question you like.</HelpBlock> : <HelpBlock>{questionField.validationMessage}</HelpBlock> }
 					</FormGroup>
-					<FormGroup controlId='answerOptions' validationState={answerOptionsField.validationState} className='answerOptionListContainer well'>
+					<FormGroup controlId='answerOptions' validationState={answerOptionsField.validationState} className='answer-option-list-container well'>
 						<ControlLabel>Current Answer options:</ControlLabel>
 						<AnswerOptionsList answer_options={this.state.answer_options} votes={[]} handleAnswerOptionChange={this.handleAnswerOptionChange} options_are_editable={true} />
 						<FormControl.Feedback />
 						{answerOptionsField.validationMessage == null ? null : <HelpBlock>{answerOptionsField.validationMessage}</HelpBlock> }
 					</FormGroup>
-					<FormGroup controlId='newAnswerOptionForm' className='newAnswerOptionFormContainer well'>
+					<FormGroup controlId='newAnswerOptionForm' className='new-answer-option-form-container well'>
 						<ControlLabel>Add additional answer option:</ControlLabel>
 						<NewAnswerOptionForm handleAddAnswerOption={this.handleAddAnswerOption} initial_new_answer_option={this.state.initial_new_answer_option} user={this.state.currentUser} />
 					</FormGroup>
@@ -224,9 +224,9 @@ export default React.createClass({
 		);
 
 		return (
-			<div className='pollForm'>
-				<div className='newPollHeader'>
-						<h2 className='displayInline'>Create a new Poll</h2> :
+			<div className='poll-form'>
+				<div className='new-poll-header'>
+						<h2 className='display-inline'>Create a new Poll</h2> :
 				</div>
 				<br />
 				{formInstance}

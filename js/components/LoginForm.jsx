@@ -41,7 +41,7 @@ export default React.createClass({
 		var validationState = message_obj == null ? null : (message_obj.error ? 'error' : 'success');
 		var validationMessage = message_obj == null ? '' : message_obj.message_text;
 		return (
-			<div className='sign_in_form' onClick={this.handleClick} >
+			<div className='sign-in-form' onClick={this.handleClick} >
 				<div className='modal-body' onClick={this.handleClick} >
 					<Form horizontal>
 						<FormGroup validationState={validationState}>

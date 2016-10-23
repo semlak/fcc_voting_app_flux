@@ -26,13 +26,13 @@ a {
 	/*box-sizing: border-box;*/
 }
 /*
-.pollContainer.pollList {
+.poll-container.poll-list {
 	margin: -200px;
 }
 
 */
 
-.pollContainer {
+.poll-container {
 	/*margin-left: -15px;*/
 }
 
@@ -43,39 +43,36 @@ a {
 }
 
 
-.pollListing {
+.poll-listing {
 	list-style-type: none;
 }
 
-/*#poll_2 #answer_option_0 {
-	color: green;
-}*/
 
-.pollList .poll.well:hover{
+.poll-list .poll.well:hover{
 	background: lightblue;
 }
 
-.pollList {
+.poll-list {
 	margin-left: -30px;
 	margin-right: -30px;
 }
 
-.headerColumn {
+.header-column {
 	margin-left: -15px
 }
 
-li.answer_option, .answer_option {
+li.answer-option, .answer-option {
 	margin: 5px 0px 5px 0px;
 }
 
 
 
-.answer_option.pollListing.uneditable {
+.answer-option.poll-listing.uneditable {
 /*	padding: 5px 0px 5px 0px;*/
 	border: 1px solid white;
 }
 
-.answer_option.pollListing.uneditable.addBorder {
+.answer-option.poll-listing.uneditable.add-border {
 	/*background: lightblue;*/
 	/*border: black;*/
 	border: 1px solid lightblue;
@@ -83,7 +80,7 @@ li.answer_option, .answer_option {
 }
 
 
-.answer_option span {
+.answer-option span {
 	/*margin-left: -25px;*/
 
 	/*to allow answer option to wrap to next line but be indented*/
@@ -96,11 +93,11 @@ li.answer_option, .answer_option {
 	margin-bottom: 5px;
 }
 
-.voteCount {
+.vote-count {
 	float: right;
 }
 
-.delete_poll_link {
+.delete-poll-link {
 	/*float: right;*/
 	/*margin-left: 10px;*/
 }
@@ -141,33 +138,33 @@ li.answer_option, .answer_option {
 	font-size: 21px;
 }
 
-.floatRight {
+.float-right {
 	float: right;
 }
 
-.modalCloseButton {
+.modal-close-button {
 	margin-right: 10px;
 	margin-top: 10px;
 }
 
-.displayInline {
+.display-inline {
 	display: inline;
 }
 
-#modal_error_message {
+#modal-error-message {
 	margin-bottom: 10px;
 }
 
-.answer_options_list {
+.answer-options-list {
 /*	border: 1px solid black;
 	padding: 5px;*/
 }
 
-.backToAllPolls {
+.back-to-all-polls {
 	/*margin-left: 25px;*/
 }
 
-.share_poll_button {
+.share-poll-button {
 	/*margin-top: 10px;*/
 }
 
@@ -199,7 +196,7 @@ canvas {
 	margin-bottom: 5px;
 }
 
- .pollBoxHeader {
+ .poll-box-header {
  	/*height: 50px;*/
  }
 

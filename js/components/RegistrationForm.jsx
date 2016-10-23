@@ -66,7 +66,7 @@ export default React.createClass({
 		var validationState = message_obj == null ? null : (message_obj.error ? 'error' : 'success');
 		var validationMessage = message_obj == null ? '' : message_obj.message_text;
 		return (
-			<div className='registration_form'>
+			<div className='registration-form'>
 				<div className='modal-body'>
 					<Form horizontal>
 						<FormGroup validationState={validationState}>

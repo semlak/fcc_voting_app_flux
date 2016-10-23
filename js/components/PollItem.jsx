@@ -17,14 +17,14 @@ var PollItem = React.createClass({
 		var author_label = 'Poll Author: ';
 		var question_label = 'Poll Question: ';
 		return (
-			<div className='poll well' id={'poll_' + poll.id} onClick={this.props.handlePollSelect.bind(null, poll.id)}>
-				<div className='pollAuthor poll-label'>
+			<div className='poll well' id={'poll-' + poll.id} onClick={this.props.handlePollSelect.bind(null, poll.id)}>
+				<div className='poll-author poll-label'>
 					{author_label}
 					<span>
 						{poll.author}
 					</span>
 				</div>
-				<div className='pollQuestion poll-label'>
+				<div className='poll-question poll-label'>
 					{question_label}
 					<span>
 						{poll.question}

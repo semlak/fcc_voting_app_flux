@@ -85,7 +85,7 @@ var AnswerOption = React.createClass({
 		else {
 			// var uneditableAnswerOptionWithVotes = (
 			// // Used primarily for development. It displays votes next to answer option. Not really needed if chart is being rendered in PollForm.
-			// 	<Row className={'answer_option pollListing uneditable' + (this.state.hoverOn ? ' addBorder' : '')}>
+			// 	<Row className={'answer-option poll-listing uneditable' + (this.state.hover-on ? ' add-border' : '')}>
 			// 		<Col xs={4} sm={4} md={2} className=''>
 			// 			<Button
 			// 				onClick={this.vote}
@@ -106,7 +106,7 @@ var AnswerOption = React.createClass({
 			// )
 			var uneditableAnswerOption = function() {
 				return (
-					<Row className={'answer_option pollListing uneditable' + (this.state.hoverOn ? ' addBorder' : '')}>
+					<Row className={'answer-option poll-listing uneditable' + (this.state.hoverOn ? ' add-border' : '')}>
 						<Col xs={4} sm={4} md={2} className=''>
 							<Button
 								onClick={this.vote}
@@ -153,7 +153,7 @@ var AnswerOptionsList = React.createClass({
 			);
 		}.bind(this));
 		return (
-			<div className='answer_options_list'>
+			<div className='answer-options-list'>
 				<Grid>
 					{answerOptionNodes.length > 0 ? answerOptionNodes : 'None'}
 				</Grid>
@@ -211,7 +211,7 @@ var NewAnswerOptionForm = React.createClass({
 		var userIsAuthenticated = this.props.user != null && this.props.user.username != null;
 		// console.log('userIsAuthenticated:', userIsAuthenticated, ', this.props.user: ', this.props.user);
 		return (
-			<Grid className='newAnswerOptionForm'>
+			<Grid className='new-answer-option-form'>
 				<FormGroup controlId='newAnswerOptionForm' validationState={validationState}>
 					<FormGroup controlId='newAnswerOptionField' validationState={validationState}>
 						<FormControl
@@ -308,7 +308,7 @@ var AnswerOptionsBox = React.createClass({
 		);
 
 		return (
-			<div className='answerOptionBox'>
+			<div className='answer-options-box'>
 					<AnswerOptionsList
 						answer_options={this.props.answer_options}
 						answer_option_votes={!this.props.options_are_editable ? this.props.mapVotesToAnswerOptions(this.props.votes) : null}

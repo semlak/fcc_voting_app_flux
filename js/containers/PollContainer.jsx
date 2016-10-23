@@ -192,7 +192,7 @@ export default React.createClass({
 		// console.log('polls to render are ', pollsToRender);
 		var pollListHeader = this.props.params == null || this.props.params.userPollsToRender == null ? 'Listing of All Polls:' : 'Listing of ' + this.props.params.userPollsToRender + '\'s Polls:';
 		return (
-				<div id='pollapp'  className='pollContainer'>
+				<div id='pollapp'  className='poll-container'>
 					<PollList allPolls={pollsToRender} header={pollListHeader} handlePollSelect={this.handlePollSelect} />
 				</div>
 		);

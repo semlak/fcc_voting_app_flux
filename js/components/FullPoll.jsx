@@ -6,7 +6,7 @@
 import React from 'react';
 import {Button, Row, Col, Grid, ButtonToolbar, Modal} from 'react-bootstrap';
 
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+// import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import {AnswerOptionsBox} from './AnswerOptionsBox';
 // import AnswerOptionsBox from './AnswerOptionsBox';
 import PollChart from './PollChart';
@@ -70,7 +70,7 @@ function copyToClipboard(elem) {
 
 
 
-export default React.createClass({
+var FullPoll = React.createClass({
 	propTypes: {
 		poll: ReactPropTypes.object.isRequired,
 		openDeletePollModal: React.PropTypes.func.isRequired,
@@ -116,7 +116,7 @@ export default React.createClass({
 	render: function() {
 		var poll = this.props.poll;
 		// console.log('rendering FullPoll');
-		console.log('props in Fullpoll are', this.props);
+		// console.log('props in Fullpoll are', this.props);
 		var author_label = 'Poll Author: ';
 		var question_label = 'Poll Question: ';
 		if (this.props.poll == null || this.props.poll == undefined || this.props.poll.id == null) {
@@ -152,7 +152,7 @@ export default React.createClass({
 		// 	<Button
 		// 		type='button'
 		// 		bsStyle='info'
-		// 		className='share_poll_button'
+		// 		className='share-poll-button'
 		// 		data-toggle='tooltip'
 		// 		title='Get Link to Poll for sharing'
 		// 		data-placement='bottom'
@@ -162,7 +162,7 @@ export default React.createClass({
 
 		// var deletePollButtonOld = (
 		// 	<Button
-		// 		className='delete_poll_link'
+		// 		className='delete-poll-link'
 		// 		data-toggle='tooltip'
 		// 		title={currentUserIsPollOwner ? 'Delete poll' : 'A poll can only be deleted by its owner/creator'}
 		// 		data-placement='bottom'
@@ -174,9 +174,9 @@ export default React.createClass({
 
 		// var deletePollButton = (
 		// 	<Button
-		// 		className='delete_poll_link'
+		// 		className='delete-poll-link'
 		// 		data-toggle='tooltip'
-		// 		title={currentUserIsPollOwner ? 'Delete poll' : 'A poll can only be deleted by its owner/creator'}
+		// 			title={currentUserIsPollOwner ? 'Delete poll' : 'A poll can only be deleted by its owner/creator'}
 		// 		data-placement='bottom'
 		// 		disabled={currentUserIsPollOwner ? false: true}
 		// 		bsStyle='danger'
@@ -298,62 +298,62 @@ export default React.createClass({
 		);
 
 		return (
-			<div className={'fullPollListing'}>
+			<div className={'full-poll-listing'}>
 				{deletePollModal}
 				{sharePollModal}
 				{dialogModal}
-				<ReactCSSTransitionGroup transitionName='example1' transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
+
+
+				<Grid>
+					<Row >
+						<Col xs={6} sm={6} md={9}>
+							<h2  className='header-column'>Single Poll Listing</h2>
+						</Col>
+						<Col xs={6} sm={6} md={3} className=''>
+							{backToPollListButton}
+						</Col>
+					</Row>
+				</Grid>
+				<br />
+
+				<div className='poll well' id={'poll-' + this.props.poll.id}>
 					<Grid>
 						<Row >
-							<Col xs={6} sm={6} md={9}>
-								<h2  className='headerColumn'>Single Poll Listing</h2>
+							<Col xs={12} sm={6} md={6} className='' id='poll-text-div'>
+								<div className='poll-author poll-label'>
+									{author_label}
+									<span>
+										{poll.author}
+									</span>
+								</div>
+								<div className='poll-question poll-label'>
+									{question_label}
+									<span>
+										{poll.question}
+									</span>
+								</div>
+								<div>
+									{answerOptionsBox}
+								</div>
 							</Col>
-							<Col xs={6} sm={6} md={3} className=''>
-								{backToPollListButton}
+							<Col xs={12} sm={6} md={6} className='' id=''>
+								<PollChart poll={this.props.poll}/>
+							</Col>
+						</Row>
+						<Row>
+							<Col xs={12} sm={12} md={12}>
+								<ButtonToolbar>
+									{openSharePollModalButton}
+									{openDeletePollModalButton}
+								</ButtonToolbar>
 							</Col>
 						</Row>
 					</Grid>
-					<br />
+				</div>
+				<div>
+					{backToPollListButton}
+				</div>
 
-					<div className='poll well' id={'poll_' + this.props.poll.id}>
-						<Grid>
-							<Row >
-								<Col xs={12} sm={6} md={6} className='' id='poll-text-div'>
-									<div className='pollAuthor poll-label'>
-										{author_label}
-										<span>
-											{poll.author}
-										</span>
-									</div>
-									<div className='pollQuestion poll-label'>
-										{question_label}
-										<span>
-											{poll.question}
-										</span>
-									</div>
-									<div>
-										{answerOptionsBox}
-									</div>
-								</Col>
-								<Col xs={12} sm={6} md={6} className='' id=''>
-									<PollChart poll={this.props.poll}/>
-								</Col>
-							</Row>
-							<Row>
-								<Col xs={12} sm={12} md={12}>
-									<ButtonToolbar>
-										{openSharePollModalButton}
-										{openDeletePollModalButton}
-									</ButtonToolbar>
-								</Col>
-							</Row>
-						</Grid>
-					</div>
-					<div>
-						{backToPollListButton}
-					</div>
-
-				</ReactCSSTransitionGroup>
 
 			</div>
 
@@ -361,3 +361,5 @@ export default React.createClass({
 		);
 	}
 });
+
+module.exports = FullPoll;

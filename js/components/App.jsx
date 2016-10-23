@@ -18,7 +18,7 @@ export default React.createClass({
 			<div>
 				<Navbar location={this.props.location.pathname}/>
 				<br />
-				<div className='app_body container jumbotron well'>
+				<div className='app-body container jumbotron well'>
 					{this.props.location.pathname == '/' ? <PollContainer /> : this.props.children}
 				</div>
 			</div>

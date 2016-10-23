@@ -48,7 +48,7 @@ export default React.createClass({
 	render: function() {
 		// console.log("Rendering <UserListContainer />");
 		return (
-				<div id='userapp'  className='userListContainer'>
+				<div id='userapp'  className='user-list-container'>
 					<UserList allUsers={this.state.allUsers} />
 				</div>
 		);

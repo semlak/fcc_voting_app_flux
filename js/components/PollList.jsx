@@ -49,12 +49,12 @@ var PollList = React.createClass({
 			//   <ul id="poll-list">{polls}</ul>
 			// </div>
 			<div>
-				<div className='pollContainerHeader'>
-					<h2 className='displayInline'>{this.props.header || 'Listing of all polls'}</h2>
+				<div className='poll-container-header'>
+					<h2 className='display-inline'>{this.props.header || 'Listing of all polls'}</h2>
 				</div>
 				<br />
 				<Grid>
-					<Row className='pollList'>
+					<Row className='poll-list'>
 						{pollNodes}
 					</Row>
 				</Grid>
