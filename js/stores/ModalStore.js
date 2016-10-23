@@ -7,7 +7,7 @@ import {EventEmitter} from 'events';
 import ModalConstants from '../constants/ModalConstants';
 import assign from 'object-assign';
 
-var CHANGE_EVENT = 'change';
+const CHANGE_EVENT = 'change';
 // var CREATED_EVENT = 'create';
 // var DESTROY_EVENT = 'destroy';
 
@@ -15,7 +15,7 @@ var CHANGE_EVENT = 'change';
 var _modalToShow = 'none';
 //other options: 'dialog', 'sharepoll', 'deletepoll'
 //I plan to add changepassword and login.
-// var _modalToShowOptions = ['dialog', 'shharepoll', 'deletepoll', 'changepassword', 'login'];
+const _modalToShowOptions = ['dialog', 'sharepoll', 'deletepoll', 'changepassword', 'login'];
 
 var _modalMessage = '';
 
