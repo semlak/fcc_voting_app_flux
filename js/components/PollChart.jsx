@@ -1,6 +1,6 @@
 /*
 <AppRoot>/js/components/PollChart.jsx
-using react-d3-basic library
+using recharts library (http://recharts.org/)
 */
 
 import React from 'react';

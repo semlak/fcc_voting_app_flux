@@ -43,26 +43,22 @@ var searchTree = function(root, str) {
 	return null;
 }
 
-var searchTree1 = function(root, reqs) {
+var searchTreeForProps = function(root, props) {
 // http://stackoverflow.com/questions/9133500/how-to-find-a-node-in-a-tree-with-javascript
 	var stack = [], node, ii;
 	stack.push(root);
 
 	while (stack.length > 0) {
 		node = stack.pop();
-    console.log('node:', node);
-		if (node.children) {
-			let found = false;
-			// for (var key in reqs) {
-				// console.log("testing node.children[key] of ", node.children[key], ' against reqs[key] of ', reqs[key]);
-				if (node.children['className'] == reqs) {
+		if (node.props) {
+			for (var key in props) {
+				if (node.props[key] != null && node.props[key] === props[key]) {
 				  // Found it!
-				  console.log("found node. returning " , node);
 					return node;
 				}
-			// }
+			}
 		}
-		else if (node.children && node.children.length) {
+		if (node.children && node.children.length) {
 		  for (ii = 0; ii < node.children.length; ii += 1) {
 				stack.push(node.children[ii]);
 		  }
@@ -235,6 +231,11 @@ describe('FullPoll', function() {
     // expect(searchTree(tree, '7:30am').children[0]).toBe('7:30am');
     // let node1 = searchTree(tree, '8:00am');
     // expect(node1.children[0]).toBe('8:00am');
+
+    let node1 = searchTreeForProps(tree, {className: 'poll-author poll-label'});
+    // console.log('node1: ', node1);
+    expect(node1.children[0]).toBe('Poll Author: ');
+    expect(node1.children[1].children[0]).toBe('Kronos');
 
 	});
 });

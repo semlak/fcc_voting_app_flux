@@ -1,0 +1,389 @@
+exports[`FullPoll has an answer option box 1`] = `
+<div
+  className="full-poll-listing">
+  <div
+    className="container">
+    <div
+      className="row">
+      <div
+        className="col-md-9 col-sm-6 col-xs-6">
+        <h2
+          className="header-column">
+          Single Poll Listing
+        </h2>
+      </div>
+      <div
+        className="col-md-3 col-sm-6 col-xs-6">
+        <button
+          className="btn btn-default"
+          data-placement="bottom"
+          data-toggle="tooltip"
+          disabled={false}
+          onClick={[Function openDeletePollModal]}
+          title="Back to Poll Listing"
+          type="button">
+          Back To Poll List
+        </button>
+      </div>
+    </div>
+  </div>
+  <br />
+  <div
+    className="poll well"
+    id="poll-2">
+    <div
+      className="container">
+      <div
+        className="row">
+        <div
+          className="col-md-6 col-sm-6 col-xs-12"
+          id="poll-text-div">
+          <div
+            className="poll-author poll-label">
+            Poll Author: 
+            <span>
+              Kronos
+            </span>
+          </div>
+          <div
+            className="poll-question poll-label">
+            Poll Question: 
+            <span>
+              What time do you wake up?
+            </span>
+          </div>
+          <div>
+            <div
+              className="answer-options-box">
+              <div
+                className="answer-options-list">
+                <div
+                  className="container">
+                  <div
+                    className="answer-option poll-listing uneditable row">
+                    <div
+                      className="col-md-2 col-sm-4 col-xs-4">
+                      <button
+                        className="vote-button btn btn-default"
+                        data-placement="bottom"
+                        data-toggle="tooltip"
+                        disabled={false}
+                        onClick={[Function bound vote]}
+                        onMouseOut={[Function bound onButtonMouseOut]}
+                        onMouseOver={[Function bound onButtonMouseIn]}
+                        title="Click to Vote"
+                        type="button">
+                        Vote
+                      </button>
+                    </div>
+                    <div
+                      className="col-md-10 col-sm-8 col-xs-8">
+                      <div>
+                        7:00am
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="answer-option poll-listing uneditable row">
+                    <div
+                      className="col-md-2 col-sm-4 col-xs-4">
+                      <button
+                        className="vote-button btn btn-default"
+                        data-placement="bottom"
+                        data-toggle="tooltip"
+                        disabled={false}
+                        onClick={[Function bound vote]}
+                        onMouseOut={[Function bound onButtonMouseOut]}
+                        onMouseOver={[Function bound onButtonMouseIn]}
+                        title="Click to Vote"
+                        type="button">
+                        Vote
+                      </button>
+                    </div>
+                    <div
+                      className="col-md-10 col-sm-8 col-xs-8">
+                      <div>
+                        7:30am
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="answer-option poll-listing uneditable row">
+                    <div
+                      className="col-md-2 col-sm-4 col-xs-4">
+                      <button
+                        className="vote-button btn btn-default"
+                        data-placement="bottom"
+                        data-toggle="tooltip"
+                        disabled={false}
+                        onClick={[Function bound vote]}
+                        onMouseOut={[Function bound onButtonMouseOut]}
+                        onMouseOver={[Function bound onButtonMouseIn]}
+                        title="Click to Vote"
+                        type="button">
+                        Vote
+                      </button>
+                    </div>
+                    <div
+                      className="col-md-10 col-sm-8 col-xs-8">
+                      <div>
+                        8:00am
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="new-answer-option-form container">
+                <div
+                  className="form-group has-feedback">
+                  <div
+                    className="form-group has-feedback">
+                    <input
+                      autoComplete="off"
+                      className="form-control"
+                      disabled="disabled"
+                      id="newAnswerOptionField"
+                      onChange={[Function bound handleNewAnswerOptionChange]}
+                      placeholder="Login to add a poll answer option"
+                      title="Login to add a poll answer option"
+                      type="text"
+                      value="" />
+                  </div>
+                  <div
+                    className="form-group">
+                    <button
+                      className="btn btn-default"
+                      disabled={true}
+                      onClick={[Function bound handleAnswerOptionAdd]}
+                      title="Login to add a poll answer option"
+                      type="button">
+                      Add Answer Option
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="col-md-6 col-sm-6 col-xs-12"
+          id="" />
+      </div>
+      <div
+        className="row">
+        <div
+          className="col-md-12 col-sm-12 col-xs-12">
+          <div
+            className="btn-toolbar"
+            role="toolbar">
+            <button
+              className="btn btn-info"
+              data-placement="bottom"
+              data-toggle="tooltip"
+              disabled={false}
+              onClick={[Function openDeletePollModal]}
+              title="Get Link to Poll for sharing"
+              type="button">
+              Share Poll
+            </button>
+            <button
+              className="btn btn-danger"
+              data-placement="bottom"
+              data-toggle="tooltip"
+              disabled={true}
+              onClick={[Function openDeletePollModal]}
+              title="A poll can only be deleted by its owner/creator"
+              type="button">
+              Delete Poll
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-default"
+      data-placement="bottom"
+      data-toggle="tooltip"
+      disabled={false}
+      onClick={[Function openDeletePollModal]}
+      title="Back to Poll Listing"
+      type="button">
+      Back To Poll List
+    </button>
+  </div>
+</div>
+`;
+
+exports[`FullPoll has an author and a question 1`] = `
+<div
+  className="full-poll-listing">
+  <div
+    className="container">
+    <div
+      className="row">
+      <div
+        className="col-md-9 col-sm-6 col-xs-6">
+        <h2
+          className="header-column">
+          Single Poll Listing
+        </h2>
+      </div>
+      <div
+        className="col-md-3 col-sm-6 col-xs-6">
+        <button
+          className="btn btn-default"
+          data-placement="bottom"
+          data-toggle="tooltip"
+          disabled={false}
+          onClick={[Function openDeletePollModal]}
+          title="Back to Poll Listing"
+          type="button">
+          Back To Poll List
+        </button>
+      </div>
+    </div>
+  </div>
+  <br />
+  <div
+    className="poll well"
+    id="poll-1">
+    <div
+      className="container">
+      <div
+        className="row">
+        <div
+          className="col-md-6 col-sm-6 col-xs-12"
+          id="poll-text-div">
+          <div
+            className="poll-author poll-label">
+            Poll Author: 
+            <span>
+              Xena
+            </span>
+          </div>
+          <div
+            className="poll-question poll-label">
+            Poll Question: 
+            <span>
+              How cute is Xena?
+            </span>
+          </div>
+          <div>
+            <div
+              className="answer-options-box">
+              <div
+                className="answer-options-list">
+                <div
+                  className="container">
+                  <div
+                    className="answer-option poll-listing uneditable row">
+                    <div
+                      className="col-md-2 col-sm-4 col-xs-4">
+                      <button
+                        className="vote-button btn btn-default"
+                        data-placement="bottom"
+                        data-toggle="tooltip"
+                        disabled={false}
+                        onClick={[Function bound vote]}
+                        onMouseOut={[Function bound onButtonMouseOut]}
+                        onMouseOver={[Function bound onButtonMouseIn]}
+                        title="Click to Vote"
+                        type="button">
+                        Vote
+                      </button>
+                    </div>
+                    <div
+                      className="col-md-10 col-sm-8 col-xs-8">
+                      <div>
+                        Very cute!
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="new-answer-option-form container">
+                <div
+                  className="form-group has-feedback">
+                  <div
+                    className="form-group has-feedback">
+                    <input
+                      autoComplete="off"
+                      className="form-control"
+                      disabled="disabled"
+                      id="newAnswerOptionField"
+                      onChange={[Function bound handleNewAnswerOptionChange]}
+                      placeholder="Login to add a poll answer option"
+                      title="Login to add a poll answer option"
+                      type="text"
+                      value="" />
+                  </div>
+                  <div
+                    className="form-group">
+                    <button
+                      className="btn btn-default"
+                      disabled={true}
+                      onClick={[Function bound handleAnswerOptionAdd]}
+                      title="Login to add a poll answer option"
+                      type="button">
+                      Add Answer Option
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="col-md-6 col-sm-6 col-xs-12"
+          id="" />
+      </div>
+      <div
+        className="row">
+        <div
+          className="col-md-12 col-sm-12 col-xs-12">
+          <div
+            className="btn-toolbar"
+            role="toolbar">
+            <button
+              className="btn btn-info"
+              data-placement="bottom"
+              data-toggle="tooltip"
+              disabled={false}
+              onClick={[Function openDeletePollModal]}
+              title="Get Link to Poll for sharing"
+              type="button">
+              Share Poll
+            </button>
+            <button
+              className="btn btn-danger"
+              data-placement="bottom"
+              data-toggle="tooltip"
+              disabled={true}
+              onClick={[Function openDeletePollModal]}
+              title="A poll can only be deleted by its owner/creator"
+              type="button">
+              Delete Poll
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-default"
+      data-placement="bottom"
+      data-toggle="tooltip"
+      disabled={false}
+      onClick={[Function openDeletePollModal]}
+      title="Back to Poll Listing"
+      type="button">
+      Back To Poll List
+    </button>
+  </div>
+</div>
+`;

@@ -109,6 +109,7 @@ var AnswerOption = React.createClass({
 					<Row className={'answer-option poll-listing uneditable' + (this.state.hoverOn ? ' add-border' : '')}>
 						<Col xs={4} sm={4} md={2} className=''>
 							<Button
+								className='vote-button'
 								onClick={this.vote}
 								onMouseOver={this.onButtonMouseIn}
 								onMouseOut={this.onButtonMouseOut}

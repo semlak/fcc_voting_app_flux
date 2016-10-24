@@ -1,0 +1,21 @@
+exports[`Poll has an author and a question 1`] = `
+<div
+  className="poll well"
+  id="poll-1"
+  onClick={[Function bound handlePollSelectFunc]}>
+  <div
+    className="poll-author poll-label">
+    Poll Author: 
+    <span>
+      Xena
+    </span>
+  </div>
+  <div
+    className="poll-question poll-label">
+    Poll Question: 
+    <span>
+      How cute is Xena?
+    </span>
+  </div>
+</div>
+`;
