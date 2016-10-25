@@ -1,0 +1,236 @@
+exports[`LoginForm automatically calls the handleLogin callback if enter is pressed while either input field is active 1`] = `
+<div
+  className="sign-in-form"
+  onKeyPress={[Function bound onKeyPress]}>
+  <div
+    className="modal-body">
+    <form
+      className="form-horizontal">
+      <div
+        className="form-group">
+        <div
+          className="form-group">
+          <label
+            className="col-sm-2 col-sm-offset-0 control-label"
+            htmlFor="formHorizontalUsername">
+            Username:
+          </label>
+          <div
+            className="col-sm-10">
+            <input
+              className="form-control"
+              id="formHorizontalUsername"
+              name="username"
+              onChange={[Function bound handleFieldChange]}
+              placeholder="Enter Username"
+              type="text"
+              value="" />
+          </div>
+        </div>
+        <div
+          className="form-group">
+          <label
+            className="col-sm-2 col-sm-offset-0 control-label"
+            htmlFor="formHorizontalPassword">
+            Password:
+          </label>
+          <div
+            className="col-sm-10">
+            <input
+              className="form-control"
+              id="formHorizontalPassword"
+              name="password"
+              onChange={[Function bound handleFieldChange]}
+              placeholder="Enter Password"
+              type="password"
+              value="" />
+          </div>
+        </div>
+        <div
+          className="col-sm-10 col-sm-offset-2">
+          <span
+            className="help-block">
+            Log in with your username and password.
+          </span>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div
+    className="modal-footer">
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      id="login-button"
+      onClick={[Function bound handleLogin]}
+      type="button">
+      Sign In
+    </button>
+    <button
+      className="btn btn-default"
+      disabled={false}
+      onClick={[Function mockConstructor]}
+      type="button">
+      Cancel 
+    </button>
+  </div>
+</div>
+`;
+
+exports[`LoginForm calls the handleLogin callback with username and password as arguments when button clicked 1`] = `
+<div
+  className="sign-in-form"
+  onKeyPress={[Function bound onKeyPress]}>
+  <div
+    className="modal-body">
+    <form
+      className="form-horizontal">
+      <div
+        className="form-group">
+        <div
+          className="form-group">
+          <label
+            className="col-sm-2 col-sm-offset-0 control-label"
+            htmlFor="formHorizontalUsername">
+            Username:
+          </label>
+          <div
+            className="col-sm-10">
+            <input
+              className="form-control"
+              id="formHorizontalUsername"
+              name="username"
+              onChange={[Function bound handleFieldChange]}
+              placeholder="Enter Username"
+              type="text"
+              value="" />
+          </div>
+        </div>
+        <div
+          className="form-group">
+          <label
+            className="col-sm-2 col-sm-offset-0 control-label"
+            htmlFor="formHorizontalPassword">
+            Password:
+          </label>
+          <div
+            className="col-sm-10">
+            <input
+              className="form-control"
+              id="formHorizontalPassword"
+              name="password"
+              onChange={[Function bound handleFieldChange]}
+              placeholder="Enter Password"
+              type="password"
+              value="" />
+          </div>
+        </div>
+        <div
+          className="col-sm-10 col-sm-offset-2">
+          <span
+            className="help-block">
+            Log in with your username and password.
+          </span>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div
+    className="modal-footer">
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      id="login-button"
+      onClick={[Function bound handleLogin]}
+      type="button">
+      Sign In
+    </button>
+    <button
+      className="btn btn-default"
+      disabled={false}
+      onClick={[Function mockConstructor]}
+      type="button">
+      Cancel 
+    </button>
+  </div>
+</div>
+`;
+
+exports[`LoginForm responds to changes in username and password fields 1`] = `
+<div
+  className="sign-in-form"
+  onKeyPress={[Function bound onKeyPress]}>
+  <div
+    className="modal-body">
+    <form
+      className="form-horizontal">
+      <div
+        className="form-group">
+        <div
+          className="form-group">
+          <label
+            className="col-sm-2 col-sm-offset-0 control-label"
+            htmlFor="formHorizontalUsername">
+            Username:
+          </label>
+          <div
+            className="col-sm-10">
+            <input
+              className="form-control"
+              id="formHorizontalUsername"
+              name="username"
+              onChange={[Function bound handleFieldChange]}
+              placeholder="Enter Username"
+              type="text"
+              value="" />
+          </div>
+        </div>
+        <div
+          className="form-group">
+          <label
+            className="col-sm-2 col-sm-offset-0 control-label"
+            htmlFor="formHorizontalPassword">
+            Password:
+          </label>
+          <div
+            className="col-sm-10">
+            <input
+              className="form-control"
+              id="formHorizontalPassword"
+              name="password"
+              onChange={[Function bound handleFieldChange]}
+              placeholder="Enter Password"
+              type="password"
+              value="" />
+          </div>
+        </div>
+        <div
+          className="col-sm-10 col-sm-offset-2">
+          <span
+            className="help-block">
+            Log in with your username and password.
+          </span>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div
+    className="modal-footer">
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      id="login-button"
+      onClick={[Function bound handleLogin]}
+      type="button">
+      Sign In
+    </button>
+    <button
+      className="btn btn-default"
+      disabled={false}
+      onClick={[Function mockConstructor]}
+      type="button">
+      Cancel 
+    </button>
+  </div>
+</div>
+`;

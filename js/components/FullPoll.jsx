@@ -147,42 +147,6 @@ var FullPoll = React.createClass({
 				data-placement='bottom'
 			>Back To Poll List</Button>
 		);
-		//{this.props.blah}
-		// var sharePollButton = (
-		// 	<Button
-		// 		type='button'
-		// 		bsStyle='info'
-		// 		className='share-poll-button'
-		// 		data-toggle='tooltip'
-		// 		title='Get Link to Poll for sharing'
-		// 		data-placement='bottom'
-		// 		data-target='#sharePollModal'
-		// 	>Share Poll</Button>
-		// );
-
-		// var deletePollButtonOld = (
-		// 	<Button
-		// 		className='delete-poll-link'
-		// 		data-toggle='tooltip'
-		// 		title={currentUserIsPollOwner ? 'Delete poll' : 'A poll can only be deleted by its owner/creator'}
-		// 		data-placement='bottom'
-		// 		disabled={currentUserIsPollOwner ? false: true}
-		// 		bsStyle='danger'
-		// 		data-target='#deletePollModal'
-		// 	>Delete Poll</Button>
-		// );
-
-		// var deletePollButton = (
-		// 	<Button
-		// 		className='delete-poll-link'
-		// 		data-toggle='tooltip'
-		// 			title={currentUserIsPollOwner ? 'Delete poll' : 'A poll can only be deleted by its owner/creator'}
-		// 		data-placement='bottom'
-		// 		disabled={currentUserIsPollOwner ? false: true}
-		// 		bsStyle='danger'
-		// 		onClick={this.props.deletePollRequest}
-		// 	>Delete</Button>
-		// );
 
 		var openDeletePollModalButton = (
 			<Button

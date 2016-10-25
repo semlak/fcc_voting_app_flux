@@ -124,6 +124,13 @@ export default React.createClass({
 
 	},
 
+
+	handleLogin: function(username, password) {
+		UserActionCreators.login(username, password);
+	},
+
+
+
 	// navbarToggleClick: function(e) {
 	// 	// console.log('in 'navbarToggleClick' of <Navbar />.', 'event: ', e);
 	// },
@@ -163,7 +170,7 @@ export default React.createClass({
 				<Modal.Body>
 					<Tabs defaultActiveKey={this.state.activeModalTab} id='registration-login-tabs'>
 						<Tab eventKey={1} title='Register'><RegistrationForm onCancel={this.closeRegisterLoginModal}/></Tab>
-						<Tab eventKey={2} title='Login'><LoginForm onCancel={this.closeRegisterLoginModal}/></Tab>
+						<Tab eventKey={2} title='Login'><LoginForm onCancel={this.closeRegisterLoginModal} handleLogin={this.handleLogin}/></Tab>
 					</Tabs>
 				</Modal.Body>
 			</Modal>

@@ -47,11 +47,17 @@ var searchTreeForProps = function(root, props) {
 // http://stackoverflow.com/questions/9133500/how-to-find-a-node-in-a-tree-with-javascript
 	var stack = [], node, ii;
 	stack.push(root);
+  if (root == null || props == null) {
+    console.log("need to pass both a root element and props to check");
+    return null;
+  }
 
 	while (stack.length > 0) {
 		node = stack.pop();
 		if (node.props) {
+      // console.log("node.props: ", node.props);
 			for (var key in props) {
+        // console.log("checking: key:", key, ", node.props[key]: ", node.props[key], ", props[key]:", props[key]);
 				if (node.props[key] != null && node.props[key] === props[key]) {
 				  // Found it!
 					return node;
@@ -92,11 +98,13 @@ var searchTreeForClassName = function(root, str) {
 
 const openDeletePollModal = function() {return true;};
 const openSharePollModal = openDeletePollModal;
-const backToPollList = openDeletePollModal;
+const backToPollList = jest.fn();
 const handleAddAnswerOption = openDeletePollModal;
 const closeModal = openDeletePollModal;
 const deletePollRequest = openDeletePollModal;
 const currentUser = {};
+
+var funct = jest.fn();
 
 describe('FullPoll', function() {
   var FullPoll;
@@ -162,7 +170,18 @@ describe('FullPoll', function() {
     // expect(a).toBe(1)
 
     // manually trigger the callback
-    // tree.props.onMouseEnter();
+    // let node = searchTreeForProps(tree, {title: "Back to Poll Listing"});
+    // console.log("node:", node);
+    // node.props != null && node.props.onClick();
+    // expect(backToPollList).toHaveBeenCalled();
+
+    // node.props != null && node.props.onClick();
+    // let node1 = searchTreeForClassName(tree, 'full-poll-listing');
+    // node1.props != null && node1.props.onMouseOver();
+    // console.log("node1:", node1);
+    // node1.props != null && node1.props.onMouseOver();
+    // expect(backToPollList).toHaveBeenCalled();
+
     // re-rendering
     // tree = component.toJSON();
     // expect(tree).toMatchSnapshot();

@@ -29,17 +29,17 @@ var AnswerOption = React.createClass({
 			or a function can be passed as a prop to handle the vote
 		*/
 		var data = {index: this.props.index, answer_option_text: this.props.answer_option};
-		if (this.props.poll_id != null) {
+		if (typeof this.props.handleVote == 'function') {
+			// console.log('passing vote data to parent object from AnswerOption');
+			this.props.handleVote(data);
+		}
+		else if (this.props.poll_id != null) {
 			data.poll_id = this.props.poll_id;
 			//fire vote action
 			// console.log('firing vote action creator from AnswerOption');
 			VoteActionCreators.create(data);
 		}
 
-		else if (typeof this.props.handleVote == 'function') {
-			// console.log('passing vote data to parent object from AnswerOption');
-			this.props.handleVote(data);
-		}
 
 		else {
 			// console.log('problem submitting vote');
@@ -83,34 +83,13 @@ var AnswerOption = React.createClass({
 			return editableAnswerOption;
 		}
 		else {
-			// var uneditableAnswerOptionWithVotes = (
-			// // Used primarily for development. It displays votes next to answer option. Not really needed if chart is being rendered in PollForm.
-			// 	<Row className={'answer-option poll-listing uneditable' + (this.state.hover-on ? ' add-border' : '')}>
-			// 		<Col xs={4} sm={4} md={2} className=''>
-			// 			<Button
-			// 				onClick={this.vote}
-			// 				onMouseOver={this.onButtonMouseIn}
-			// 				onMouseOut={this.onButtonMouseOut}
-			// 				bsStyle='default'
-			// 				data-toggle='tooltip'
-			// 				title='Click to Vote'
-			// 				data-placement='bottom'>Vote</Button>
-			// 		</Col>
-			// 		<Col xs={6} sm={6} md={8} className=''>
-			// 			<div>{this.props.answer_option}</div>
-			// 		</Col>
-			// 		<Col xs={2} sm={2} md={2} className=''>
-			// 			<div>{this.props.answer_option_votes}</div>
-			// 		</Col>
-			// 	</Row>
-			// )
 			var uneditableAnswerOption = function() {
 				return (
 					<Row className={'answer-option poll-listing uneditable' + (this.state.hoverOn ? ' add-border' : '')}>
 						<Col xs={4} sm={4} md={2} className=''>
 							<Button
 								className='vote-button'
-								onClick={this.vote}
+								onClick={this.props.handleVote.bind(null, null, this.props.index)}
 								onMouseOver={this.onButtonMouseIn}
 								onMouseOut={this.onButtonMouseOut}
 								bsStyle='default'
@@ -210,7 +189,6 @@ var NewAnswerOptionForm = React.createClass({
 		var validationMessage = this.state.form_feedback == null ? '' : this.state.form_feedback.message;
 
 		var userIsAuthenticated = this.props.user != null && this.props.user.username != null;
-		// console.log('userIsAuthenticated:', userIsAuthenticated, ', this.props.user: ', this.props.user);
 		return (
 			<Grid className='new-answer-option-form'>
 				<FormGroup controlId='newAnswerOptionForm' validationState={validationState}>
@@ -249,24 +227,38 @@ var NewAnswerOptionForm = React.createClass({
 var AnswerOptionsBox = React.createClass({
 	//this is the updated AnswerOptionsBox that uses the separate NewAnswerOptionForm component rather than builds its own newAnswerOptionForm
 	getInitialState: function() {
-		// console.log('in getInitialState for AnswerOptionsBox')
 		return {
 			new_answer_option: this.props.initial_new_answer_option,
 			form_feedback: this.props.form_feedback
 		};
 	},
 
-	// handleAnswerOptionAdd: function(e) {
+	handleVote: function(_, index) {
+
+		// Ideally, I will add logic here to check if user has already voted in this poll
+		// However, I am relying on the server to handle that, and the user sees (or should see) a modal box if that is the case
+		let data = {index: index, answer_option_text: this.props.answer_options[index], poll_id: this.props.poll_id};
+		if (Object.keys(data).filter(key => data[key] == null).length > 0) {
+			console.log('bad data for vote. data is :', data);
+		}
+		else {
+			//fire vote action
+			// console.log('firing vote action creator from AnswerOption');
+			VoteActionCreators.create(data);
+		}
+	},
+
 	handleAnswerOptionAdd: function() {
 		// console.log('in 'handleAnswerOptionAdd' of AnswerOptionsBoxNew, props is', this.props);
-
 		this.props.handleAddAnswerOption(this.state.new_answer_option);
 	},
+
 	handleNewAnswerOptionChange: function(e) {
 		var new_answer_option = e.target.value;
 		var newState = {new_answer_option: new_answer_option, form_feedback: null};
 		this.setState(newState);
 	},
+
 	componentWillReceiveProps: function(nextProps) {
 		// console.log('in 'componentWillReceiveProps' of AnswerOptionsBox. nextProps: ', nextProps);
 		var newState = {};
@@ -279,10 +271,9 @@ var AnswerOptionsBox = React.createClass({
 		}
 		this.setState(newState);
 	},
+
 	handleKeyPress: function(e) {
-		// console.log('\n\n\n\n\ndetected key press');
 		if (e.key === 'Enter') {
-			// e.preventDefault();
 			this.props.handleAddAnswerOption(this.state.new_answer_option);
 		}
 	},
@@ -290,15 +281,6 @@ var AnswerOptionsBox = React.createClass({
 	render: function() {
 		// console.log('rendering AnswerOptionsBoxNew, props are ', this.props);
 
-		// var validationState = this.state.form_feedback == null ? null : 'error';
-		// var validationMessage = this.state.form_feedback == null ? '' : this.state.form_feedback.message;
-		// console.log('this.state.form_feedback', this.state.form_feedback);
-
-
-
-	// 					placeholder={(this.props.user == null ? 'Login to add a poll answer option' : 'Enter a new poll answer option here')}
-		// var userIsAuthenticated = this.props.user != null && this.props.user.username != null;
-		// console.log('userIsAuthenticated:', userIsAuthenticated, ', this.props.user: ', this.props.user);
 		var newAnswerOptionForm = (
 			<NewAnswerOptionForm
 				initial_new_answer_option={this.props.initial_new_answer_option}
@@ -315,7 +297,7 @@ var AnswerOptionsBox = React.createClass({
 						answer_option_votes={!this.props.options_are_editable ? this.props.mapVotesToAnswerOptions(this.props.votes) : null}
 						options_are_editable={this.props.options_are_editable}
 						handleKeyPress={this.handleKeyPress}
-						handleVote={this.props.handleVote}
+						handleVote={this.handleVote}
 						handleAnswerOptionChange={this.props.handleAnswerOptionChange}
 						poll_id={this.props.poll_id}
 					/>

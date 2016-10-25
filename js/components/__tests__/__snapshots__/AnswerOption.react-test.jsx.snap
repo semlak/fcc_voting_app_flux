@@ -1,0 +1,122 @@
+exports[`AnswerOption has a string containing the answer option text 1`] = `
+<div
+  className="answer-option poll-listing uneditable row">
+  <div
+    className="col-md-2 col-sm-4 col-xs-4">
+    <button
+      className="vote-button btn btn-default"
+      data-placement="bottom"
+      data-toggle="tooltip"
+      disabled={false}
+      onClick={[Function bound mockConstructor]}
+      onMouseOut={[Function bound onButtonMouseOut]}
+      onMouseOver={[Function bound onButtonMouseIn]}
+      title="Click to Vote"
+      type="button">
+      Vote
+    </button>
+  </div>
+  <div
+    className="col-md-10 col-sm-8 col-xs-8">
+    <div>
+      Cuddly
+    </div>
+  </div>
+</div>
+`;
+
+exports[`AnswerOptionsBox It contains an AnswerOptionsList with all of the existing answer_options 1`] = `
+<div
+  className="answer-options-box">
+  <div
+    className="answer-options-list">
+    <div
+      className="container">
+      <div
+        className="answer-option poll-listing uneditable row">
+        <div
+          className="col-md-2 col-sm-4 col-xs-4">
+          <button
+            className="vote-button btn btn-default"
+            data-placement="bottom"
+            data-toggle="tooltip"
+            disabled={false}
+            onClick={[Function bound bound handleVote]}
+            onMouseOut={[Function bound onButtonMouseOut]}
+            onMouseOver={[Function bound onButtonMouseIn]}
+            title="Click to Vote"
+            type="button">
+            Vote
+          </button>
+        </div>
+        <div
+          className="col-md-10 col-sm-8 col-xs-8">
+          <div>
+            Cuddly
+          </div>
+        </div>
+      </div>
+      <div
+        className="answer-option poll-listing uneditable row">
+        <div
+          className="col-md-2 col-sm-4 col-xs-4">
+          <button
+            className="vote-button btn btn-default"
+            data-placement="bottom"
+            data-toggle="tooltip"
+            disabled={false}
+            onClick={[Function bound bound handleVote]}
+            onMouseOut={[Function bound onButtonMouseOut]}
+            onMouseOver={[Function bound onButtonMouseIn]}
+            title="Click to Vote"
+            type="button">
+            Vote
+          </button>
+        </div>
+        <div
+          className="col-md-10 col-sm-8 col-xs-8">
+          <div>
+            Cute
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="new-answer-option-form container">
+    <div
+      className="form-group has-feedback has-error">
+      <div
+        className="form-group has-feedback has-error">
+        <input
+          autoComplete="off"
+          className="form-control"
+          disabled={null}
+          id="newAnswerOptionField"
+          onChange={[Function bound handleNewAnswerOptionChange]}
+          placeholder="Enter a new poll answer option here"
+          title="Enter a new poll answer option here"
+          type="text"
+          value={undefined} />
+        <span
+          className="form-control-feedback glyphicon glyphicon-remove" />
+      </div>
+      <div
+        className="form-group">
+        <button
+          className="btn btn-default"
+          disabled={false}
+          onClick={[Function bound handleAnswerOptionAdd]}
+          title="Add Answer"
+          type="button">
+          Add Answer Option
+        </button>
+        <span
+          className="help-block">
+          Test message.
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;
