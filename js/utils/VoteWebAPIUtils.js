@@ -65,7 +65,7 @@ module.exports = {
 				}
 				else {
 					// should receive updated poll
-					console.log('created vote. Updating poll. poll is:', responseJSON.poll);
+					// console.log('created vote. Updating poll. poll is:', responseJSON.poll);
 					PollServerActionCreators.receiveUpdatedPoll(responseJSON.poll);
 				}
 			}

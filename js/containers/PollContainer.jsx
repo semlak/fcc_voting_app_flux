@@ -136,7 +136,7 @@ export default React.createClass({
 	},
 
 	deletePollRequest: function() {
-		console.log('in deletePollRequest of FullPoll');
+		// console.log('in deletePollRequest of FullPoll');
 		var poll_id = this.props.params != null ? this.props.params.poll_id : null;
 		if (poll_id != null) {
 			PollActionCreators.destroy(poll_id);
@@ -165,19 +165,19 @@ export default React.createClass({
 
 
 	openDeletePollModal:function() {
-		console.log('firing action to open deletePollModal');
+		// console.log('firing action to open deletePollModal');
 		ModalActionCreators.open('deletepoll', 'Do you wish to delete the current poll?');
 	},
 
 
 	openSharePollModal:function() {
-		console.log('firing action to open sharePollModal');
+		// console.log('firing action to open sharePollModal');
 		ModalActionCreators.open('sharepoll', 'URL for poll: blah');
 	},
 
 
 	openDialogModal:function() {
-		console.log('firiing action to open dialogModal');
+		// console.log('firiing action to open dialogModal');
 		ModalActionCreators.open('dialog', 'Vote failed?  NEED TO FIX THIS');
 	},
 

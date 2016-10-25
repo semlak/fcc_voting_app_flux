@@ -32,7 +32,7 @@ module.exports = {
 				PollServerActionCreators.receiveAll(rawPolls);
 			}
 			else {
-				console.log('Request for all polls failed.  Returned status of ' + xhr.status);
+				console.error('Request for all polls failed.  Returned status of ' + xhr.status);
 			}
 		}.bind(this);
 		xhr.send();
@@ -55,7 +55,7 @@ module.exports = {
 				var responseJSON = JSON.parse(xhr.responseText);
 				// console.log('Submitted Poll creation request via ajax xhr! xhr.responseText:', responseJSON);
 				if (responseJSON.error) {
-					console.log('Error occurred sumbiting a poll. response is', responseJSON);
+					console.error('Error occurred sumbiting a poll. response is', responseJSON);
 					//ideally, send error info to PollServerActionCreator to dispatch to store to emit event that triggers launch of modal with responseJSON.message as text.
 				}
 				else {
@@ -69,7 +69,7 @@ module.exports = {
 
 			}
 			else {
-				// console.log('Registration xrh request failed.  Returned status is ' + xhr.status);
+				console.error('Registration xrh request failed.  Returned status is ' + xhr.status);
 			}
 		}.bind(this);
 
@@ -89,9 +89,9 @@ module.exports = {
 		xhr.onload = function() {
 			if (xhr.status === 200) {
 				var responseJSON = JSON.parse(xhr.responseText);
-				console.log('Submitted Poll answer_option creation request via ajax xhr! xhr.responseText is:', responseJSON);
+				// console.log('Submitted Poll answer_option creation request via ajax xhr! xhr.responseText is:', responseJSON);
 				if (responseJSON.error) {
-					console.log('Error occurred sumbiting a new answer_option for a poll. response is', responseJSON);
+					// console.log('Error occurred sumbiting a new answer_option for a poll. response is', responseJSON);
 					ModalActionCreators.open('dialog', responseJSON.message || 'Failed to add new answer option to poll.');
 					//ideally, launch modal with responseJSON.message as text.
 				}
@@ -128,7 +128,7 @@ module.exports = {
 				var responseJSON = JSON.parse(xhr.responseText);
 				// console.log('Submitted Poll DELETE request via ajax xhr! xhr.responseText is:', responseJSON);
 				if (responseJSON.error) {
-					console.log('Error occurred deleting a poll. response is', responseJSON);
+					console.error('Error occurred deleting a poll. response is', responseJSON);
 					//ideally, launch modal with responseJSON.message as text. The below action at least notifies that the delete request fails.
 					PollServerActionCreators.handleDeletedPollFail(poll_id);
 				}

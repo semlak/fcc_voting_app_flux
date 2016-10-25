@@ -500,7 +500,7 @@ UserStore.dispatchToken = AppDispatcher.register(function(action) {
 		else {
 			//Not sure if this would be encountered.;
 			let message = 'Problem encountered when setting the user authentication state.';
-			console.log(message);
+			console.error(message);
 			_authenticatedUserId = null;
 			UserStore.emitAuthenticationChange({error: true, message_text: message});
 		}

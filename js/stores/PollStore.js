@@ -44,7 +44,7 @@ function deleteLocalPoll(id) {
 }
 
 function updatePoll(rawPoll) {
-	console.log('in updatePoll of PollStore helper functions, rawPoll is ', rawPoll);
+	// console.log('in updatePoll of PollStore helper functions, rawPoll is ', rawPoll);
 	var poll = PollUtils.convertRawPoll(rawPoll);
 	var currentPoll = _polls[poll.id];
 	// the only update allowed for polls are a additional answer options (existing ones don't change) and votes
@@ -290,11 +290,11 @@ PollStore.dispatchToken = AppDispatcher.register(function(action) {
 	// for when a new answer_option or vote is created for the poll.
 
 	//would like to use this to handle new answer_option or vote that is added to existing poll. Currently, I just receive all rawpolls.
-		console.log('in POLL_UPDATE case. action is ', action);
+		// console.log('in POLL_UPDATE case. action is ', action);
 		var updatedPoll = action.updatedPoll;
 		// console.log('pollUpdates is ', pollUpdates)
 		updatePoll(updatedPoll);
-		console.log('poll, after update:', _polls[action.updatedPoll.id]);
+		// console.log('poll, after update:', _polls[action.updatedPoll.id]);
 		PollStore.emitChange();
 		break;
 

@@ -28,7 +28,7 @@ var UserActionCreators = {
 	 * @param  {object} userUpdates:  object containing possible updates (username, password, and/or fullname, role)
 	 */
 	update: function(id, /*object*/ userUpdates) {
-		console.log('UserActionCreators.update function fired');
+		// console.log('UserActionCreators.update function fired');
 
 		// var data = userUpdates;
 		// data.id = id;

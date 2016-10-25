@@ -45,7 +45,7 @@ module.exports = {
 	},
 
 	receiveUpdatedPoll: function(rawPoll) {
-		console.log('in receiveUpdatedPoll of PollServerActionCreators. dispatching POLL_UPDATE signal with rawPoll.id:', rawPoll.id);
+		// console.log('in receiveUpdatedPoll of PollServerActionCreators. dispatching POLL_UPDATE signal with rawPoll.id:', rawPoll.id);
 		AppDispatcher.dispatch({
 			actionType: PollConstants.POLL_UPDATE,
 			updatedPoll: rawPoll

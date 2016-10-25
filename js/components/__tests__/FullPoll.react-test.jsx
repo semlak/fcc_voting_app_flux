@@ -10,19 +10,6 @@ import renderer from 'react-test-renderer';
 jest.mock('react-dom');
 jest.mock('../PollChart');
 
-
-		// poll: ReactPropTypes.object.isRequired,
-		// openDeletePollModal: React.PropTypes.func.isRequired,
-		// openSharePollModal: React.PropTypes.func.isRequired,
-		// currentUser: ReactPropTypes.object.isRequired,
-		// backToPollList: React.PropTypes.func.isRequired,
-		// handleAddAnswerOption: React.PropTypes.func.isRequired,
-		// closeModal: React.PropTypes.func.isRequired,
-		// modalToShow: React.PropTypes.string.isRequired,
-		// modalMessage: React.PropTypes.string.isRequired,
-		// new_answer_option: React.PropTypes.string.isRequired,
-		// deletePollRequest: React.PropTypes.func.isRequired
-
 var searchTree = function(root, str) {
 // http://stackoverflow.com/questions/9133500/how-to-find-a-node-in-a-tree-with-javascript
 	var stack = [], node, ii;

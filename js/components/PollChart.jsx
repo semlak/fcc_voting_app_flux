@@ -115,7 +115,7 @@ export default React.createClass({
 		// var poll = PollStore.getPollById(this.props.params.poll_id);
 		var poll = this.props.poll;
 
-		console.log('rendering PollChart');
+		// console.log('rendering PollChart');
 
 		// var currentUserIsPollOwner = (this.state.currentUser == null || this.state.currentUser.username == null) ? false : (this.state.currentUser.id == this.props.poll.owner);
 		// console.log('\n\n\ncurrentUserIsPollOwner is', currentUserIsPollOwner);
@@ -123,7 +123,7 @@ export default React.createClass({
 
 
 		var mappedVotes = this.mapVotesToAnswerOptions(poll.answer_options, poll.votes);
-		console.log('mappedVotes:', mappedVotes);
+		// console.log('mappedVotes:', mappedVotes);
 		var data = mappedVotes.map(function(answer_option_votes, i ) {
 			return {
 				answer_option: truncateString(poll.answer_options[i], 25),

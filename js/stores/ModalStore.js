@@ -60,10 +60,10 @@ ModalStore.dispatchToken = AppDispatcher.register(function(action) {
 	switch(action.actionType) {
 
 	case ModalConstants.MODAL_SHOW:
-		console.log('triggered MODAL_SHOW case in ModalStore dispatch receiving. action is ', action);
+		// console.log('triggered MODAL_SHOW case in ModalStore dispatch receiving. action is ', action);
 		// check that action.modalToShow is in the list of valid options (_modalToShowOptions array)
 		if (_modalToShowOptions.indexOf(action.modalToShow) < 0) {
-			console.error('\'modalToShow\' variable dispatched to ModalStore is not a valid option');
+			// console.error('\'modalToShow\' variable dispatched to ModalStore is not a valid option');
 		}
 
 		var modalToShow = action.modalToShow;
@@ -74,7 +74,7 @@ ModalStore.dispatchToken = AppDispatcher.register(function(action) {
 			ModalStore.emitChange();
 		}
 		else {
-			console.log('Received Modal dispatch, but no change detected. action is ', action);
+			// console.log('Received Modal dispatch, but no change detected. action is ', action);
 		}
 		break;
 
