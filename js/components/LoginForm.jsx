@@ -6,25 +6,24 @@ import {Button,  Col, Form, FormGroup, FormControl, ControlLabel, HelpBlock} fro
 // import ReactPropTypes from 'react/lib/ReactPropTypes';
 
 
-export default class extends React.Component {
-	// export default React.createClass({
-	getInitialState() {
+export default React.createClass({
+	getInitialState: function() {
 		return {
 			username: '',
 			password: '',
 			message_obj: null
 		};
-	}
+	},
 
-	componentDidMount() {
+	componentDidMount: function() {
 		UserStore.addAuthenticationChangeListener(this._onAuthenticationChange);
-	}
+	},
 
-	componentWillUnmount() {
+	componentWillUnmount: function() {
 		UserStore.removeAuthenticationChangeListener(this._onAuthenticationChange);
-	}
+	},
 
-	handleLogin() {
+	handleLogin: function() {
 		let username = this.state.username;
 		let password = this.state.password;
 		if (username == null || username.length < 1 ) {
@@ -37,23 +36,23 @@ export default class extends React.Component {
 			this.props.handleLogin(username, password);
 		}
 
-	}
+	},
 
-	handleFieldChange(e) {
+	handleFieldChange: function(e) {
 		var key = e.target.name.toString();
 		var newParam = {};
 		newParam[key] = e.target.value;
 		newParam['message_obj'] = null;
 		this.setState(newParam);
-	}
+	},
 
-	onKeyPress(e) {
+	onKeyPress: function(e) {
 		if (e.key === 'Enter') {
 			this.handleLogin();
 		}
-	}
+	},
 
-	render() {
+	render: function() {
 		// console.log('rendering LoginForm');
 		var message_obj = this.state.message_obj;
 		var validationState = message_obj == null ? null : (message_obj.error ? 'error' : 'success');
@@ -91,13 +90,12 @@ export default class extends React.Component {
 				</div>
 			</div>
 		);
-	}
+	},
 
-	_onAuthenticationChange(message_obj) {
+	_onAuthenticationChange: function(message_obj) {
 		// this.setState(getUserState());
 		if (message_obj != null && message_obj.error) {
 			this.setState({message_obj: message_obj});
 		}
 	}
-}
-// });
+});

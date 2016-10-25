@@ -95,7 +95,7 @@ describe('LoginForm', function() {
 		// console.log('\n\n\Pll is', Poll)
 		// done()
 		onCancel = jest.fn();
-		handleLogin = jest.fn();
+		handleLogin = jest.genMockFunction();
 
 	});
 
@@ -115,22 +115,22 @@ describe('LoginForm', function() {
 
 		expect(tree.children[0].props.className).toBe('modal-body');
 
-		let node1 = searchTreeForProps(tree, {name: 'username'});
-		let node2 = searchTreeForProps(tree, {name: 'password'});
-		expect(node1.props.name).toBe('username');
-		expect(node1.props.value).toBe('');
-		expect(node1.props.placeholder).toBe('Enter Username');
-		expect(node1.props.type).toBe('text');
-		expect(node1.props.className).toBe('form-control');
+		let usernameNode = searchTreeForProps(tree, {name: 'username'});
+		let passwordNode = searchTreeForProps(tree, {name: 'password'});
+		expect(usernameNode.props.name).toBe('username');
+		expect(usernameNode.props.value).toBe('');
+		expect(usernameNode.props.placeholder).toBe('Enter Username');
+		expect(usernameNode.props.type).toBe('text');
+		expect(usernameNode.props.className).toBe('form-control');
 
 
-		expect(node2.props.name).toBe('password');
-		expect(node2.props.value).toBe('');
-		expect(node2.props.placeholder).toBe('Enter Password');
-		expect(node2.props.type).toBe('password');
-		expect(node2.props.className).toBe('form-control');
+		expect(passwordNode.props.name).toBe('password');
+		expect(passwordNode.props.value).toBe('');
+		expect(passwordNode.props.placeholder).toBe('Enter Password');
+		expect(passwordNode.props.type).toBe('password');
+		expect(passwordNode.props.className).toBe('form-control');
 
-		// console.log('node2:', node2);
+		// console.log('passwordNode:', passwordNode);
 		// var a = 1;
 		// expect(a).toBeGreaterThan(0);
 
@@ -151,8 +151,8 @@ describe('LoginForm', function() {
 		expect(tree).toMatchSnapshot();
 		// console.log('tree.children:', tree.children);
 
-		let node1 = searchTreeForProps(tree, {name: 'username'});
-		let node2 = searchTreeForProps(tree, {name: 'password'});
+		let usernameNode = searchTreeForProps(tree, {name: 'username'});
+		let passwordNode = searchTreeForProps(tree, {name: 'password'});
 
 		let e1 = {
 			target: {
@@ -160,12 +160,12 @@ describe('LoginForm', function() {
 				value: 'simple_username84'
 			}
 		};
-		node1.props.onChange(e1);
+		usernameNode.props.onChange(e1);
 
 		tree = component.toJSON();
-		node1 = searchTreeForProps(tree, {name: 'username'});
-		expect(node1.props.value).toBe('simple_username84');
-		// console.log('node1:', node1);
+		usernameNode = searchTreeForProps(tree, {name: 'username'});
+		expect(usernameNode.props.value).toBe('simple_username84');
+		// console.log('usernameNode:', usernameNode);
 
 		let e2 = {
 			target: {
@@ -174,14 +174,14 @@ describe('LoginForm', function() {
 			}
 		}
 
-		node2.props.onChange(e2);
+		passwordNode.props.onChange(e2);
 		tree = component.toJSON();
-		node2 = searchTreeForProps(tree, {name: 'password'});
-		expect(node2.props.value).toBe('dumb_pa$$word');
+		passwordNode = searchTreeForProps(tree, {name: 'password'});
+		expect(passwordNode.props.value).toBe('dumb_pa$$word');
 
 
 
-		// console.log('node2:', node2);
+		// console.log('passwordNode:', passwordNode);
 		// var a = 1;
 		// expect(a).toBeGreaterThan(0);
 
@@ -202,8 +202,8 @@ describe('LoginForm', function() {
 		expect(tree).toMatchSnapshot();
 		// console.log('tree.children:', tree.children);
 
-		let node1 = searchTreeForProps(tree, {name: 'username'});
-		let node2 = searchTreeForProps(tree, {name: 'password'});
+		let usernameNode = searchTreeForProps(tree, {name: 'username'});
+		let passwordNode = searchTreeForProps(tree, {name: 'password'});
 
 		let e1 = {
 			target: {
@@ -212,7 +212,7 @@ describe('LoginForm', function() {
 			}
 		};
 
-		node1.props != null && node1.props.onChange(e1);
+		usernameNode.props != null && usernameNode.props.onChange(e1);
 
 
 		let e2 = {
@@ -222,25 +222,27 @@ describe('LoginForm', function() {
 			}
 		}
 
-		node2.props != null && node2.props.onChange(e2);
+		passwordNode.props != null && passwordNode.props.onChange(e2);
 
 
 		// tree = component.toJSON();
-		// node1 = searchTreeForProps(tree, {name: 'username'});
-		// expect(node1.props.value).toBe('simple_username84');
-		// console.log('node1:', node1);
+		// usernameNode = searchTreeForProps(tree, {name: 'username'});
+		// expect(usernameNode.props.value).toBe('simple_username84');
+		// console.log('usernameNode:', usernameNode);
 
 		// tree = component.toJSON();
-		// node2 = searchTreeForProps(tree, {name: 'password'});
-		// expect(node2.props.value).toBe('dumb_pa$$word');
+		// passwordNode = searchTreeForProps(tree, {name: 'password'});
+		// expect(passwordNode.props.value).toBe('dumb_pa$$word');
 		let loginButton = searchTreeForProps(tree, {id: 'login-button'});
-		console.log('loginButton:', loginButton);
+		// console.log('loginButton:', loginButton);
 		loginButton.props != null && loginButton.props.onClick();
 
 		expect(handleLogin).toHaveBeenCalledTimes(1);
-		expect(handleLogin).toHaveBeenCalledWith('simple_username84', 'dumb_pa$$word');
+		expect(handleLogin).toBeCalledWith('simple_username84', 'dumb_pa$$word');
+		expect(handleLogin).lastCalledWith('simple_username84', 'dumb_pa$$word');
 
-		// console.log('node2:', node2);
+
+		// console.log('passwordNode:', passwordNode);
 		// var a = 1;
 		// expect(a).toBeGreaterThan(0);
 
@@ -264,8 +266,8 @@ describe('LoginForm', function() {
 		expect(tree).toMatchSnapshot();
 		// console.log('tree.children:', tree.children);
 
-		let node1 = searchTreeForProps(tree, {name: 'username'});
-		let node2 = searchTreeForProps(tree, {name: 'password'});
+		let usernameNode = searchTreeForProps(tree, {name: 'username'});
+		let passwordNode = searchTreeForProps(tree, {name: 'password'});
 
 		let e1 = {
 			target: {
@@ -273,12 +275,12 @@ describe('LoginForm', function() {
 				value: 'simple_username84'
 			}
 		};
-		node1.props != null && node1.props.onChange(e1);
+		usernameNode.props != null && usernameNode.props.onChange(e1);
 
 		tree = component.toJSON();
-		node1 = searchTreeForProps(tree, {name: 'username'});
-		expect(node1.props.value).toBe('simple_username84');
-		// console.log('node1:', node1);
+		usernameNode = searchTreeForProps(tree, {name: 'username'});
+		expect(usernameNode.props.value).toBe('simple_username84');
+		// console.log('usernameNode:', usernameNode);
 
 		let e2 = {
 			target: {
@@ -295,16 +297,16 @@ describe('LoginForm', function() {
 			key: 'Enter'
 		}
 
-		node2.props != null && node2.props.onChange(e2);
+		passwordNode.props != null && passwordNode.props.onChange(e2);
 		tree = component.toJSON();
-		node2 = searchTreeForProps(tree, {name: 'password'});
-		expect(node2.props.value).toBe('dumb_pa$$word');
+		passwordNode = searchTreeForProps(tree, {name: 'password'});
+		expect(passwordNode.props.value).toBe('dumb_pa$$word');
 
 		let node3 = searchTreeForProps(tree, {className: 'sign-in-form'});
 		node3.props != null && node3.props.onKeyPress(e3);
 		expect(handleLogin).toHaveBeenCalledTimes(1);
 
-		// console.log('node2:', node2);
+		// console.log('passwordNode:', passwordNode);
 		// var a = 1;
 		// expect(a).toBeGreaterThan(0);
 
