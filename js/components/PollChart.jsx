@@ -1,3 +1,5 @@
+'use strict';
+
 /*
 <AppRoot>/js/components/PollChart.jsx
 using recharts library (http://recharts.org/)

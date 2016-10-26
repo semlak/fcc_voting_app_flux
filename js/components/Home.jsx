@@ -1,3 +1,9 @@
+'use strict';
+
+/*
+components/Home.jsx
+*/
+
 import React from 'react';
 
 export default React.createClass({

@@ -1,3 +1,5 @@
+'use strict';
+
 import React from 'react';
 import UserStore from '../stores/UserStore';
 // import UserActionCreators from '../actions/UserActionCreators';
@@ -56,8 +58,6 @@ export default React.createClass({
 		var message_obj = this.state.message_obj;
 		var validationState = message_obj == null ? null : (message_obj.error ? 'error' : 'success');
 		var validationMessage = message_obj == null ? '' : message_obj.message_text;
-		// console.log("message_obj: ", message_obj);
-		// console.log("validationMessage: ", validationMessage);
 		return (
 			<div className='sign-in-form' onKeyPress={this.onKeyPress}>
 				<div className='modal-body'>

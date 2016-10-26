@@ -56,58 +56,10 @@ describe('FullPoll', function() {
     expect(tree.children.length).toBe(4);
 
     expect(tree.children[0].props.className).toBe('container');
-    // expect(tree.children[0].children[0].children[0].children[0].props.className).toBe('header-column');
-    // expect(tree.children[0].children[0].children[0].children[0].children[0]).toBe('Single Poll Listing');
-
-    // expect(tree.children[2].children[0].children[0].children[0].children[0].children[0]).toBe('Poll Author: ');
-    // expect(tree.children[2].children[0].children[0].children[0].children[0].children[1].children[0]).toBe('Xena');
-
-    // expect(tree.children[2].children[0].children[0].children[0].children[1].children[0]).toBe('Poll Question: ');
-    // expect(tree.children[2].children[0].children[0].children[0].children[1].children[1].children[0]).toBe('How cute is Xena?');
 
     expect(searchTreeForClassName(tree, 'header-column')[0].children[0]).toBe('Single Poll Listing');
     expect(searchTree(tree, 'Poll Author: ')[0].children[1].children[0]).toBe('Xena');
     expect(searchTree(tree, 'Poll Question: ')[0].children[1].children[0]).toBe('How cute is Xena?');
-
-
-    // expect(tree.children[2].children[0].children[0].children[0].children[2].children[0].props.className).toBe('answer-options-box');
-    // expect(tree.children[2].children[0].children[0].children[0].children[2].children[1].chi
-    // expect(tree.children[0].props.className).toBe('poll-author poll-label');
-    // expect(tree.children[0].children.length).toBe(2);
-    // expect(tree.children[0].children[0]).toBe('Poll Author: ');
-    // expect(tree.children[0].children[1].children[0]).toBe('Xena');
-
-    // expect(tree.children[1].children.length).toBe(2);
-    // expect(tree.children[1].children[0]).toBe('Poll Question: ');
-    // expect(tree.children[1].children[1].children[0]).toBe('How cute is Xena?');
-
-    // console.log('tree.children[1]:', tree.children[1]);
-
-    // var a = 1;
-    // expect(a).toBe(1)
-
-    // manually trigger the callback
-    // let node = searchTreeForProps(tree, {title: "Back to Poll Listing"})[0];
-    // console.log("node:", node);
-    // node.props != null && node.props.onClick();
-    // expect(backToPollList).toHaveBeenCalled();
-
-    // node.props != null && node.props.onClick();
-    // let node1 = searchTreeForClassName(tree, 'full-poll-listing')[0];
-    // node1.props != null && node1.props.onMouseOver();
-    // console.log("node1:", node1);
-    // node1.props != null && node1.props.onMouseOver();
-    // expect(backToPollList).toHaveBeenCalled();
-
-    // re-rendering
-    // tree = component.toJSON();
-    // expect(tree).toMatchSnapshot();
-
-    // manually trigger the callback
-    // tree.props.onMouseLeave();
-    // re-rendering
-    // tree = component.toJSON();
-    // expect(tree).toMatchSnapshot();
   });
 
   it('has an answer option box', () => {
@@ -134,42 +86,26 @@ describe('FullPoll', function() {
     expect(tree.children.length).toBe(4);
 
     expect(tree.children[0].props.className).toBe('container');
-    // expect(tree.children[0].children[0].children[0].children[0].props.className).toBe('header-column');
-    // expect(tree.children[0].children[0].children[0].children[0].children[0]).toBe('Single Poll Listing');
-
-    // expect(tree.children[2].children[0].children[0].children[0].children[0].children[0]).toBe('Poll Author: ');
-    // expect(tree.children[2].children[0].children[0].children[0].children[0].children[1].children[0]).toBe('Kronos');
-
-    // expect(tree.children[2].children[0].children[0].children[0].children[1].children[0]).toBe('Poll Question: ');
-    // expect(tree.children[2].children[0].children[0].children[0].children[1].children[1].children[0]).toBe('What time do you wake up?');
 
     expect(searchTreeForClassName(tree, 'header-column')[0].children[0]).toBe('Single Poll Listing');
     expect(searchTree(tree, 'Poll Author: ')[0].children[1].children[0]).toBe('Kronos');
     expect(searchTree(tree, 'Poll Question: ')[0].children[1].children[0]).toBe('What time do you wake up?');
 
-    // expect(tree.children[2].children[0].children[0].children[0].children[2].children[0].props.className).toBe('answer-options-box');
-    // expect(tree.children[2].children[0].children[0].children[0].children[2].children[0].children[0].children[0].children[0]).toBe('answer-options-box');
-    // expect(tree.children[2].children[0].children[0].children[0].children[2].children[0].children[0].children[0].children[0].children[1].children[0].children[0]).toBe('7:00am');
     let answerOptionsBox = searchTreeForClassName(tree, 'answer-options-box')[0];
     let answerOptionsList = answerOptionsBox.children[0];
     // console.log(JSON.stringify(answerOptionsList));
 
+    // Verify that the answerOptionsList contains three answers.
+    expect(answerOptionsList.children[0].children.length).toBe(3);
+
+    // verify the presence of answer_options
     expect(searchTree(tree, "7:00am")[0].children[0]).toBe('7:00am');
     expect(searchTree(tree, '7:30am')[0].children[0]).toBe('7:30am');
     expect(searchTree(tree, '8:00am')[0].children[0]).toBe('8:00am');
 
-    // Verify that the answerOptionsList contains three answers.
-    expect(answerOptionsList.children[0].children.length).toBe(3);
 
-    expect(answerOptionsList.children[0].children[0].children[1].children[0].children[0]).toBe('7:00am');
-    // let node0 = searchTree(tree, "7:00am")[0];
-    // // console.log('node:', node);
-    // expect(searchTree(tree, '7:30am')[0].children[0]).toBe('7:30am');
-    // let node1 = searchTree(tree, '8:00am')[0];
-    // expect(node1.children[0]).toBe('8:00am');
 
     let node1 = searchTreeForProps(tree, {className: 'poll-author'})[0];
-    // console.log('node1: ', node1);
     expect(node1.children[0]).toBe('Poll Author: ');
     expect(node1.children[1].children[0]).toBe('Kronos');
 

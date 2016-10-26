@@ -1,13 +1,10 @@
-/**
- * Copyright (c) 2014-2015, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- */
+'use strict';
 
- // This is called UserItem rather than just 'User', because it is specifically to represent a User on a list of Users.
+/**
+components/UserItem.jsx
+
+ This is called UserItem rather than just 'User', because it is specifically to represent a User on a list of Users.
+**/
 
 import React from 'react';
 import ReactPropTypes from 'react/lib/ReactPropTypes';
@@ -31,8 +28,8 @@ var UserItem = React.createClass({
 	render: function() {
 		var user = this.props.user;
 		return (
-			<div className='poll well' onClick={this.handleUserSelect}>
-					{'User: ' + user.username}
+			<div className='poll well poll-label' onClick={this.handleUserSelect}>
+					{'Username: ' + user.username}
 			</div>
 		);
 	}

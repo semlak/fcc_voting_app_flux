@@ -1,5 +1,8 @@
+'use strict';
+
 /*
-ChangePasswordForm.jsx
+components/ChangePasswordForm.jsx
+
 Needs username (string) passed as a prop
 */
 

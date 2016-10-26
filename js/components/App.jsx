@@ -1,3 +1,10 @@
+'use strict';
+
+/*
+components/App.jsx
+
+*/
+
 import React from 'react';
 // import {IndexLink } from 'react-router';
 import PollContainer from '../containers/PollContainer';

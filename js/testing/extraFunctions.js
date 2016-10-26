@@ -1,3 +1,4 @@
+'use strict';
 
 export function searchTree(root, str) {
 // http://stackoverflow.com/questions/9133500/how-to-find-a-node-in-a-tree-with-javascript

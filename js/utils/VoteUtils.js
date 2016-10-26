@@ -1,8 +1,11 @@
+'use strict';
+
 /**
 
-	VoteUtils:
-	I adapted a TodoUtils file from Faceboo\' react example repository to make this VoteUtils file
- */
+	./js/utils/VoteUtils.js
+	I adapted a TodoUtils file from Facebook's react example repository to make this VoteUtils file
+
+*/
 
 module.exports = {
 

@@ -1,4 +1,12 @@
-// This is called PollItem rather than just 'Poll', because it is specifically to represent a Poll on a list of Polls.
+'use strict';
+
+/*
+./components/PollItem.jsx
+
+ This is called PollItem rather than just 'Poll', because it is specifically to represent a Poll node on a list of Polls.
+ It does not list all of the poll, just the author and question.
+
+*/
 
 import React from 'react';
 import ReactPropTypes from 'react/lib/ReactPropTypes';
