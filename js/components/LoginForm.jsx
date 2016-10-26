@@ -75,7 +75,7 @@ export default React.createClass({
 									Password:
 								</Col>
 								<Col sm={10}>
-									<FormControl type='password' name='password' value={this.state.password} onChange={this.handleFieldChange} placeholder='Enter Password'/>
+									<FormControl type='password' name='password' value={this.state.password} onChange={this.handleFieldChange} placeholder='Enter Password' />
 								</Col>
 							</FormGroup>
 							<Col smOffset={2} sm={10}>
