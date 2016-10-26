@@ -10,9 +10,13 @@ import renderer from 'react-test-renderer';
 import {searchTreeForProps} from '../../testing/extraFunctions';
 
 jest.mock('react-dom');
-jest.mock('../PollChart');
+jest.mock('../../utils/UserWebAPIUtils.js');
+import UserActionCreators from '../../actions/UserActionCreators';
+import UserServerActionCreators from '../../actions/UserServerActionCreators';
 
-
+var actualHandleLoginFunction = function(username, password) {
+		UserActionCreators.login(username, password);
+};
 
 describe('LoginForm', function() {
 	// var LoginForm;
@@ -58,10 +62,6 @@ describe('LoginForm', function() {
 		expect(passwordNode.props.placeholder).toBe('Enter Password');
 		expect(passwordNode.props.type).toBe('password');
 		expect(passwordNode.props.className).toBe('form-control');
-
-		// console.log('passwordNode:', passwordNode);
-		// var a = 1;
-		// expect(a).toBeGreaterThan(0);
 
 
 	});
@@ -109,11 +109,6 @@ describe('LoginForm', function() {
 		expect(passwordNode.props.value).toBe('dumb_pa$$word');
 
 		expect(tree).toMatchSnapshot();
-
-
-		// console.log('passwordNode:', passwordNode);
-		// var a = 1;
-		// expect(a).toBeGreaterThan(0);
 
 	});
 
@@ -169,11 +164,6 @@ describe('LoginForm', function() {
 		expect(handleLogin).toHaveBeenCalledTimes(1);
 		expect(handleLogin).toBeCalledWith('simple_username84', 'dumb_pa$$word');
 		expect(handleLogin).lastCalledWith('simple_username84', 'dumb_pa$$word');
-
-
-		// console.log('passwordNode:', passwordNode);
-		// var a = 1;
-		// expect(a).toBeGreaterThan(0);
 
 	});
 
@@ -234,9 +224,6 @@ describe('LoginForm', function() {
 		node3.props != null && node3.props.onKeyPress(e3);
 		expect(handleLogin).toHaveBeenCalledTimes(1);
 
-		// console.log('passwordNode:', passwordNode);
-		// var a = 1;
-		// expect(a).toBeGreaterThan(0);
 
 	});
 
@@ -264,7 +251,7 @@ describe('LoginForm', function() {
 
 
 
-	it('displays error message to user when no username is provided on sign-in attempt', () => {
+	it('displays error message to user when no username is provided on sign-in attempt, and whatever password entered remains', () => {
 
 		var component = renderer.create(
 			<LoginForm
@@ -301,21 +288,20 @@ describe('LoginForm', function() {
 		// console.log('helpBlock:', helpBlock);
 		expect(helpBlock.children[0]).toBe('Username must be at least one character long.');
 
+		passwordNode = searchTreeForProps(tree, {name: 'password'})[0];
+		expect(passwordNode.props.value).toBe('dumb_pa$$word');
+
 		// let formGroups = searchTreeForProps(tree, {className: 'form-group'});
 		let topFormGroup = searchTreeForProps(tree, {id: 'top-form-group'})[0];
 		// console.log('formGroups:', formGroups);
 		// console.log('topFormGroup:', topFormGroup);
 		expect(topFormGroup.props.className).toMatch('has-error');
 
-		// console.log('passwordNode:', passwordNode);
-		// var a = 1;
-		// expect(a).toBeGreaterThan(0);
-
 	});
 
 
 
-	it('displays error message to user when no password is provided on sign-in attempt', () => {
+	it('displays error message to user when no password is provided on sign-in attempt, and whatever username entered remains', () => {
 
 		var component = renderer.create(
 			<LoginForm
@@ -349,16 +335,18 @@ describe('LoginForm', function() {
 		expect(handleLogin).toHaveBeenCalledTimes(0);
 		expect(handleLogin).not.toHaveBeenCalled();
 
+		usernameNode = searchTreeForProps(tree, {name: 'username'})[0];
+		expect(usernameNode.props.value).toBe('simple_username84');
+
 		let helpBlock = searchTreeForProps(tree, {className: 'help-block'})[0];
 		// console.log('helpBlock:', helpBlock);
 		expect(helpBlock.children[0]).toBe('Password must be at least one character long.');
+
 
 		let topFormGroup = searchTreeForProps(tree, {id: 'top-form-group'})[0];
 		expect(topFormGroup.props.className).toMatch('has-error');
 
 	});
-
-
 
 
 });

@@ -35,7 +35,6 @@ export default React.createClass({
 		else {
 			this.props.handleLogin(username, password);
 		}
-
 	},
 
 	handleFieldChange: function(e) {
@@ -57,6 +56,8 @@ export default React.createClass({
 		var message_obj = this.state.message_obj;
 		var validationState = message_obj == null ? null : (message_obj.error ? 'error' : 'success');
 		var validationMessage = message_obj == null ? '' : message_obj.message_text;
+		// console.log("message_obj: ", message_obj);
+		// console.log("validationMessage: ", validationMessage);
 		return (
 			<div className='sign-in-form' onKeyPress={this.onKeyPress}>
 				<div className='modal-body'>
@@ -93,9 +94,13 @@ export default React.createClass({
 	},
 
 	_onAuthenticationChange: function(message_obj) {
-		// this.setState(getUserState());
-		if (message_obj != null && message_obj.error) {
-			this.setState({message_obj: message_obj});
+		if (message_obj != null) {
+			if (message_obj.error) {
+				this.setState({message_obj: message_obj});
+			}
+			else {
+				this.setState({message_obj: message_obj, username: '', password: ''});
+			}
 		}
 	}
 });

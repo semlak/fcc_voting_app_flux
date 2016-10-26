@@ -1,3 +1,10 @@
+'use strict';
+
+/*
+./js/utils/UserWebAPIUtils.js
+
+*/
+
 import UserServerActionCreators from '../actions/UserServerActionCreators';
 import UserStore from '../stores/UserStore';
 
@@ -67,7 +74,6 @@ module.exports = {
 		xhr.send(JSON.stringify(data));
 	},
 
-// should move this to webapi utils
 	login: function(username, password) {
 		var data = {username: username, password: password};
 		var xhr = new XMLHttpRequest();

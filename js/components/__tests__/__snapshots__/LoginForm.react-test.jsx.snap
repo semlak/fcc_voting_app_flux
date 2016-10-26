@@ -1,4 +1,4 @@
-exports[`LoginForm displays error message to user when no password is provided on sign-in attempt 1`] = `
+exports[`LoginForm displays error message to user when no password is provided on sign-in attempt, and whatever username entered remains 1`] = `
 <div
   className="sign-in-form"
   onKeyPress={[Function bound onKeyPress]}>
@@ -79,7 +79,7 @@ exports[`LoginForm displays error message to user when no password is provided o
 </div>
 `;
 
-exports[`LoginForm displays error message to user when no username is provided on sign-in attempt 1`] = `
+exports[`LoginForm displays error message to user when no username is provided on sign-in attempt, and whatever password entered remains 1`] = `
 <div
   className="sign-in-form"
   onKeyPress={[Function bound onKeyPress]}>

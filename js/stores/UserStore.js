@@ -492,7 +492,7 @@ UserStore.dispatchToken = AppDispatcher.register(function(action) {
 			// }
 			else {
 				//The authenticationState is not actually changing. This is likely due to a refresh of the UserStore or other application data.;
-				//This could also be just after a page refresh when UserStore was initially populated.;
+				//This could also be just after a page load or refresh when UserStore was initially populated.;
 				//The user could be authenticated or un-authenticated.;
 				UserStore.emitAuthenticationChange({error: false, message_text: null});
 			}

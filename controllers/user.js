@@ -80,7 +80,7 @@ router.post('/users/login', function(req, res, next) {
 				return next(err);
 			}
 			else {
-				return res.json({ message: 'User authenticated.', user: reqUserInfo(req.user)});
+				return res.json({ message: 'Login successful.', user: reqUserInfo(req.user)});
 			}
 		});
 	})(req, res, next);
