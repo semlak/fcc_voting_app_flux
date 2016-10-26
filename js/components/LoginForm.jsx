@@ -61,7 +61,7 @@ export default React.createClass({
 			<div className='sign-in-form' onKeyPress={this.onKeyPress}>
 				<div className='modal-body'>
 					<Form horizontal>
-						<FormGroup validationState={validationState} >
+						<FormGroup validationState={validationState} id='top-form-group' >
 							<FormGroup controlId='formHorizontalUsername'>
 								<Col smOffset={0} sm={2} componentClass={ControlLabel}>
 									Username:
@@ -79,14 +79,14 @@ export default React.createClass({
 								</Col>
 							</FormGroup>
 							<Col smOffset={2} sm={10}>
-								{validationState == null ? <HelpBlock>{'Log in with your username and password.'}</HelpBlock> : <HelpBlock>{validationMessage}</HelpBlock> }
+								<HelpBlock>{validationState == null ? 'Log in with your username and password.' : validationMessage}</HelpBlock>
 							</Col>
 						</FormGroup>
 					</Form>
 				</div>
 				<div className='modal-footer'>
 					<Button bsStyle='primary' id='login-button' onClick={this.handleLogin}>Sign In</Button>
-					<Button bsStyle='default' onClick={this.props.onCancel}>Cancel </Button>
+					<Button bsStyle='default' id='cancel-button' onClick={this.props.onCancel}>Cancel</Button>
 				</div>
 			</div>
 		);

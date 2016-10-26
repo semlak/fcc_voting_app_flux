@@ -10,90 +10,7 @@ import renderer from 'react-test-renderer';
 jest.mock('react-dom');
 jest.mock('../PollChart');
 
-
-		// poll: ReactPropTypes.object.isRequired,
-		// openDeletePollModal: React.PropTypes.func.isRequired,
-		// openSharePollModal: React.PropTypes.func.isRequired,
-		// currentUser: ReactPropTypes.object.isRequired,
-		// backToPollList: React.PropTypes.func.isRequired,
-		// handleAddAnswerOption: React.PropTypes.func.isRequired,
-		// closeModal: React.PropTypes.func.isRequired,
-		// modalToShow: React.PropTypes.string.isRequired,
-		// modalMessage: React.PropTypes.string.isRequired,
-		// new_answer_option: React.PropTypes.string.isRequired,
-		// deletePollRequest: React.PropTypes.func.isRequired
-
-var searchTree = function(root, str) {
-// http://stackoverflow.com/questions/9133500/how-to-find-a-node-in-a-tree-with-javascript
-	var stack = [], node, ii;
-	stack.push(root);
-
-	while (stack.length > 0) {
-		node = stack.pop();
-		if (node.children && node.children[0] == str) {
-		  // Found it!
-			return node;
-		}
-		else if (node.children && node.children.length) {
-		  for (ii = 0; ii < node.children.length; ii += 1) {
-				stack.push(node.children[ii]);
-		  }
-		}
-	}
-	return null;
-}
-
-var searchTreeForProps = function(root, props) {
-// http://stackoverflow.com/questions/9133500/how-to-find-a-node-in-a-tree-with-javascript
-	var stack = [], node, ii;
-	stack.push(root);
-  if (root == null || props == null) {
-    console.log("need to pass both a root element and props to check");
-    return null;
-  }
-
-	while (stack.length > 0) {
-		node = stack.pop();
-		if (node.props) {
-      // console.log("node.props: ", node.props);
-			for (var key in props) {
-        // console.log("checking: key:", key, ", node.props[key]: ", node.props[key], ", props[key]:", props[key]);
-				if (node.props[key] != null && node.props[key] === props[key]) {
-				  // Found it!
-					return node;
-				}
-			}
-		}
-		if (node.children && node.children.length) {
-		  for (ii = 0; ii < node.children.length; ii += 1) {
-				stack.push(node.children[ii]);
-		  }
-		}
-	}
-	return null;
-}
-
-
-var searchTreeForClassName = function(root, str) {
-// http://stackoverflow.com/questions/9133500/how-to-find-a-node-in-a-tree-with-javascript
-	var stack = [], node, ii;
-	stack.push(root);
-
-	while (stack.length > 0) {
-		node = stack.pop();
-		if (node.props && node.props.className == str) {
-		  // Found it!
-			return node;
-		}
-		else if (node.children && node.children.length) {
-		  for (ii = 0; ii < node.children.length; ii += 1) {
-				stack.push(node.children[ii]);
-		  }
-		}
-	}
-	return null;
-}
-
+import {searchTree, searchTreeForProps, searchTreeForClassName} from '../../testing/extraFunctions';
 
 
 const openDeletePollModal = function() {return true;};
@@ -148,9 +65,9 @@ describe('FullPoll', function() {
     // expect(tree.children[2].children[0].children[0].children[0].children[1].children[0]).toBe('Poll Question: ');
     // expect(tree.children[2].children[0].children[0].children[0].children[1].children[1].children[0]).toBe('How cute is Xena?');
 
-    expect(searchTreeForClassName(tree, 'header-column').children[0]).toBe('Single Poll Listing');
-    expect(searchTree(tree, 'Poll Author: ').children[1].children[0]).toBe('Xena');
-    expect(searchTree(tree, 'Poll Question: ').children[1].children[0]).toBe('How cute is Xena?');
+    expect(searchTreeForClassName(tree, 'header-column')[0].children[0]).toBe('Single Poll Listing');
+    expect(searchTree(tree, 'Poll Author: ')[0].children[1].children[0]).toBe('Xena');
+    expect(searchTree(tree, 'Poll Question: ')[0].children[1].children[0]).toBe('How cute is Xena?');
 
 
     // expect(tree.children[2].children[0].children[0].children[0].children[2].children[0].props.className).toBe('answer-options-box');
@@ -170,13 +87,13 @@ describe('FullPoll', function() {
     // expect(a).toBe(1)
 
     // manually trigger the callback
-    // let node = searchTreeForProps(tree, {title: "Back to Poll Listing"});
+    // let node = searchTreeForProps(tree, {title: "Back to Poll Listing"})[0];
     // console.log("node:", node);
     // node.props != null && node.props.onClick();
     // expect(backToPollList).toHaveBeenCalled();
 
     // node.props != null && node.props.onClick();
-    // let node1 = searchTreeForClassName(tree, 'full-poll-listing');
+    // let node1 = searchTreeForClassName(tree, 'full-poll-listing')[0];
     // node1.props != null && node1.props.onMouseOver();
     // console.log("node1:", node1);
     // node1.props != null && node1.props.onMouseOver();
@@ -226,32 +143,32 @@ describe('FullPoll', function() {
     // expect(tree.children[2].children[0].children[0].children[0].children[1].children[0]).toBe('Poll Question: ');
     // expect(tree.children[2].children[0].children[0].children[0].children[1].children[1].children[0]).toBe('What time do you wake up?');
 
-    expect(searchTreeForClassName(tree, 'header-column').children[0]).toBe('Single Poll Listing');
-    expect(searchTree(tree, 'Poll Author: ').children[1].children[0]).toBe('Kronos');
-    expect(searchTree(tree, 'Poll Question: ').children[1].children[0]).toBe('What time do you wake up?');
+    expect(searchTreeForClassName(tree, 'header-column')[0].children[0]).toBe('Single Poll Listing');
+    expect(searchTree(tree, 'Poll Author: ')[0].children[1].children[0]).toBe('Kronos');
+    expect(searchTree(tree, 'Poll Question: ')[0].children[1].children[0]).toBe('What time do you wake up?');
 
     // expect(tree.children[2].children[0].children[0].children[0].children[2].children[0].props.className).toBe('answer-options-box');
     // expect(tree.children[2].children[0].children[0].children[0].children[2].children[0].children[0].children[0].children[0]).toBe('answer-options-box');
     // expect(tree.children[2].children[0].children[0].children[0].children[2].children[0].children[0].children[0].children[0].children[1].children[0].children[0]).toBe('7:00am');
-    let answerOptionsBox = searchTreeForClassName(tree, 'answer-options-box');
+    let answerOptionsBox = searchTreeForClassName(tree, 'answer-options-box')[0];
     let answerOptionsList = answerOptionsBox.children[0];
     // console.log(JSON.stringify(answerOptionsList));
 
-    expect(searchTree(tree, "7:00am").children[0]).toBe('7:00am');
-    expect(searchTree(tree, '7:30am').children[0]).toBe('7:30am');
-    expect(searchTree(tree, '8:00am').children[0]).toBe('8:00am');
+    expect(searchTree(tree, "7:00am")[0].children[0]).toBe('7:00am');
+    expect(searchTree(tree, '7:30am')[0].children[0]).toBe('7:30am');
+    expect(searchTree(tree, '8:00am')[0].children[0]).toBe('8:00am');
 
     // Verify that the answerOptionsList contains three answers.
     expect(answerOptionsList.children[0].children.length).toBe(3);
 
     expect(answerOptionsList.children[0].children[0].children[1].children[0].children[0]).toBe('7:00am');
-    // let node0 = searchTree(tree, "7:00am");
+    // let node0 = searchTree(tree, "7:00am")[0];
     // // console.log('node:', node);
-    // expect(searchTree(tree, '7:30am').children[0]).toBe('7:30am');
-    // let node1 = searchTree(tree, '8:00am');
+    // expect(searchTree(tree, '7:30am')[0].children[0]).toBe('7:30am');
+    // let node1 = searchTree(tree, '8:00am')[0];
     // expect(node1.children[0]).toBe('8:00am');
 
-    let node1 = searchTreeForProps(tree, {className: 'poll-author poll-label'});
+    let node1 = searchTreeForProps(tree, {className: 'poll-author'})[0];
     // console.log('node1: ', node1);
     expect(node1.children[0]).toBe('Poll Author: ');
     expect(node1.children[1].children[0]).toBe('Kronos');
