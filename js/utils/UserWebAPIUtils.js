@@ -4,6 +4,7 @@
 ./js/utils/UserWebAPIUtils.js
 
 */
+
 import UserServerActionCreators from '../actions/UserServerActionCreators';
 import UserStore from '../stores/UserStore';
 
@@ -21,7 +22,7 @@ module.exports = {
 			if (xhr.status === 200) {
 				// console.log('xhr is ', xhr);
 				var response = JSON.parse(xhr.responseText);
-				// console.log('Successfully received server response for getAllUsers request.\nxhr.responseText:', response);
+				console.log('Successfully received server response for getAllUsers request.\nxhr.responseText:', response);
 				var rawUsers = response.users;
 				var currentUser = response.authorizedUser;
 				// console.log('req.user is ', currentUser);
@@ -36,7 +37,7 @@ module.exports = {
 				UserServerActionCreators.setAuthenticatedUserState(currentUser, message_obj);
 			}
 			else {
-				console.error('Request for all users failed.  Returned status of ' + xhr.status);
+				console.log('Request for all users failed.  Returned status of ' + xhr.status);
 			}
 		}.bind(this);
 		xhr.send();
@@ -90,7 +91,7 @@ module.exports = {
 			}
 			else {
 				let rawLoginResponse = JSON.parse(xhr.responseText);
-				console.error('Request failed.  Returned status of' + xhr.status);
+				console.log('Request failed.  Returned status of' + xhr.status);
 				let message_obj = {error: true, message_text: rawLoginResponse.message || 'Login Request failed.  Returned status of ' + xhr.status};
 				UserServerActionCreators.setAuthenticatedUserState(null, message_obj);
 			}
@@ -99,7 +100,6 @@ module.exports = {
 		xhr.send(JSON.stringify(data));
 
 	},
-
 
 	logout: function() {
 		var xhr = new XMLHttpRequest();
@@ -115,7 +115,7 @@ module.exports = {
 				UserServerActionCreators.setAuthenticatedUserState({}, message_obj);
 			}
 			else {
-				console.error('Request failed.  Returned status of ' + xhr.status);
+				console.log('Request failed.  Returned status of ' + xhr.status);
 			}
 		}.bind(this);
 		xhr.send();
@@ -124,12 +124,12 @@ module.exports = {
 	update: function(id, userUpdates) {
 		var data = {};
 		if (id == null) {
-			console.error('No id passed to update function in UserWebAPIUtils.');
+			console.log('No id passed to update function in UserWebAPIUtils.');
 			return;
 		}
-		console.error('id and userUpdates in UserWebAPIUtils update function:', id, ', ', userUpdates);
+		console.log('id and userUpdates in UserWebAPIUtils update function:', id, ', ', userUpdates);
 		for (var key in userUpdates) {
-			// console.log('key is ', key);
+			console.log('key is ', key);
 			switch(key) {
 			case 'role':
 				data.new_role = userUpdates[key];
@@ -148,7 +148,7 @@ module.exports = {
 				//don\'t change this. Just send with data.
 				break;
 			default:
-				console.error('in UserWebAPIUtils. Unknown userUpdate field passed to user update function.');
+				console.log('in UserWebAPIUtils. Unknown userUpdate field passed to user update function.');
 				return ;
 			}
 		}
@@ -161,7 +161,7 @@ module.exports = {
 		xhr.onload = function() {
 			if (xhr.status === 200) {
 				let response = JSON.parse(xhr.responseText);
-				// console.log('Submitted user update ajax xhr! xhr.responseText is', response);
+				console.log('Submitted user update ajax xhr! xhr.responseText is', response);
 				// should receive the updated user object as response.user (includes id, username, fullname, and role)
 				let message_obj = { error: false, message_text: response.message};
 				UserServerActionCreators.receiveUpdatedUser(response.user, message_obj);
@@ -173,6 +173,7 @@ module.exports = {
 				UserServerActionCreators.receiveUpdatedUser(null, message_obj);
 			}
 		}.bind(this);
+		console.log('data:', data);
 
 		xhr.send(JSON.stringify(data));
 	}

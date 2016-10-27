@@ -10,89 +10,15 @@ import renderer from 'react-test-renderer';
 jest.mock('react-dom');
 jest.mock('../PollChart');
 
-<<<<<<< HEAD
-var searchTree = function(root, str) {
-// http://stackoverflow.com/questions/9133500/how-to-find-a-node-in-a-tree-with-javascript
-	var stack = [], node, ii;
-	stack.push(root);
-
-	while (stack.length > 0) {
-		node = stack.pop();
-		if (node.children && node.children[0] == str) {
-		  // Found it!
-			return node;
-		}
-		else if (node.children && node.children.length) {
-		  for (ii = 0; ii < node.children.length; ii += 1) {
-				stack.push(node.children[ii]);
-		  }
-		}
-	}
-	return null;
-}
-
-var searchTreeForProps = function(root, props) {
-// http://stackoverflow.com/questions/9133500/how-to-find-a-node-in-a-tree-with-javascript
-	var stack = [], node, ii;
-	stack.push(root);
-  if (root == null || props == null) {
-    console.log("need to pass both a root element and props to check");
-    return null;
-  }
-
-	while (stack.length > 0) {
-		node = stack.pop();
-		if (node.props) {
-      // console.log("node.props: ", node.props);
-			for (var key in props) {
-        // console.log("checking: key:", key, ", node.props[key]: ", node.props[key], ", props[key]:", props[key]);
-				if (node.props[key] != null && node.props[key] === props[key]) {
-				  // Found it!
-					return node;
-				}
-			}
-		}
-		if (node.children && node.children.length) {
-		  for (ii = 0; ii < node.children.length; ii += 1) {
-				stack.push(node.children[ii]);
-		  }
-		}
-	}
-	return null;
-}
-
-
-var searchTreeForClassName = function(root, str) {
-// http://stackoverflow.com/questions/9133500/how-to-find-a-node-in-a-tree-with-javascript
-	var stack = [], node, ii;
-	stack.push(root);
-
-	while (stack.length > 0) {
-		node = stack.pop();
-		if (node.props && node.props.className == str) {
-		  // Found it!
-			return node;
-		}
-		else if (node.children && node.children.length) {
-		  for (ii = 0; ii < node.children.length; ii += 1) {
-				stack.push(node.children[ii]);
-		  }
-		}
-	}
-	return null;
-}
-
-=======
 import {searchTree, searchTreeForProps, searchTreeForClassName} from '../../testing/extraFunctions';
->>>>>>> more_tests
 
 
-const openDeletePollModal = function() {return true;};
-const openSharePollModal = openDeletePollModal;
+const openDeletePollModal = jest.fn();
+const openSharePollModal = jest.fn();
 const backToPollList = jest.fn();
-const handleAddAnswerOption = openDeletePollModal;
-const closeModal = openDeletePollModal;
-const deletePollRequest = openDeletePollModal;
+const handleAddAnswerOption = jest.fn();
+const closeModal = jest.fn();
+const deletePollRequest = jest.fn();
 const currentUser = {};
 
 var funct = jest.fn();

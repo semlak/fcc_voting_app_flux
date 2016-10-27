@@ -182,7 +182,7 @@ exports[`FullPoll has an answer option box 1`] = `
               data-placement="bottom"
               data-toggle="tooltip"
               disabled={false}
-              onClick={[Function openDeletePollModal]}
+              onClick={[Function mockConstructor]}
               title="Get Link to Poll for sharing"
               type="button">
               Share Poll
@@ -192,7 +192,7 @@ exports[`FullPoll has an answer option box 1`] = `
               data-placement="bottom"
               data-toggle="tooltip"
               disabled={true}
-              onClick={[Function openDeletePollModal]}
+              onClick={[Function mockConstructor]}
               title="A poll can only be deleted by its owner/creator"
               type="button">
               Delete Poll
@@ -353,7 +353,7 @@ exports[`FullPoll has an author and a question 1`] = `
               data-placement="bottom"
               data-toggle="tooltip"
               disabled={false}
-              onClick={[Function openDeletePollModal]}
+              onClick={[Function mockConstructor]}
               title="Get Link to Poll for sharing"
               type="button">
               Share Poll
@@ -363,7 +363,7 @@ exports[`FullPoll has an author and a question 1`] = `
               data-placement="bottom"
               data-toggle="tooltip"
               disabled={true}
-              onClick={[Function openDeletePollModal]}
+              onClick={[Function mockConstructor]}
               title="A poll can only be deleted by its owner/creator"
               type="button">
               Delete Poll
