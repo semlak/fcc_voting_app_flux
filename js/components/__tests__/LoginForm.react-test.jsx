@@ -6,84 +6,17 @@ import LoginForm from '../LoginForm';
 import React from 'react';
 // import Link from '../Link.react';
 import renderer from 'react-test-renderer';
+// import {searchTree, searchTreeForProps, searchTreeForClassName} from '../../testing/extraFunctions';
+import {searchTreeForProps} from '../../testing/extraFunctions';
 
 jest.mock('react-dom');
-jest.mock('../PollChart');
+jest.mock('../../utils/UserWebAPIUtils.js');
+import UserActionCreators from '../../actions/UserActionCreators';
+import UserServerActionCreators from '../../actions/UserServerActionCreators';
 
-
-var searchTree = function(root, str) {
-// http://stackoverflow.com/questions/9133500/how-to-find-a-node-in-a-tree-with-javascript
-	var stack = [], node, ii;
-	stack.push(root);
-
-	while (stack.length > 0) {
-		node = stack.pop();
-		if (node.children && node.children[0] == str) {
-			// Found it!
-			return node;
-		}
-		else if (node.children && node.children.length) {
-			for (ii = 0; ii < node.children.length; ii += 1) {
-				stack.push(node.children[ii]);
-			}
-		}
-	}
-	return null;
-}
-
-var searchTreeForProps = function(root, props) {
-// http://stackoverflow.com/questions/9133500/how-to-find-a-node-in-a-tree-with-javascript
-	var stack = [], node, ii;
-	stack.push(root);
-	if (root == null || props == null) {
-		console.log("need to pass both a root element and props to check");
-		return null;
-	}
-
-	while (stack.length > 0) {
-		node = stack.pop();
-		if (node.props) {
-			// console.log("node.props: ", node.props);
-			for (var key in props) {
-				// console.log("checking: key:", key, ", node.props[key]: ", node.props[key], ", props[key]:", props[key]);
-				if (node.props[key] != null && node.props[key] === props[key]) {
-					// Found it!
-					return node;
-				}
-			}
-		}
-		if (node.children && node.children.length) {
-			for (ii = 0; ii < node.children.length; ii += 1) {
-				stack.push(node.children[ii]);
-			}
-		}
-	}
-	return null;
-}
-
-
-var searchTreeForClassName = function(root, str) {
-// http://stackoverflow.com/questions/9133500/how-to-find-a-node-in-a-tree-with-javascript
-	var stack = [], node, ii;
-	stack.push(root);
-
-	while (stack.length > 0) {
-		node = stack.pop();
-		if (node.props && node.props.className == str) {
-			// Found it!
-			return node;
-		}
-		else if (node.children && node.children.length) {
-			for (ii = 0; ii < node.children.length; ii += 1) {
-				stack.push(node.children[ii]);
-			}
-		}
-	}
-	return null;
-}
-
-
-
+var actualHandleLoginFunction = function(username, password) {
+		UserActionCreators.login(username, password);
+};
 
 describe('LoginForm', function() {
 	// var LoginForm;
@@ -109,14 +42,14 @@ describe('LoginForm', function() {
 		);
 
 		let tree = component.toJSON();
-		// expect(tree).toMatchSnapshot();
+		expect(tree).toMatchSnapshot();
 		// console.log('tree.children:', tree.children);
 		expect(tree.children.length).toBe(2);
 
 		expect(tree.children[0].props.className).toBe('modal-body');
 
-		let usernameNode = searchTreeForProps(tree, {name: 'username'});
-		let passwordNode = searchTreeForProps(tree, {name: 'password'});
+		let usernameNode = searchTreeForProps(tree, {name: 'username'})[0];
+		let passwordNode = searchTreeForProps(tree, {name: 'password'})[0];
 		expect(usernameNode.props.name).toBe('username');
 		expect(usernameNode.props.value).toBe('');
 		expect(usernameNode.props.placeholder).toBe('Enter Username');
@@ -129,10 +62,6 @@ describe('LoginForm', function() {
 		expect(passwordNode.props.placeholder).toBe('Enter Password');
 		expect(passwordNode.props.type).toBe('password');
 		expect(passwordNode.props.className).toBe('form-control');
-
-		// console.log('passwordNode:', passwordNode);
-		// var a = 1;
-		// expect(a).toBeGreaterThan(0);
 
 
 	});
@@ -148,11 +77,11 @@ describe('LoginForm', function() {
 		);
 
 		let tree = component.toJSON();
-		expect(tree).toMatchSnapshot();
+		// expect(tree).toMatchSnapshot();
 		// console.log('tree.children:', tree.children);
 
-		let usernameNode = searchTreeForProps(tree, {name: 'username'});
-		let passwordNode = searchTreeForProps(tree, {name: 'password'});
+		let usernameNode = searchTreeForProps(tree, {name: 'username'})[0];
+		let passwordNode = searchTreeForProps(tree, {name: 'password'})[0];
 
 		let e1 = {
 			target: {
@@ -163,7 +92,7 @@ describe('LoginForm', function() {
 		usernameNode.props.onChange(e1);
 
 		tree = component.toJSON();
-		usernameNode = searchTreeForProps(tree, {name: 'username'});
+		usernameNode = searchTreeForProps(tree, {name: 'username'})[0];
 		expect(usernameNode.props.value).toBe('simple_username84');
 		// console.log('usernameNode:', usernameNode);
 
@@ -176,20 +105,16 @@ describe('LoginForm', function() {
 
 		passwordNode.props.onChange(e2);
 		tree = component.toJSON();
-		passwordNode = searchTreeForProps(tree, {name: 'password'});
+		passwordNode = searchTreeForProps(tree, {name: 'password'})[0];
 		expect(passwordNode.props.value).toBe('dumb_pa$$word');
 
-
-
-		// console.log('passwordNode:', passwordNode);
-		// var a = 1;
-		// expect(a).toBeGreaterThan(0);
+		expect(tree).toMatchSnapshot();
 
 	});
 
 
 
-	it('calls the handleLogin callback with username and password as arguments when button clicked', () => {
+	it('calls the handleLogin callback with username and password as arguments when sign-in button clicked', () => {
 
 		var component = renderer.create(
 			<LoginForm
@@ -199,11 +124,10 @@ describe('LoginForm', function() {
 		);
 
 		let tree = component.toJSON();
-		expect(tree).toMatchSnapshot();
-		// console.log('tree.children:', tree.children);
+		// expect(tree).toMatchSnapshot();
 
-		let usernameNode = searchTreeForProps(tree, {name: 'username'});
-		let passwordNode = searchTreeForProps(tree, {name: 'password'});
+		let usernameNode = searchTreeForProps(tree, {name: 'username'})[0];
+		let passwordNode = searchTreeForProps(tree, {name: 'password'})[0];
 
 		let e1 = {
 			target: {
@@ -226,25 +150,20 @@ describe('LoginForm', function() {
 
 
 		// tree = component.toJSON();
-		// usernameNode = searchTreeForProps(tree, {name: 'username'});
+		// usernameNode = searchTreeForProps(tree, {name: 'username'})[0];
 		// expect(usernameNode.props.value).toBe('simple_username84');
 		// console.log('usernameNode:', usernameNode);
 
 		// tree = component.toJSON();
-		// passwordNode = searchTreeForProps(tree, {name: 'password'});
+		// passwordNode = searchTreeForProps(tree, {name: 'password'})[0];
 		// expect(passwordNode.props.value).toBe('dumb_pa$$word');
-		let loginButton = searchTreeForProps(tree, {id: 'login-button'});
+		let loginButton = searchTreeForProps(tree, {id: 'login-button'})[0];
 		// console.log('loginButton:', loginButton);
 		loginButton.props != null && loginButton.props.onClick();
 
 		expect(handleLogin).toHaveBeenCalledTimes(1);
 		expect(handleLogin).toBeCalledWith('simple_username84', 'dumb_pa$$word');
 		expect(handleLogin).lastCalledWith('simple_username84', 'dumb_pa$$word');
-
-
-		// console.log('passwordNode:', passwordNode);
-		// var a = 1;
-		// expect(a).toBeGreaterThan(0);
 
 	});
 
@@ -253,7 +172,7 @@ describe('LoginForm', function() {
 
 
 
-	it('automatically calls the handleLogin callback if enter is pressed while either input field is active', () => {
+	it('automatically calls the handleLogin callback if \'enter\' key is pressed while either input field is active', () => {
 
 		var component = renderer.create(
 			<LoginForm
@@ -263,11 +182,10 @@ describe('LoginForm', function() {
 		);
 
 		let tree = component.toJSON();
-		expect(tree).toMatchSnapshot();
-		// console.log('tree.children:', tree.children);
+		// expect(tree).toMatchSnapshot();
 
-		let usernameNode = searchTreeForProps(tree, {name: 'username'});
-		let passwordNode = searchTreeForProps(tree, {name: 'password'});
+		let usernameNode = searchTreeForProps(tree, {name: 'username'})[0];
+		let passwordNode = searchTreeForProps(tree, {name: 'password'})[0];
 
 		let e1 = {
 			target: {
@@ -278,7 +196,7 @@ describe('LoginForm', function() {
 		usernameNode.props != null && usernameNode.props.onChange(e1);
 
 		tree = component.toJSON();
-		usernameNode = searchTreeForProps(tree, {name: 'username'});
+		usernameNode = searchTreeForProps(tree, {name: 'username'})[0];
 		expect(usernameNode.props.value).toBe('simple_username84');
 		// console.log('usernameNode:', usernameNode);
 
@@ -299,16 +217,134 @@ describe('LoginForm', function() {
 
 		passwordNode.props != null && passwordNode.props.onChange(e2);
 		tree = component.toJSON();
-		passwordNode = searchTreeForProps(tree, {name: 'password'});
+		passwordNode = searchTreeForProps(tree, {name: 'password'})[0];
 		expect(passwordNode.props.value).toBe('dumb_pa$$word');
 
-		let node3 = searchTreeForProps(tree, {className: 'sign-in-form'});
+		let node3 = searchTreeForProps(tree, {className: 'sign-in-form'})[0];
 		node3.props != null && node3.props.onKeyPress(e3);
 		expect(handleLogin).toHaveBeenCalledTimes(1);
 
-		// console.log('passwordNode:', passwordNode);
-		// var a = 1;
-		// expect(a).toBeGreaterThan(0);
+
+	});
+
+
+	it('calls the onCancel callback when cancel button is clicked', () => {
+
+		var component = renderer.create(
+			<LoginForm
+				onCancel={onCancel}
+				handleLogin={handleLogin}
+			/>
+		);
+
+		let tree = component.toJSON();
+		// expect(tree).toMatchSnapshot();
+
+		let cancelButton = searchTreeForProps(tree, {id: 'cancel-button'})[0];
+		// console.log('loginButton:', loginButton);
+		cancelButton.props != null && cancelButton.props.onClick();
+
+		expect(onCancel).toHaveBeenCalledTimes(1);
+
+	});
+
+
+
+
+	it('displays error message to user when no username is provided on sign-in attempt, and whatever password entered remains', () => {
+
+		var component = renderer.create(
+			<LoginForm
+				onCancel={onCancel}
+				handleLogin={handleLogin}
+			/>
+		);
+
+		let tree = component.toJSON();
+		// expect(tree).toMatchSnapshot();
+
+		let passwordNode = searchTreeForProps(tree, {name: 'password'})[0];
+
+		let e2 = {
+			target: {
+				name: 'password',
+				value: 'dumb_pa$$word'
+			}
+		};
+
+		passwordNode.props != null && passwordNode.props.onChange(e2);
+
+		let loginButton = searchTreeForProps(tree, {id: 'login-button'})[0];
+		loginButton.props != null && loginButton.props.onClick();
+
+		tree = component.toJSON();
+		expect(tree).toMatchSnapshot();
+
+		// Because the LoginForm has its own function called onClick, the handleLogin mockFunction callback is only called if the username and password are not empty
+		expect(handleLogin).toHaveBeenCalledTimes(0);
+		expect(handleLogin).not.toHaveBeenCalled();
+
+		let helpBlock = searchTreeForProps(tree, {className: 'help-block'})[0];
+		// console.log('helpBlock:', helpBlock);
+		expect(helpBlock.children[0]).toBe('Username must be at least one character long.');
+
+		passwordNode = searchTreeForProps(tree, {name: 'password'})[0];
+		expect(passwordNode.props.value).toBe('dumb_pa$$word');
+
+		// let formGroups = searchTreeForProps(tree, {className: 'form-group'});
+		let topFormGroup = searchTreeForProps(tree, {id: 'top-form-group'})[0];
+		// console.log('formGroups:', formGroups);
+		// console.log('topFormGroup:', topFormGroup);
+		expect(topFormGroup.props.className).toMatch('has-error');
+
+	});
+
+
+
+	it('displays error message to user when no password is provided on sign-in attempt, and whatever username entered remains', () => {
+
+		var component = renderer.create(
+			<LoginForm
+				onCancel={onCancel}
+				handleLogin={handleLogin}
+			/>
+		);
+
+		let tree = component.toJSON();
+		// expect(tree).toMatchSnapshot();
+
+		let usernameNode = searchTreeForProps(tree, {name: 'username'})[0];
+		let passwordNode = searchTreeForProps(tree, {name: 'password'})[0];
+
+		let e1 = {
+			target: {
+				name: 'username',
+				value: 'simple_username84'
+			}
+		};
+
+		usernameNode.props != null && usernameNode.props.onChange(e1);
+
+		let loginButton = searchTreeForProps(tree, {id: 'login-button'})[0];
+		loginButton.props != null && loginButton.props.onClick();
+
+		tree = component.toJSON();
+		expect(tree).toMatchSnapshot();
+
+		// Because the LoginForm has its own function called onClick, the handleLogin mockFunction callback is only called if the username and password are not empty
+		expect(handleLogin).toHaveBeenCalledTimes(0);
+		expect(handleLogin).not.toHaveBeenCalled();
+
+		usernameNode = searchTreeForProps(tree, {name: 'username'})[0];
+		expect(usernameNode.props.value).toBe('simple_username84');
+
+		let helpBlock = searchTreeForProps(tree, {className: 'help-block'})[0];
+		// console.log('helpBlock:', helpBlock);
+		expect(helpBlock.children[0]).toBe('Password must be at least one character long.');
+
+
+		let topFormGroup = searchTreeForProps(tree, {id: 'top-form-group'})[0];
+		expect(topFormGroup.props.className).toMatch('has-error');
 
 	});
 

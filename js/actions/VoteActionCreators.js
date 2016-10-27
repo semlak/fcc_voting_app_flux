@@ -1,4 +1,8 @@
+'use strict';
+
 /*
+
+./js/actions/VoteActionCreators.js
 
  */
 

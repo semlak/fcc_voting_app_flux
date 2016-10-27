@@ -1,3 +1,10 @@
+'use strict';
+
+/*
+	I've taken this file almost directly from Facebook's examples on github, so I'm leaving their copyright info.
+	https://github.com/facebook/flux/tree/master/examples/flux-todomvc/js/dispatcher
+*/
+
 /*
  * Copyright (c) 2014-2015, Facebook, Inc.
  * All rights reserved.

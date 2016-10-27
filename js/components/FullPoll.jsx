@@ -1,3 +1,5 @@
+'use strict';
+
 /*
 <AppRoot>/js/components/FullPoll.jsx
 */

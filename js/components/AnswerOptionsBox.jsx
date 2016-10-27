@@ -1,3 +1,9 @@
+'use strict';
+
+/*
+components/AnswerOptionsBox.jsx
+
+*/
 import React from 'react';
 import {Button, Grid, Row, Col, FormGroup, FormControl, HelpBlock} from 'react-bootstrap';
 

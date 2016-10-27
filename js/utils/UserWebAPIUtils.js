@@ -1,3 +1,9 @@
+'use strict';
+
+/*
+./js/utils/UserWebAPIUtils.js
+
+*/
 import UserServerActionCreators from '../actions/UserServerActionCreators';
 import UserStore from '../stores/UserStore';
 
@@ -13,11 +19,11 @@ module.exports = {
 		xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 		xhr.onload = function() {
 			if (xhr.status === 200) {
-				// console.log('Successfully received server response for getAllUsers request. xhr.responseText is' + xhr.responseText);
 				// console.log('xhr is ', xhr);
 				var response = JSON.parse(xhr.responseText);
+				// console.log('Successfully received server response for getAllUsers request.\nxhr.responseText:', response);
 				var rawUsers = response.users;
-				var currentUser = response.user;
+				var currentUser = response.authorizedUser;
 				// console.log('req.user is ', currentUser);
 				// console.log('firing UserServerActionCreators.receiveAll');
 				// console.log('raw users are ', rawUsers);
@@ -54,8 +60,8 @@ module.exports = {
 			if (xhr.status === 200) {
 				const response = JSON.parse(xhr.responseText);
 				// console.log('Submitted Registration ajax xhr! xhr.responseText is', response);
-				// should receive the new user object as a user (includes id, username, fullname, and role)
-				UserServerActionCreators.receiveCreatedUser(response.user, null);
+				// should receive the new user object as 'authoriedUser' (includes id, username, fullname, and role)
+				UserServerActionCreators.receiveCreatedUser(response.authorizedUser, null);
 
 			}
 			else {
@@ -67,7 +73,6 @@ module.exports = {
 		xhr.send(JSON.stringify(data));
 	},
 
-// should move this to webapi utils
 	login: function(username, password) {
 		var data = {username: username, password: password};
 		var xhr = new XMLHttpRequest();
@@ -80,7 +85,7 @@ module.exports = {
 					// console.log('Successfully received reponse from user.login xhr. xhr.responseText is' + xhr.responseText);
 				let rawLoginResponse = JSON.parse(xhr.responseText);
 				let message_obj = {error: false, message_text: rawLoginResponse.message };
-				UserServerActionCreators.setAuthenticatedUserState(rawLoginResponse.user, message_obj);
+				UserServerActionCreators.setAuthenticatedUserState(rawLoginResponse.authorizedUser, message_obj);
 
 			}
 			else {
@@ -94,6 +99,7 @@ module.exports = {
 		xhr.send(JSON.stringify(data));
 
 	},
+
 
 	logout: function() {
 		var xhr = new XMLHttpRequest();

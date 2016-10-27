@@ -55,8 +55,8 @@ var cleansePoll = function (poll) {
 	I do have some old routes commented out that include non-json responses (I initially created this app as a non-single-page-app)
 
 	All responses to ajax requests to /polls (except when there is a database err, in which case the response is just the err object)
-		include the requesting user's data (an object or null), message (string), and an error status (boolean, true if error occurred) .
-	The user data for the request is implicitly provided by Passport.js in the request (same for all requests), but included explicitly after
+		include the requesting user's data (an object or null, called 'authorizedUser'), message (string), and an error status (boolean, true if error occurred) .
+	The authorizedUser data for the request is implicitly provided by Passport.js in the request (same for all requests), but included explicitly after
 		being cleaned to avoid sending password hashes. I would like to find way to have passport or express do this implicitly.
 
 	THIS APPLICATION CURRENTLY SENDS SOME SENSTIVE USER DATA TO CLIENT. This should be cleaned up before production use. The main examples I can think of
@@ -93,7 +93,7 @@ router.get('/polls/', function(req, res) {
 		else {
 			var message = polls.length < 0 ? 'No polls found.' : 'Polls retrieved succesfully.';
 			var cleansedPolls = polls.map(poll => cleansePoll(poll));
-			res.json({error: (polls.length < 0), polls: cleansedPolls, message: message, user: reqUserInfo(req.user)});
+			res.json({error: (polls.length < 0), polls: cleansedPolls, message: message, authorizedUser: reqUserInfo(req.user)});
 		}
 	});
 });
@@ -115,13 +115,13 @@ router.get('/polls/', function(req, res) {
 // 			}
 // 			else {
 // 				var message = polls.length < 0 ? 'No poll found with id of '' + poll_id + ''.' : 'Poll retrieved succesfully.';
-// 				res.json({error: (polls.length < 0), poll: poll, message: message, initialSinglePollId: poll_id, user: reqUserInfo(req.user)});
+// 				res.json({error: (polls.length < 0), poll: poll, message: message, initialSinglePollId: poll_id, authorizedUser: reqUserInfo(req.user)});
 // 			}
 // 		});
 // 	}
 // 	else {
 // 		//res.sendFile(path.join(__dirname, '..' ,'public', 'index.html'))
-// 		res.render('index', { user: reqUserInfo(req.user), title: 'Single Poll'})
+// 		res.render('index', { authorizedUser: reqUserInfo(req.user), title: 'Single Poll'})
 // 	}
 // })
 
@@ -167,7 +167,7 @@ router.post('/polls/', function(req, res) {
 		res.json({error: true, message: 'User must be authenticated in order to create poll answer_option'});
 	}
 	else if (poll.author == null || poll.question == null || poll.owner == null) {
-		res.json({error: true, message: 'Poll Author or Question cannot be null', user: reqUserInfo(req.user)});
+		res.json({error: true, message: 'Poll Author or Question cannot be null', authorizedUser: reqUserInfo(req.user)});
 	}
 	else {
 		// other logic
@@ -176,7 +176,7 @@ router.post('/polls/', function(req, res) {
 				res.json(err);
 			}
 			var singlePoll = cleansePoll(poll);
-			var data = {error: false, poll: singlePoll, message: 'Poll created successfully.', user: reqUserInfo(req.user)};
+			var data = {error: false, poll: singlePoll, message: 'Poll created successfully.', authorizedUser: reqUserInfo(req.user)};
 			res.json(data);
 		});
 	}
@@ -220,10 +220,10 @@ router.post('/polls/:poll_id/new_answer_option', function(req, res) {
 	var new_answer_option = req.body.new_answer_option;
 
 	if (!req.isAuthenticated()) {
-		res.json({error: true, message: 'User must be authenticated in order to create poll answer_option', user: null});
+		res.json({error: true, message: 'User must be authenticated in order to create poll answer_option', authorizedUser: null});
 	}
 	else if (new_answer_option == '' || new_answer_option == null) {
-		res.json({error: true, message: 'New answer option cannot be blank/null.', user: reqUserInfo(req.user)});
+		res.json({error: true, message: 'New answer option cannot be blank/null.', authorizedUser: reqUserInfo(req.user)});
 	}
 	else {
 		Poll.findById(poll_id).populate('votes').exec(function(err, poll) {
@@ -231,7 +231,7 @@ router.post('/polls/:poll_id/new_answer_option', function(req, res) {
 				res.json(err);
 			}
 			else if (poll == null) {
-				res.json({error: true, message: 'Poll with id \'' + poll_id + '\' unable to be found', user: reqUserInfo(req.user)});
+				res.json({error: true, message: 'Poll with id \'' + poll_id + '\' unable to be found', authorizedUser: reqUserInfo(req.user)});
 			}
 			else {
 				var answer_options = poll.answer_options;
@@ -247,7 +247,7 @@ router.post('/polls/:poll_id/new_answer_option', function(req, res) {
 						// console.log('Successfully updated poll ', poll_id, ' with new_answer_option', new_answer_option, ', all answer options are ', poll.answer_options)
 						// res.json({poll_id: poll._id, answer_options: poll.answer_options});
 						var singlePoll = cleansePoll(poll);
-						var data = {error: false, poll: singlePoll, message: message, user: reqUserInfo(req.user)};
+						var data = {error: false, poll: singlePoll, message: message, authorizedUser: reqUserInfo(req.user)};
 						res.json(data);
 					}
 				});
@@ -283,7 +283,7 @@ router.delete('/polls/:poll_id',  function(req, res) {
 		}
 		else if (poll == null) {
 			console.log('On poll delete request, unable to find poll with id ' + poll_id);
-			res.status(404).json({error: true, message: 'poll with id ' + poll_id + ' was not found.', user: reqUserInfo(req.user)});
+			res.status(404).json({error: true, message: 'poll with id ' + poll_id + ' was not found.', authorizedUser: reqUserInfo(req.user)});
 		}
 		else if (req.user && (String(poll.owner) == String(req.user._id) || req.user.role === 'admin')) {
 			// delete poll
@@ -295,13 +295,13 @@ router.delete('/polls/:poll_id',  function(req, res) {
 				else {
 					var message = 'poll with id ' + poll_id + ' deleted successfully, user was ' + req.user.username;
 					console.log(message);
-					res.status(200).json({error: false, message: message, user: reqUserInfo(req.user)});
+					res.status(200).json({error: false, message: message, authorizedUser: reqUserInfo(req.user)});
 				}
 			});
 		}
 		else {
 			console.log('Unknown error while attempting to delete poll with id ' + poll_id);
-			res.status(403).json({error: true, message: 'a poll can only be deleted by its owner', user: reqUserInfo(req.user)});
+			res.status(403).json({error: true, message: 'a poll can only be deleted by its owner', authorizedUser: reqUserInfo(req.user)});
 		}
 	});
 });
@@ -357,7 +357,7 @@ router.delete('/polls/:poll_id',  function(req, res) {
 
 // //This gets the new poll form. This is not actually used with the single page app.
 // router.get('/polls/new', function(req, res, next) {
-// 	res.render('create_poll', { user: reqUserInfo(req.user), title: 'Create New Poll'})
+// 	res.render('create_poll', { authorizedUser: reqUserInfo(req.user), title: 'Create New Poll'})
 
 // })
 

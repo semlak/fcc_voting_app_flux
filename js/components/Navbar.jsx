@@ -1,3 +1,10 @@
+'use strict';
+
+
+/*
+components/Navbar.jsx
+*/
+
 import React from 'react';
 // import NavLink from './NavLink';
 import {IndexLink } from 'react-router';

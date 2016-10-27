@@ -1,3 +1,5 @@
+'use strict';
+
 /*
 ModalActionCreators.js
 */

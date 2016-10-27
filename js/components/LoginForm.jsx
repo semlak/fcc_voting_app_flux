@@ -1,3 +1,5 @@
+'use strict';
+
 import React from 'react';
 import UserStore from '../stores/UserStore';
 // import UserActionCreators from '../actions/UserActionCreators';
@@ -35,7 +37,6 @@ export default React.createClass({
 		else {
 			this.props.handleLogin(username, password);
 		}
-
 	},
 
 	handleFieldChange: function(e) {
@@ -61,7 +62,7 @@ export default React.createClass({
 			<div className='sign-in-form' onKeyPress={this.onKeyPress}>
 				<div className='modal-body'>
 					<Form horizontal>
-						<FormGroup validationState={validationState} >
+						<FormGroup validationState={validationState} id='top-form-group' >
 							<FormGroup controlId='formHorizontalUsername'>
 								<Col smOffset={0} sm={2} componentClass={ControlLabel}>
 									Username:
@@ -75,27 +76,31 @@ export default React.createClass({
 									Password:
 								</Col>
 								<Col sm={10}>
-									<FormControl type='password' name='password' value={this.state.password} onChange={this.handleFieldChange} placeholder='Enter Password'/>
+									<FormControl type='password' name='password' value={this.state.password} onChange={this.handleFieldChange} placeholder='Enter Password' />
 								</Col>
 							</FormGroup>
 							<Col smOffset={2} sm={10}>
-								{validationState == null ? <HelpBlock>{'Log in with your username and password.'}</HelpBlock> : <HelpBlock>{validationMessage}</HelpBlock> }
+								<HelpBlock>{validationState == null ? 'Log in with your username and password.' : validationMessage}</HelpBlock>
 							</Col>
 						</FormGroup>
 					</Form>
 				</div>
 				<div className='modal-footer'>
 					<Button bsStyle='primary' id='login-button' onClick={this.handleLogin}>Sign In</Button>
-					<Button bsStyle='default' onClick={this.props.onCancel}>Cancel </Button>
+					<Button bsStyle='default' id='cancel-button' onClick={this.props.onCancel}>Cancel</Button>
 				</div>
 			</div>
 		);
 	},
 
 	_onAuthenticationChange: function(message_obj) {
-		// this.setState(getUserState());
-		if (message_obj != null && message_obj.error) {
-			this.setState({message_obj: message_obj});
+		if (message_obj != null) {
+			if (message_obj.error) {
+				this.setState({message_obj: message_obj});
+			}
+			else {
+				this.setState({message_obj: message_obj, username: '', password: ''});
+			}
 		}
 	}
 });

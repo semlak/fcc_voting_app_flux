@@ -7,6 +7,8 @@ import renderer from 'react-test-renderer';
 import {AnswerOptionsBox, AnswerOptionsList, AnswerOption} from '../AnswerOptionsBox';
 // var TestUtils = ReactTestUtils;
 
+import {searchTree, searchTreeForProps, searchTreeForClassName} from '../../testing/extraFunctions';
+
 
 jest.autoMockOff();
 jest.mock('react-dom');
@@ -16,29 +18,6 @@ var mapVotesToAnswerOptions = function (votes) {
 		var answer_option_votes = []
 		votes.forEach(vote => answer_option_votes[vote.answer_option] = (answer_option_votes[vote.answer_option] + 1 || 1) )
 		return answer_option_votes
-}
-
-var searchTreeForClassName = function(root, str) {
-// http://stackoverflow.com/questions/9133500/how-to-find-a-node-in-a-tree-with-javascript
-	var stack = [], node, ii;
-	stack.push(root);
-	var results = [];
-
-	while (stack.length > 0) {
-		node = stack.pop();
-		if (node.props && node.props.className == str) {
-			// Found it!
-			var node1 = Object.assign({}, node);
-			results.push(node1);
-			// return node;
-		}
-		if (node.children && node.children.length) {
-			for (ii = 0; ii < node.children.length; ii += 1) {
-				stack.push(node.children[ii]);
-			}
-		}
-	}
-	return results;
 }
 
 var handleVote = jest.fn();
@@ -103,7 +82,7 @@ describe('AnswerOption', function() {
 		// console.log("tree.children[1].children:", tree.children[1].children);
 		// console.log("tree.children[0].children:", tree.children[0].children);
 		expect(tree.children.length).toBe(2);
-		// var buttons = searchTreeForClassName(tree, 'vote-button');
+		// var buttons = searchTreeForClassName(tree, 'vote-button')[0];
 		// console.log("buttons:", buttons);
 		// console.log("tree:", tree);
 		expect(tree.children[0].children[0].type).toBe("button");

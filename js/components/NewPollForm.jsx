@@ -1,3 +1,5 @@
+'use strict';
+
 /*
 NewPollForm.jsx component.
 Does not receive any props. I might change this if I have to create a container for NewPollForm to be a child of.

@@ -1,5 +1,8 @@
+'use strict';
+
 /*
-VoteWebAPIUtils.js
+./js/utils/VoteWebAPIUtils.js
+
 handles communication with server regarding vote.
 The actual ajax calls (xhr) occur here.
 */

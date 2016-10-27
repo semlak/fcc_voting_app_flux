@@ -1,3 +1,10 @@
+'use strict';
+
+
+/*
+components/FullUser.jsx
+*/
+
 import React from 'react';
 import NavLink from './NavLink';
 // import ChangePasswordForm from './ChangePasswordForm';

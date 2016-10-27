@@ -52,7 +52,7 @@ router.get('/users/', function(req, res) {
 		}
 		else {
 			var users = accounts.map(user => reqUserInfo(user));
-			res.json({error: false, users: users, message: 'Successfully retrieved users.', user: reqUserInfo(req.user)});
+			res.json({error: false, users: users, message: 'Successfully retrieved users.', authorizedUser: reqUserInfo(req.user)});
 		}
 	});
 
@@ -80,7 +80,7 @@ router.post('/users/login', function(req, res, next) {
 				return next(err);
 			}
 			else {
-				return res.json({ message: 'User authenticated.', user: reqUserInfo(req.user)});
+				return res.json({ message: 'Login successful.', authorizedUser: reqUserInfo(req.user)});
 			}
 		});
 	})(req, res, next);
@@ -118,7 +118,7 @@ router.post('/users/register', function(req, res, next) {
 								return next(err);
 							}
 							else {
-								res.json({error: false, message: 'Successfully registered.', user: reqUserInfo(req.user)});
+								res.json({error: false, message: 'Successfully registered.', authorizedUser: reqUserInfo(req.user)});
 							}
 						});
 					});
@@ -133,7 +133,7 @@ router.post('/users/register', function(req, res, next) {
 router.get('/users/logout', function(req, res) {
 	console.log('Received get request to \'/api/users/logout\'. Logging off user');
 	req.logout();
-	res.json({error: false, message: 'User logged off successfully.', user: null});
+	res.json({error: false, message: 'User logged off successfully.', authorizedUser: null});
 });
 
 
@@ -243,7 +243,7 @@ var updateUser = function(user_id, attributes, cb) {
 								cb(err2);
 							}
 							else {
-								cb(null, {message: 'Account saved with new password.', user: reqUserInfo(account1)});
+								cb(null, {message: 'Account saved with new password.', user: reqUserInfo(account1), authorizedUser: reqUserInfo(req.user)});
 							}
 						});
 					}
@@ -262,7 +262,7 @@ var updateUser = function(user_id, attributes, cb) {
 						cb(err2);
 					}
 					else {
-						cb(null, {message: 'Account saved.', user: account});
+						cb(null, {message: 'Account saved.', user: reqUserInfo(account), authorizedUser: reqUserInfo(req.user)});
 					}
 				});
 			}

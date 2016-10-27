@@ -1,3 +1,5 @@
+'use strict';
+
 /**
 	VoteServerActionCreator. When creating, getting, or destroying votes, this handles actions after receiving information from server
  */

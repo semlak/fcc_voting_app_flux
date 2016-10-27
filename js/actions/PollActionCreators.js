@@ -1,5 +1,9 @@
+'use strict';
+
 /*
+
 PollActionCreators
+
  */
 
 import AppDispatcher from '../dispatcher/AppDispatcher';
