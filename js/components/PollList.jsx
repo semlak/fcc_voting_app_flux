@@ -25,7 +25,7 @@ var PollList = React.createClass({
 		// var polls = allPolls.map(poll => (<li><PollItem key={poll.id} poll={poll}/></li>));
 
 		for (var key in allPolls) {
-			// console.log("poll:", allPolls[key]);
+			// console.log('poll:', allPolls[key]);
 			pollNodes.push(
 				<Col key={key} xs={12} sm={6} md={6} className=''>
 					<PollItem  poll={allPolls[key]} handlePollSelect={this.props.handlePollSelect} />
@@ -42,8 +42,8 @@ var PollList = React.createClass({
 		}
 
 		return (
-			// <div id="poll-list">
-			//   <ul id="poll-list">{polls}</ul>
+			// <div id='poll-list'>
+			//   <ul id='poll-list'>{polls}</ul>
 			// </div>
 			<div>
 				<div className='poll-container-header'>

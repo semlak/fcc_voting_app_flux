@@ -37,7 +37,9 @@ module.exports = {
 				UserServerActionCreators.setAuthenticatedUserState(currentUser, message_obj);
 			}
 			else {
-				console.log('Request for all users failed.  Returned status of ' + xhr.status);
+				let message = 'Request for all users failed.  Returned status of ' + xhr.status;
+				console.error(message);
+				UserServerActionCreators.setUserErrorStatusAndMessage(true, message, '');
 			}
 		}.bind(this);
 		xhr.send();
@@ -67,7 +69,8 @@ module.exports = {
 			}
 			else {
 				// console.log('Registration xrh request failed.  Returned status is ' + xhr.status);
-				UserServerActionCreators.receiveCreatedUser(null, 'Failed to register new user.');
+				// UserServerActionCreators.receiveCreatedUser(null, 'Failed to register new user.');
+				UserServerActionCreators.setUserErrorStatusAndMessage(true, 'Failed to register new user.', '');
 			}
 		}.bind(this);
 
@@ -83,7 +86,6 @@ module.exports = {
 
 		xhr.onload = function() {
 			if (xhr.status === 200) {
-					// console.log('Successfully received reponse from user.login xhr. xhr.responseText is' + xhr.responseText);
 				let rawLoginResponse = JSON.parse(xhr.responseText);
 				let message_obj = {error: false, message_text: rawLoginResponse.message };
 				UserServerActionCreators.setAuthenticatedUserState(rawLoginResponse.authorizedUser, message_obj);
@@ -93,7 +95,8 @@ module.exports = {
 				let rawLoginResponse = JSON.parse(xhr.responseText);
 				console.log('Request failed.  Returned status of' + xhr.status);
 				let message_obj = {error: true, message_text: rawLoginResponse.message || 'Login Request failed.  Returned status of ' + xhr.status};
-				UserServerActionCreators.setAuthenticatedUserState(null, message_obj);
+				// UserServerActionCreators.setAuthenticatedUserState(null, message_obj);
+				UserServerActionCreators.setUserErrorStatusAndMessage(true, message_obj.message_text, '');
 			}
 		}.bind(this);
 
@@ -120,6 +123,7 @@ module.exports = {
 		}.bind(this);
 		xhr.send();
 	},
+
 
 	update: function(id, userUpdates) {
 		var data = {};
@@ -170,7 +174,8 @@ module.exports = {
 				// console.log('Registration xrh request failed.  Returned status is ' + xhr.status);
 				let response = JSON.parse(xhr.responseText);
 				let message_obj = {error: true, message_text: response.message || 'Failed to update user.'};
-				UserServerActionCreators.receiveUpdatedUser(null, message_obj);
+				// UserServerActionCreators.receiveUpdatedUser(null, message_obj);
+				UserServerActionCreators.setUserErrorStatusAndMessage(true, message_obj.message_text, '');
 			}
 		}.bind(this);
 		console.log('data:', data);

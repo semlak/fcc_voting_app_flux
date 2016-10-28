@@ -30,7 +30,7 @@ var UserList = React.createClass({
 				);
 		}
 
-		// If there are no uses, push a div onto the empty userNodes with text "No users."
+		// If there are no uses, push a div onto the empty userNodes with text 'No users.'
 		if (userNodes.length == 0) {
 			userNodes.push(
 				<Col key={1} xs={12} sm={12} md={12} className=''>
@@ -41,7 +41,7 @@ var UserList = React.createClass({
 
 		return (
 			<div>
-				<div id="user-list" className='poll-container-header'>
+				<div id='user-list' className='poll-container-header'>
 					<h2 className='display-inline'>Listing of all Users:</h2>
 				</div>
 				<br />

@@ -26,13 +26,13 @@ export default React.createClass({
 		var currentUser = this.getCurrentUser();
 		return {
 			user: user,
-			currentUser: currentUser,
 			showUserAsEditable: (currentUser.role == 'admin'),
 			//the following are only used if updating the user.
 			username: user.username || '',
 			fullname: user.fullname || '',
 			role: user.role || '',
-			message_obj: null
+			message_obj: null,
+			userStoreState: UserStore.getState()
 		};
 		//'user' is the user being displayed in this item. currentUser is the authenticated user (if authenticated, {} otherwise).
 	},
@@ -48,12 +48,10 @@ export default React.createClass({
 
 
 	componentDidMount: function() {
-		UserStore.addAuthenticationChangeListener(this._onAuthenticationChange);
 		UserStore.addChangeListener(this._onUserChange);
 	},
 
 	componentWillUnmount: function() {
-		UserStore.removeAuthenticationChangeListener(this._onAuthenticationChange);
 		UserStore.removeChangeListener(this._onUserChange);
 	},
 
@@ -90,7 +88,6 @@ export default React.createClass({
 			var currentUser = this.getCurrentUser();
 			this.setState ({
 				user: user,
-				currentUser: currentUser,
 				showUserAsEditable: (currentUser.role == 'admin'),
 				//the following are only used if updating the user.
 				username: user.username || '',
@@ -103,7 +100,7 @@ export default React.createClass({
 	},
 
 	openEditUserForm: function() {
-		if (this.state.user.username == this.state.currentUser.username || this.state.currentUser.role == 'admin') {
+		if (this.state.user.username == this.state.userStoreState.authenticatedUser.username || this.state.userStoreState.authenticatedUser.role == 'admin') {
 			this.setState({showUserAsEditable: true});
 		}
 	},
@@ -152,7 +149,7 @@ export default React.createClass({
 								</FormGroup>
 								<FormGroup>
 									<Col sm={6}>
-										{ this.state.currentUser.username == user.username ? <Button type='button' bsStyle='primary' onClick={this.openEditUserForm}>Edit User Details</Button> : null}
+										{ this.state.userStoreState.authenticatedUser.username == user.username ? <Button type='button' bsStyle='primary' onClick={this.openEditUserForm}>Edit User Details</Button> : null}
 									</Col>
 								</FormGroup>
 							</FormGroup>
@@ -225,7 +222,7 @@ export default React.createClass({
 		}.bind(this);
 
 
-		if (this.state.currentUser.role == 'admin' || this.state.showUserAsEditable == true) {
+		if (this.state.userStoreState.authenticatedUser.role == 'admin' || this.state.showUserAsEditable == true) {
 			return editableUser();
 		}
 		else {
@@ -241,11 +238,14 @@ export default React.createClass({
 		var user = UserStore.getUserByUsername(this.props.params.username) || {};
 		if (this.state.user.username != null && message_obj != null ) {
 			//this is likely just after the user attempted to update user info on the screen.
-			this.setState({message_obj: message_obj});
+			this.setState({
+				message_obj: message_obj,
+				userStoreState: UserStore.getState()
+			});
 		}
 		else if (user.username != null && this.state.user.username == null) {
 			// console.log('in 'if' branch of _onUserChange in <FullUser />');
-			//this is likely just after page load. UserStore _users was initially empty but now loaded, and username in url now valid
+			//this is likely just after page load. UserStore _users was initially empty but now loaded, and user profile can be pulled if username in url is valid
 			this.setState(this.getInitialState());
 		}
 		else if (message_obj == null && this.state.user.username != null && this.state.username != this.state.user.username) {
@@ -260,14 +260,16 @@ export default React.createClass({
 
 	},
 
+
+
 	// _onAuthenticationChange: function(message_obj) {
-	_onAuthenticationChange: function() {
-		// console.log('in _onAuthenticationChange of <FullUser />');
-		// console.log('message_obj:', message_obj, ', message_obj == null', message_obj == null);
-		var currentUser = this.getCurrentUser();
-		this.setState({
-			currentUser: currentUser,
-			showUserAsEditable: this.state.showUserAsEditable && (currentUser.username == this.state.user.username || currentUser.role == 'admin')
-		});
-	}
+	// _onAuthenticationChange: function() {
+	// 	// console.log('in _onAuthenticationChange of <FullUser />');
+	// 	// console.log('message_obj:', message_obj, ', message_obj == null', message_obj == null);
+	// 	var currentUser = this.getCurrentUser();
+	// 	this.setState({
+	// 		currentUser: currentUser,
+	// 		showUserAsEditable: this.state.showUserAsEditable && (currentUser.username == this.state.user.username || currentUser.role == 'admin')
+	// 	});
+	// }
 });

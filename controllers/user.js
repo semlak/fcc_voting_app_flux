@@ -243,7 +243,7 @@ var updateUser = function(user_id, attributes, cb) {
 								cb(err2);
 							}
 							else {
-								cb(null, {message: 'Account saved with new password.', user: reqUserInfo(account1), authorizedUser: reqUserInfo(req.user)});
+								cb(null, {message: 'Account saved with new password.', user: reqUserInfo(account1)});
 							}
 						});
 					}
@@ -262,7 +262,7 @@ var updateUser = function(user_id, attributes, cb) {
 						cb(err2);
 					}
 					else {
-						cb(null, {message: 'Account saved.', user: reqUserInfo(account), authorizedUser: reqUserInfo(req.user)});
+						cb(null, {message: 'Account saved.', user: reqUserInfo(account)});
 					}
 				});
 			}

@@ -49,7 +49,7 @@ export default React.createClass({
 		var author = currentUser.fullname || currentUser.username || '';
 		// console.log('author is ', author);
 		return {
-			currentUser: currentUser,
+			userStoreState: UserStore.getState(),
 			author: author,
 			question: '',
 			answer_options: [],
@@ -81,12 +81,12 @@ export default React.createClass({
 	},
 
 	componentDidMount: function() {
-		UserStore.addAuthenticationChangeListener(this._onAuthenticationChange);
+		UserStore.addChangeListener(this._onUserChange);
 		PollStore.addCreatedListener(this._onPollCreated);
 	},
 
 	componentWillUnmount: function() {
-		UserStore.removeAuthenticationChangeListener(this._onAuthenticationChange);
+		UserStore.removeChangeListener(this._onUserChange);
 		PollStore.removeCreatedListener(this._onPollCreated);
 	},
 
@@ -165,7 +165,7 @@ export default React.createClass({
 		var authorField = this.state.authorField;
 		var questionField = this.state.questionField;
 		var answerOptionsField = this.state.answerOptionsField;
-		var userIsAuthenticated = this.state.currentUser != null && this.state.currentUser.username != null;
+		var userIsAuthenticated = this.state.userStoreState.authenticatedUser != null && this.state.userStoreState.authenticatedUser.username != null;
 
 		var formInstance = (
 			// uses <AnswerOptionsList> and <NewAnswerOptionForm> separately rather than single <AnswerOptionsBox>
@@ -205,7 +205,7 @@ export default React.createClass({
 					</FormGroup>
 					<FormGroup controlId='newAnswerOptionForm' className='new-answer-option-form-container well'>
 						<ControlLabel>Add additional answer option:</ControlLabel>
-						<NewAnswerOptionForm handleAddAnswerOption={this.handleAddAnswerOption} initial_new_answer_option={this.state.initial_new_answer_option} user={this.state.currentUser} />
+						<NewAnswerOptionForm handleAddAnswerOption={this.handleAddAnswerOption} initial_new_answer_option={this.state.initial_new_answer_option} user={this.state.userStoreState.authenticatedUser} />
 					</FormGroup>
 					<br />
 					<Button type='button' bsStyle='primary' onClick={this.handleSubmit}>Post New Poll </Button>
@@ -241,43 +241,61 @@ export default React.createClass({
 		return UserStore.getAuthenticatedUser();
 	},
 
-	_onAuthenticationChange: function() {
-		// console.log('in _onAuthenticationChange of NewPollForm component');
-		// var location = this.props.location.toLowerCase();
-		// console.log('location: ', location);
-		var currentUser = UserStore.getAuthenticatedUser();
-		if (currentUser.username == null && this.state.currentUser.username != null) {
+
+
+
+	// _onAuthenticationChange: function() {
+	// 	// console.log('in _onAuthenticationChange of NewPollForm component');
+	// 	// var location = this.props.location.toLowerCase();
+	// 	// console.log('location: ', location);
+	// 	var currentUser = UserStore.getAuthenticatedUser();
+	// 	if (currentUser.username == null && this.state.userStoreState.authenticatedUser.username != null) {
+	// 		//this means a user was logged in and now has logged out.
+	// 		browserHistory.push('/');
+	// 	}
+	// 	else if (currentUser.username != this.state.userStoreState.authenticatedUser.username) {
+	// 		//user has changed. Likely gone from unauthenticated to authenticated
+	// 		var newState = {currentUser: currentUser};
+	// 		if (this.state.author == '') {
+	// 			newState.author = currentUser.fullname || currentUser.username || '';
+	// 		}
+	// 		// console.log('setting the following variables in setState:', newState);
+	// 		this.setState(newState);
+	// 	}
+	// },
+
+	_onUserChange: function() {
+		var newUserState = UserStore.getState();
+		var currentUser = newUserState.authenticatedUser;
+		if (currentUser.username == null && this.state.userStoreState.authenticatedUser.username != null) {
 			//this means a user was logged in and now has logged out.
 			browserHistory.push('/');
 		}
-		else if (currentUser.username != this.state.currentUser.username) {
+		else if (currentUser.username != this.state.userStoreState.authenticatedUser.username) {
 			//user has changed. Likely gone from unauthenticated to authenticated
-			var newState = {currentUser: currentUser};
+			var newState = {userStoreState: UserStore.getState()};
 			if (this.state.author == '') {
 				newState.author = currentUser.fullname || currentUser.username || '';
 			}
 			// console.log('setting the following variables in setState:', newState);
 			this.setState(newState);
 		}
+		// console.log('in _onUserChange of NewPollForm component');
+		// var location = this.props.location.toLowerCase();
+		// console.log('location: ', location);
+
+		//This could be the result of user having viewed the form and then updating some of their user profile information.
+		// var currentUser = UserStore.getAuthenticatedUser();
+		// var newState = {};
+		// if (currentUser.fullname != this.state.userStoreState.authenticatedUser.fullname) {
+		// 	//The user appears to have changed their fullname on their user profile. If this.state.author was set to fullname, then update the author state.
+		// 	if (this.state.author == this.state.userStoreState.authenticatedUser.fullname) {
+		// 		newState.author = currentUser.fullname;
+		// 		newState.currentUser = currentUser;
+		// 		this.setState(newState);
+		// 	}
+		// }
 	},
-
-	// _onUserChange: function() {
-	// 	// console.log('in _onUserChange of NewPollForm component');
-	// 	// var location = this.props.location.toLowerCase();
-	// 	// console.log('location: ', location);
-
-	// 	//This could be the result of user having viewed the form and then updating some of their user profile information.
-	// 	// var currentUser = UserStore.getAuthenticatedUser();
-	// 	// var newState = {};
-	// 	// if (currentUser.fullname != this.state.currentUser.fullname) {
-	// 	// 	//The user appears to have changed their fullname on their user profile. If this.state.author was set to fullname, then update the author state.
-	// 	// 	if (this.state.author == this.state.currentUser.fullname) {
-	// 	// 		newState.author = currentUser.fullname;
-	// 	// 		newState.currentUser = currentUser;
-	// 	// 		this.setState(newState);
-	// 	// 	}
-	// 	// }
-	// },
 
 	_onPollCreated: function(new_poll_id) {
 		browserHistory.push('/polls/' + new_poll_id);

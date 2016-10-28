@@ -52,21 +52,27 @@ function getPollState() {
 export default React.createClass({
 
 	getInitialState: function() {
-		var pollState = getPollState();
-		var currentUser = UserStore.getAuthenticatedUser();
+		// var currentUser = UserStore.getAuthenticatedUser();
 		// var modalToShow = PollStore.getModalToShow();
 		var modalToShow = ModalStore.getModalToShow();
 		// other options: 'dialog', 'sharepoll', 'deletepoll'
 		var modalMessage = ModalStore.getModalMessage();
 		var new_answer_option = '';
 
-		return Object.assign({}, pollState, {modalToShow: modalToShow, modalMessage: modalMessage, currentUser: currentUser, new_answer_option: new_answer_option});
+		return {
+			allPolls: PollStore.getAll(),
+			modalToShow: modalToShow,
+			modalMessage: modalMessage,
+			// currentUser: currentUser,
+			new_answer_option: new_answer_option,
+			UserStoreState: UserStore.getState()
+		};
 	},
 
 
 	componentDidMount: function() {
 		// PollStore.addChangeListener(this._onChange);
-		UserStore.addAuthenticationChangeListener(this._onAuthenticationChange);
+		UserStore.addChangeListener(this._onUserChange);
 		PollStore.addChangeListener(this._onPollChange);
 		PollStore.addDestroyListener(this._onPollDestroy);
 		// PollStore.addVoteCreatedListener(this._onVoteCreate);
@@ -75,7 +81,7 @@ export default React.createClass({
 
 	componentWillUnmount: function() {
 		// PollStore.removeChangeListener(this._onChange);
-		UserStore.removeAuthenticationChangeListener(this._onAuthenticationChange);
+		UserStore.removeChangeListener(this._onUserChange);
 		PollStore.removeChangeListener(this._onPollChange);
 		PollStore.removeDestroyListener(this._onPollDestroy);
 		// PollStore.removeVoteCreatedListener(this._onVoteCreate);
@@ -90,23 +96,6 @@ export default React.createClass({
 		browserHistory.push('/polls');
 
 	},
-
-	// componentDidMount: function() {
-	// 	UserStore.addAuthenticationChangeListener(this._onAuthenticationChange);
-	// 	PollStore.addChangeListener(this._onPollChange);
-	// 	PollStore.addDestroyListener(this._onPollDestroy);
-	// 	PollStore.addVoteCreatedListener(this._onVoteCreate);
-	// },
-
-	// componentWillUnmount: function() {
-	// 	UserStore.removeAuthenticationChangeListener(this._onAuthenticationChange);
-	// 	PollStore.removeChangeListener(this._onPollChange);
-	// 	PollStore.removeDestroyListener(this._onPollDestroy);
-	// 	PollStore.removeVoteCreatedListener(this._onVoteCreate);
-	// },
-
-
-
 
 	handleAddAnswerOption: function(new_answer_option_from_answer_option_box) {
 		// console.log('in fullpoll 'handleAddAnswerOption'');
@@ -186,14 +175,16 @@ export default React.createClass({
 
 	renderPollList: function() {
 		var pollsToRender;
+		var pollListHeader;
 		if (this.props.params && this.props.params.userPollsToRender && this.props.params.userPollsToRender != null) {
 			pollsToRender = filterPollsByOwner(this.state.allPolls, this.props.params.userPollsToRender);
+			pollListHeader = 'Listing of ' + this.props.params.userPollsToRender + '\'s Polls:';
 		}
 		else {
 			pollsToRender = this.state.allPolls;
+			pollListHeader = 'Listing of All Polls:';
 		}
 		// console.log('polls to render are ', pollsToRender);
-		var pollListHeader = this.props.params == null || this.props.params.userPollsToRender == null ? 'Listing of All Polls:' : 'Listing of ' + this.props.params.userPollsToRender + '\'s Polls:';
 		return (
 				<div id='pollapp'  className='poll-container'>
 					<PollList allPolls={pollsToRender} header={pollListHeader} handlePollSelect={this.handlePollSelect} />
@@ -202,27 +193,10 @@ export default React.createClass({
 	},
 
 	renderSingleFullPoll: function() {
-	// getInitialState: function() {
-	// 	return {
-	// 		new_answer_option: '',
-	// 		form_feedback: null,
-	// 		deletePollModalMessage: '',
-	// 		dialogModalMessage: '',
-
-	// 		poll: PollStore.getPollById(this.props.poll_id),
-	// 		currentUser: this.getCurrentUser(),
-	// 		showDeletePollModal: false,
-	// 		showDialogModal: false,
-	// 		showSharePollModal: false
-
-	// 	};
-	// },
-
-
 
 		//var poll_id = this.props.params.poll_id;
 		var poll = PollStore.getPollById(this.props.params.poll_id) || {};
-		var currentUser = this.state.currentUser;
+		var currentUser = this.state.UserStoreState.authenticatedUser;
 		var modalToShow = this.state.modalToShow;
 		var modalMessage = this.state.modalMessage;
 		var new_answer_option = this.state.new_answer_option;
@@ -245,6 +219,8 @@ export default React.createClass({
 	},
 
 
+
+
 	render: function() {
 		// console.log('rendering PollContainer, props are', this.props, ', allPolls are', this.state.allPolls);
 		// console.log('props:', this.props);
@@ -260,10 +236,13 @@ export default React.createClass({
 		return UserStore.getAuthenticatedUser();
 	},
 
-	_onAuthenticationChange: function() {
-		this.setState({currentUser: UserStore.getAuthenticatedUser()});
-	},
 
+	/**
+	 * Event handler for 'change' events coming from the UserStore
+	 */
+	_onUserChange: function() {
+		this.setState({UserStoreState: UserStore.getState()});
+	},
 
 
 

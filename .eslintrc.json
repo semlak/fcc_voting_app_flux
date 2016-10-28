@@ -32,6 +32,8 @@
             "always"
         ],
         "no-console": "off",
+        "no-unused-vars": ["warn", { "vars": "all", "args": "after-used" }],
+
         "react/jsx-uses-react": "error",
         "react/jsx-uses-vars": "error"
     },

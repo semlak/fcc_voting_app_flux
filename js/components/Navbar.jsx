@@ -39,11 +39,12 @@ export default React.createClass({
 		var showRegisterLoginModal = location == '/new_poll' && userStoreIsInitializedState && currentUser.username == null ? true : false ;
 		// console.log('currentUser:', currentUser, ', showRegisterLoginModal: ', showRegisterLoginModal);
 		return {
-			currentUser: currentUser,
+			userStoreIsInitializedState: userStoreIsInitializedState,
 			showRegisterLoginModal: showRegisterLoginModal,
 			activeModalTab : 2,
 			showChangePasswordModal: false,
-			expanded: false
+			expanded: false,
+			userStoreState: UserStore.getState()
 		};
 			//expanded in the state refers to if the navBar is expanded, as in when in mobile view and the bar has been clicked to drop down the nav elements
 			//Unfortunately, it seems we need to control this state explicitly to accurately make sure the bar collapses after clicks when wanted
@@ -84,16 +85,16 @@ export default React.createClass({
 
 
 	componentDidMount: function() {
-		UserStore.addAuthenticationChangeListener(this._onAuthenticationChange);
+		UserStore.addChangeListener(this._onChange);
 	},
 
 	componentWillUnmount: function() {
-		UserStore.removeAuthenticationChangeListener(this._onAuthenticationChange);
+		UserStore.removeChangeListener(this._onChange);
 	},
 
 	componentWillReceiveProps: function(nextProps) {
 		// console.log('in componentWillReceiveProps of <Navbar />, nextProps: ', nextProps);
-		if (this.state.currentUser.username == null && nextProps.location.toLowerCase() == '/new_poll') {
+		if (this.state.userStoreState.authenticatedUser.username == null && nextProps.location.toLowerCase() == '/new_poll') {
 			this.setState({showRegisterLoginModal: true});
 		}
 	},
@@ -148,7 +149,7 @@ export default React.createClass({
 		// console.log('rendering NavBar, state is ', this.state)
 		// var rightNavbarListItems = function() {[<div/>]}
 		var rightNavbarListItems = function() {
-			if (this.state.currentUser == null || this.state.currentUser.username == null) {
+			if (this.state.userStoreState.authenticatedUser == null || this.state.userStoreState.authenticatedUser.username == null) {
 				return ([
 					<NavItem key={1001} eventKey={1001} onClick={this.openModalToRegister} >Register</NavItem>,
 					<NavItem key={1002} eventKey={1002} onClick={this.openModalToLogin} >Login</NavItem>
@@ -157,10 +158,10 @@ export default React.createClass({
 			}
 			else {
 				return ([
-					<NavDropdown key={1001} eventKey={1001} title={this.state.currentUser.username} id='basic-nav-dropdown' onClose={this.onClose}>
-						<LinkContainer eventKey={1011} to={'/Users/' + this.state.currentUser.username.toString() +'/polls'}><MenuItem>View My Polls</MenuItem></LinkContainer>
+					<NavDropdown key={1001} eventKey={1001} title={this.state.userStoreState.authenticatedUser.username} id='basic-nav-dropdown' onClose={this.onClose}>
+						<LinkContainer eventKey={1011} to={'/Users/' + this.state.userStoreState.authenticatedUser.username.toString() +'/polls'}><MenuItem>View My Polls</MenuItem></LinkContainer>
 						<MenuItem divider />
-						<LinkContainer eventKey={1012} to={'/Users/' + this.state.currentUser.username.toString()}><MenuItem>My Profile</MenuItem></LinkContainer>
+						<LinkContainer eventKey={1012} to={'/Users/' + this.state.userStoreState.authenticatedUser.username.toString()}><MenuItem>My Profile</MenuItem></LinkContainer>
 						<MenuItem eventKey={1013} onClick={this.openChangePasswordModal}>Change Password</MenuItem>
 						<MenuItem divider />
 						<MenuItem eventKey={1014} onClick={this.handleLogout}>Logout</MenuItem>
@@ -189,7 +190,7 @@ export default React.createClass({
 					<Modal.Title>Change Password</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					<ChangePasswordForm username={this.state.currentUser.username} onCancel={this.closeChangePasswordModal}/>
+					<ChangePasswordForm username={this.state.userStoreState.authenticatedUser.username} onCancel={this.closeChangePasswordModal}/>
 				</Modal.Body>
 			</Modal>
 		);
@@ -230,38 +231,84 @@ export default React.createClass({
 		return UserStore.getAuthenticatedUser();
 	},
 
-	_onAuthenticationChange: function(message_obj) {
-		// console.log('in _onAuthenticationChange of <Navbar/>')
 
-		//things are a little confusing here. the variable currentUser below is refering to the most recent updated authenticated user
-		//However, this.state.currentUser is the authenticated user last set in the NavBar object, which could be out of date (being checked here)
-		var currentUser = this.getCurrentUser();
-		// var newState = {};
+	_onChange: function() {
+		console.log('in _onChange for Navbar');
+		var newState = UserStore.getState();
 		var location = this.props.location.toLowerCase();
-		var userStoreIsInitializedState = UserStore.getUserStoreIsInitializedState();
-		// var showRegisterLoginModal = location == '/new_poll' && userStoreIsInitializedState && currentUser.username == null ? true : false ;
+		var userStoreIsInitializedState = newState.userStoreIsInitializedState;
+		console.log('newState:', newState);
+		var currentUser = newState.authenticatedUser;
+		console.log('currentUser:', currentUser);
 
-		if (message_obj != null && message_obj.error) {
-			//There was a error in the authentication change; don't modify navbar or its modal boxes, other than updating their messages/validation state
-			// this.setState({message_obj: message_obj});
+		if (this.state.userStoreIsInitializedState == false && userStoreIsInitializedState == true) {
+			let showRegisterLoginModal = location == '/new_poll' && userStoreIsInitializedState && currentUser.username == null ? true : false ;
+			this.setState({
+				userStoreIsInitializedState: userStoreIsInitializedState,
+				showRegisterLoginModal: showRegisterLoginModal,
+				userStoreState: UserStore.getState()
+			});
 		}
-		else if (currentUser.username == null && this.state.currentUser.username != null) {
-			//This should only occur when user has logged out
-			this.setState({currentUser: currentUser});
+		else if (newState.error) {
+			this.setState({
+				message_obj: {error: true, message_text: newState.errorMessage},
+				userStoreState: UserStore.getState()
+			});
+		}
+		else if (newState.authenticatedUser.id != null) {
+			// User has possible just logged in
+			console.log('setting new currentUser:', currentUser);
+			this.setState({
+				message_obj: {error: false, message_text: newState.successMessage},
+				userStoreState: UserStore.getState()
+			});
+		}
+		else if (newState.authenticatedUser.id == null) {
+			// User has possibly just logged out.
+			this.setState({
+				message_obj: {error: false, message_text: newState.successMessage},
+				userStoreState: UserStore.getState()
+			});
 			if ( location == '/login' || location == '/register') {
 				browserHistory.push('/');
 			}
 		}
-		else if (userStoreIsInitializedState && currentUser.username == null && location == '/new_poll') {
-			//this should occur if the user has loaded the app directly to the '/new_poll' page, just after the app updates users
-			//we want to show the registerLoginModal upon page rendering.
-			this.setState({currentUser: currentUser, showRegisterLoginModal: true});
-		}
-		else {
-			//this should occur when the user logged in while viewing a page. Might eventually find way to briefly show message_text
-			this.setState({currentUser: currentUser, showRegisterLoginModal: false, message_obj: message_obj});
-		}
-	}
+	},
+
+	// _onAuthenticationChange: function(message_obj) {
+	// _onAuthenticationChange: function() {
+	// 	// console.log('in _onAuthenticationChange of <Navbar/>')
+
+	// 	//things are a little confusing here. the variable currentUser below is refering to the most recent updated authenticated user
+	// 	//However, this.state.currentUser is the authenticated user last set in the NavBar object, which could be out of date (being checked here)
+
+	// 	// var currentUser = this.getCurrentUser();
+	// 	// // var newState = {};
+	// 	// var location = this.props.location.toLowerCase();
+	// 	// var userStoreIsInitializedState = UserStore.getUserStoreIsInitializedState();
+	// 	// // var showRegisterLoginModal = location == '/new_poll' && userStoreIsInitializedState && currentUser.username == null ? true : false ;
+
+	// 	// if (message_obj != null && message_obj.error) {
+	// 	// 	//There was a error in the authentication change; don't modify navbar or its modal boxes, other than updating their messages/validation state
+	// 	// 	// this.setState({message_obj: message_obj});
+	// 	// }
+	// 	// else if (currentUser.username == null && this.state.currentUser.username != null) {
+	// 	// 	//This should only occur when user has logged out
+	// 	// 	this.setState({currentUser: currentUser});
+	// 	// 	if ( location == '/login' || location == '/register') {
+	// 	// 		browserHistory.push('/');
+	// 	// 	}
+	// 	// }
+	// 	// else if (userStoreIsInitializedState && currentUser.username == null && location == '/new_poll') {
+	// 	// 	//this should occur if the user has loaded the app directly to the '/new_poll' page, just after the app updates users
+	// 	// 	//we want to show the registerLoginModal upon page rendering.
+	// 	// 	this.setState({currentUser: currentUser, showRegisterLoginModal: true});
+	// 	// }
+	// 	// else {
+	// 	// 	//this should occur when the user logged in while viewing a page. Might eventually find way to briefly show message_text
+	// 	// 	this.setState({currentUser: currentUser, showRegisterLoginModal: true, message_obj: message_obj});
+	// 	// }
+	// }
 });
 
 // module.exports = Navbar;

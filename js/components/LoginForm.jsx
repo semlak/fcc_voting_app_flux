@@ -18,11 +18,11 @@ export default React.createClass({
 	},
 
 	componentDidMount: function() {
-		UserStore.addAuthenticationChangeListener(this._onAuthenticationChange);
+		UserStore.addChangeListener(this._onChange);
 	},
 
 	componentWillUnmount: function() {
-		UserStore.removeAuthenticationChangeListener(this._onAuthenticationChange);
+		UserStore.removeChangeListener(this._onChange);
 	},
 
 	handleLogin: function() {
@@ -93,14 +93,18 @@ export default React.createClass({
 		);
 	},
 
-	_onAuthenticationChange: function(message_obj) {
-		if (message_obj != null) {
-			if (message_obj.error) {
-				this.setState({message_obj: message_obj});
-			}
-			else {
-				this.setState({message_obj: message_obj, username: '', password: ''});
-			}
+
+	_onChange: function(message_obj) {
+		console.log('in _onChange for UserStore in LoginForm. message_obj:', message_obj);
+		let newState = UserStore.getState();
+		if (newState.error) {
+			this.setState({message_obj: {error: true, message_text: newState.errorMessage}});
 		}
-	}
+		else if (newState.authenticatedUser.id != null) {
+			this.setState({message_obj: {error: false, message_text: newState.successMessage}, username: '', password: ''});
+		}
+
+	},
+
+
 });

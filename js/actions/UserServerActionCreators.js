@@ -60,6 +60,21 @@ module.exports = {
 			rawUser: rawUser,
 			message_obj: message_obj
 		});
+	},
+
+
+	/*
+   * @param {boolean} error_status  (true if there is an error)
+						{string} error_message
+						{string} success_message
+	*/
+	setUserErrorStatusAndMessage: function(error_status, error_message, success_message) {
+		AppDispatcher.dispatch({
+			actionType: UserConstants.USER_SET_ERROR,
+			errorStatus: error_status,
+			errorMessage: error_message,
+			successMessage: success_message
+		});
 	}
 
 };
