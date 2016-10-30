@@ -26,13 +26,15 @@ module.exports = {
     if (filteredUsers.length != 1) {
       message_obj = { error: true, message_text: "Invalid username or password."};
       user_obj = null;
+      UserServerActionCreators.setUserErrorStatusAndMessage(true, message_obj.message_text, '');
+
     }
     else {
       message_obj = { error: false, message_text: "Login successful."};
       user_obj = filteredUsers[0];
       delete user_obj.password;
+      UserServerActionCreators.setAuthenticatedUserState(user_obj, message_obj);
     }
-    UserServerActionCreators.setAuthenticatedUserState(user_obj, message_obj);
   }
 };
 

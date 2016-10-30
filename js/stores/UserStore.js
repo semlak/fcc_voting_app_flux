@@ -389,7 +389,7 @@ UserStore.dispatchToken = AppDispatcher.register(function(action) {
 
 
 	case UserConstants.USER_CREATE:
-		if (action.rawUser != null && action.rawUser.username != '' && action.rawUser.username != null) {
+		if (action.rawUser != null && action.rawUser.username != '' && action.rawUser.username != null && _usersByUsername[action.rawUser.username] == null) {
 			updatesMade = create(action.rawUser);
 			if (updatesMade) {
 				//also want to set the created user as the authenticated user.
@@ -458,6 +458,7 @@ UserStore.dispatchToken = AppDispatcher.register(function(action) {
 		UserStore.emitChange({error: _error, message_text: _errorMessage|| _successMessage});
 		break;
 
+
 	case UserConstants.USER_SET_AUTHENTICATED_USER_STATE:
 		// Right now, this is a bit of a mess.
 		// Triggered after user successfully logged in or out, and after receiving a list of users.
@@ -481,14 +482,17 @@ UserStore.dispatchToken = AppDispatcher.register(function(action) {
 				//This should be a successful login.
 				_authenticatedUserId = currentUser.id;
 				_successMessage = message_obj.message_text || 'Login successful.';
+				_errorMessage = '';
 				// UserStore.emitAuthenticationChange({error: false, message_text: message_obj.message_text || 'Login successful.'});
-				UserStore.emitChange({error: true, message_text: message_obj.message_text || 'Login successful.'});
+				UserStore.emitChange({error: false, message_text: message_obj.message_text || 'Login successful.'});
 			}
 			else if (currentUser.id == null && previousAuthenticatedUser.id != currentUser.id) {
 				//This should be a successful logout.;
 				_authenticatedUserId = null;
 				// UserStore.emitAuthenticationChange({error: false, message_text: message_obj.message_text || 'Logged out.'});
-				UserStore.emitChange({error: true, message_text: message_obj.message_text || 'Logged out.'});
+				UserStore.emitChange({error: false, message_text: message_obj.message_text || 'Logged out.'});
+				_successMessage = message_obj.message_text || 'Logout successful.';
+				_errorMessage = '';
 			}
 			// else if (currentUser.id != null && previousAuthenticatedUser.id == currentUser.id) {
 			//   //The authenticationState is not changing. This is likely due to a refresh of the UserStore or other application data.;
