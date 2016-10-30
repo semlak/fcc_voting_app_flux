@@ -459,10 +459,9 @@ UserStore.dispatchToken = AppDispatcher.register(function(action) {
 		break;
 
 
+
 	case UserConstants.USER_SET_AUTHENTICATED_USER_STATE:
-		// Right now, this is a bit of a mess.
 		// Triggered after user successfully logged in or out, and after receiving a list of users.
-		// Also trigged due to failed attempt to login, but I hope to remove this functionalilty to USER_SET_ERROR case
 
 		// console.log('\n\nIn UserStore, dispatch receiving. received 'USER_SET_AUTHENTICATED_USER_STATE' action signal, rawUser is', action.rawUser);
 		var currentUser = action.rawUser;
@@ -471,52 +470,86 @@ UserStore.dispatchToken = AppDispatcher.register(function(action) {
 		// console.log('currentUser: ', currentUser, 'previousAuth: ', previousAuthenticatedUser, 'message_obj:', message_obj );
 		if (currentUser == null || currentUser == undefined)    { currentUser = {}; }
 
-		if (currentUser.id == null && message_obj.error) {
-			//Login was attempted but failed.
-			_authenticatedUserId = null;
-			// UserStore.emitAuthenticationChange({error: true, message_text: message_obj.message_text || 'Failed to log in.'});
-			UserStore.emitChange({error: true, message_text: message_obj.message_text || 'Failed to log in.'});
-		}
-		else if (message_obj.error == false) {
-			if (currentUser.id != null && previousAuthenticatedUser.id != currentUser.id) {
+		if (previousAuthenticatedUser.id != currentUser.id) {
+			// The authenticatedUser has changed. The user has either Logged in or Logged out, or potentially changed users (UI does not currently support this on purpose).
+			if (currentUser.id != null) {
 				//This should be a successful login.
-				_authenticatedUserId = currentUser.id;
 				_successMessage = message_obj.message_text || 'Login successful.';
-				_errorMessage = '';
-				// UserStore.emitAuthenticationChange({error: false, message_text: message_obj.message_text || 'Login successful.'});
-				UserStore.emitChange({error: false, message_text: message_obj.message_text || 'Login successful.'});
 			}
-			else if (currentUser.id == null && previousAuthenticatedUser.id != currentUser.id) {
+			else if (currentUser.id == null) {
 				//This should be a successful logout.;
-				_authenticatedUserId = null;
-				// UserStore.emitAuthenticationChange({error: false, message_text: message_obj.message_text || 'Logged out.'});
-				UserStore.emitChange({error: false, message_text: message_obj.message_text || 'Logged out.'});
 				_successMessage = message_obj.message_text || 'Logout successful.';
-				_errorMessage = '';
 			}
-			// else if (currentUser.id != null && previousAuthenticatedUser.id == currentUser.id) {
-			//   //The authenticationState is not changing. This is likely due to a refresh of the UserStore or other application data.;
-			//   //The user could be authenticated or un-authenticated.;
-			// }
-			else {
-				//The authenticationState is not actually changing. This is likely due to a refresh of the UserStore or other application data.;
-				//This could also be just after a page load or refresh when UserStore was initially populated.;
-				//The user could be authenticated or un-authenticated.;
-				// UserStore.emitAuthenticationChange({error: false, message_text: null});
-				UserStore.emitChange();
-			}
+
+			_authenticatedUserId = currentUser.id;
+			_errorMessage = '';
+			UserStore.emitChange({error: false, message_text: _successMessage});
 		}
 		else {
-			//Not sure if this would be encountered. I'm am considering trying to really think about and see if I can create a test that triggers this. Haven't tried though.
-			_error = true;
-			_errorMessage = 'Problem encountered when setting the user authentication state.';
-			console.error(_errorMessage);
-			_authenticatedUserId = null;
-			// UserStore.emitAuthenticationChange({error: true, message_text: _errorMessage});
-			UserStore.emitChange({error: true, message_text: _errorMessage});
+			// no op.
+			// This is likely just trigged on a refresh of users. This function is called just to ensure that app authentication state is current.
+			// In this case, there with no change to the authentication state, so no op needed.
 		}
-
 		break;
+
+	// case UserConstants.USER_SET_AUTHENTICATED_USER_STATE:
+	// 	// Right now, this is a bit of a mess.
+	// 	// Triggered after user successfully logged in or out, and after receiving a list of users.
+	// 	// Also trigged due to failed attempt to login, but I hope to remove this functionalilty to USER_SET_ERROR case
+
+	// 	// console.log('\n\nIn UserStore, dispatch receiving. received 'USER_SET_AUTHENTICATED_USER_STATE' action signal, rawUser is', action.rawUser);
+	// 	var currentUser = action.rawUser;
+	// 	var previousAuthenticatedUser = UserStore.getAuthenticatedUser();
+	// 	var message_obj = action.message_obj;
+	// 	// console.log('currentUser: ', currentUser, 'previousAuth: ', previousAuthenticatedUser, 'message_obj:', message_obj );
+	// 	if (currentUser == null || currentUser == undefined)    { currentUser = {}; }
+
+	// 	if (currentUser.id == null && message_obj.error) {
+	// 		//Login was attempted but failed.
+	// 		_authenticatedUserId = null;
+	// 		// UserStore.emitAuthenticationChange({error: true, message_text: message_obj.message_text || 'Failed to log in.'});
+	// 		UserStore.emitChange({error: true, message_text: message_obj.message_text || 'Failed to log in.'});
+	// 	}
+	// 	else if (message_obj.error == false) {
+	// 		if (currentUser.id != null && previousAuthenticatedUser.id != currentUser.id) {
+	// 			//This should be a successful login.
+	// 			_authenticatedUserId = currentUser.id;
+	// 			_successMessage = message_obj.message_text || 'Login successful.';
+	// 			_errorMessage = '';
+	// 			// UserStore.emitAuthenticationChange({error: false, message_text: message_obj.message_text || 'Login successful.'});
+	// 			UserStore.emitChange({error: false, message_text: message_obj.message_text || 'Login successful.'});
+	// 		}
+	// 		else if (currentUser.id == null && previousAuthenticatedUser.id != currentUser.id) {
+	// 			//This should be a successful logout.;
+	// 			_authenticatedUserId = null;
+	// 			// UserStore.emitAuthenticationChange({error: false, message_text: message_obj.message_text || 'Logged out.'});
+	// 			UserStore.emitChange({error: false, message_text: message_obj.message_text || 'Logged out.'});
+	// 			_successMessage = message_obj.message_text || 'Logout successful.';
+	// 			_errorMessage = '';
+	// 		}
+	// 		// else if (currentUser.id != null && previousAuthenticatedUser.id == currentUser.id) {
+	// 		//   //The authenticationState is not changing. This is likely due to a refresh of the UserStore or other application data.;
+	// 		//   //The user could be authenticated or un-authenticated.;
+	// 		// }
+	// 		else {
+	// 			//The authenticationState is not actually changing. This is likely due to a refresh of the UserStore or other application data.;
+	// 			//This could also be just after a page load or refresh when UserStore was initially populated.;
+	// 			//The user could be authenticated or un-authenticated.;
+	// 			// UserStore.emitAuthenticationChange({error: false, message_text: null});
+	// 			UserStore.emitChange();
+	// 		}
+	// 	}
+	// 	else {
+	// 		//Not sure if this would be encountered. I'm am considering trying to really think about and see if I can create a test that triggers this. Haven't tried though.
+	// 		_error = true;
+	// 		_errorMessage = 'Problem encountered when setting the user authentication state.';
+	// 		console.error(_errorMessage);
+	// 		_authenticatedUserId = null;
+	// 		// UserStore.emitAuthenticationChange({error: true, message_text: _errorMessage});
+	// 		UserStore.emitChange({error: true, message_text: _errorMessage});
+	// 	}
+
+	// 	break;
 
 	default:
 		// no op;
