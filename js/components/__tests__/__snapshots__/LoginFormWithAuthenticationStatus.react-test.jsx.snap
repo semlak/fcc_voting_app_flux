@@ -78,3 +78,84 @@ exports[`LoginFormWithAuthenticationStatus displays error message to user when i
   </div>
 </div>
 `;
+
+exports[`LoginFormWithAuthenticationStatus displays success message to user when valid username or password is supplied (after server request), and username/password are cleared 1`] = `
+<div
+  className="sign-in-form"
+  onKeyPress={[Function bound onKeyPress]}>
+  <div
+    className="modal-body">
+    <form
+      className="form-horizontal">
+      <div
+        className="form-group has-success"
+        id="top-form-group">
+        <div
+          className="form-group">
+          <label
+            className="col-sm-2 col-sm-offset-0 control-label"
+            htmlFor="formHorizontalUsername">
+            Username:
+          </label>
+          <div
+            className="col-sm-10">
+            <input
+              className="form-control"
+              id="formHorizontalUsername"
+              name="username"
+              onChange={[Function bound handleFieldChange]}
+              placeholder="Enter Username"
+              type="text"
+              value="" />
+          </div>
+        </div>
+        <div
+          className="form-group">
+          <label
+            className="col-sm-2 col-sm-offset-0 control-label"
+            htmlFor="formHorizontalPassword">
+            Password:
+          </label>
+          <div
+            className="col-sm-10">
+            <input
+              className="form-control"
+              id="formHorizontalPassword"
+              name="password"
+              onChange={[Function bound handleFieldChange]}
+              placeholder="Enter Password"
+              type="password"
+              value="" />
+          </div>
+        </div>
+        <div
+          className="col-sm-10 col-sm-offset-2">
+          <span
+            className="help-block">
+            Login successful.
+          </span>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div
+    className="modal-footer">
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      id="login-button"
+      onClick={[Function bound handleLogin]}
+      type="button">
+      Sign In
+    </button>
+    <button
+      className="btn btn-default"
+      disabled={false}
+      id="cancel-button"
+      onClick={[Function mockConstructor]}
+      type="button">
+      Cancel
+    </button>
+  </div>
+</div>
+`;

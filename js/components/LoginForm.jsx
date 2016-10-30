@@ -97,6 +97,7 @@ export default React.createClass({
 	_onChange: function() {
 		// console.log('in _onChange for UserStore in LoginForm.');
 		let newState = UserStore.getState();
+		// console.log('newState: ', newState);
 		if (newState.error) {
 			this.setState({message_obj: {error: true, message_text: newState.errorMessage}});
 		}
