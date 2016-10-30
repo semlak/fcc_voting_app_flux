@@ -6,7 +6,7 @@
 
 
 import React from 'react';
-import {Button, Row, Col, Grid, ButtonToolbar, Modal} from 'react-bootstrap';
+import {Button, Row, Col, Grid, ButtonToolbar} from 'react-bootstrap';
 
 // import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import {AnswerOptionsBox} from './AnswerOptionsBox';
@@ -20,56 +20,6 @@ import ReactPropTypes from 'react/lib/ReactPropTypes';
 	// var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
 
-function copyToClipboard(elem) {
-	// create hidden text element, if it doesn't already exist
-	var targetId = '_hiddenCopyText_';
-	var isInput = elem.tagName === 'INPUT' || elem.tagName === 'TEXTAREA';
-	var origSelectionStart, origSelectionEnd;
-	if (isInput) {
-		// can just use the original source element for the selection and copy
-		target = elem;
-		origSelectionStart = elem.selectionStart;
-		origSelectionEnd = elem.selectionEnd;
-	} else {
-		// must use a temporary form element for the selection and copy
-		target = document.getElementById(targetId);
-		if (!target) {
-			var target = document.createElement('textarea');
-			target.style.position = 'absolute';
-			target.style.left = '-9999px';
-			target.style.top = '0';
-			target.id = targetId;
-			document.body.appendChild(target);
-		}
-		target.textContent = elem.textContent;
-	}
-	// select the content
-	var currentFocus = document.activeElement;
-	target.focus();
-	target.setSelectionRange(0, target.value.length);
-
-	// copy the selection
-	var succeed;
-	try {
-		succeed = document.execCommand('copy');
-	} catch(e) {
-		succeed = false;
-	}
-	// restore original focus
-	if (currentFocus && typeof currentFocus.focus === 'function') {
-		currentFocus.focus();
-	}
-
-	if (isInput) {
-		// restore prior selection
-		elem.setSelectionRange(origSelectionStart, origSelectionEnd);
-	} else {
-		// clear temporary content
-		target.textContent = '';
-	}
-	return succeed;
-}
-
 
 
 var FullPoll = React.createClass({
@@ -80,11 +30,7 @@ var FullPoll = React.createClass({
 		currentUser: ReactPropTypes.object.isRequired,
 		backToPollList: React.PropTypes.func.isRequired,
 		handleAddAnswerOption: React.PropTypes.func.isRequired,
-		closeModal: React.PropTypes.func.isRequired,
-		modalToShow: React.PropTypes.string.isRequired,
-		modalMessage: React.PropTypes.string.isRequired,
-		new_answer_option: React.PropTypes.string.isRequired,
-		deletePollRequest: React.PropTypes.func.isRequired
+		new_answer_option: React.PropTypes.string.isRequired
 	},
 
 
@@ -99,20 +45,6 @@ var FullPoll = React.createClass({
 		});
 		return answer_option_votes;
 	},
-
-
-
-	copyPollURLToClipboard: function() {
-	// copyPollURLToClipboard: function(e) {
-		copyToClipboard(document.getElementById('poll-URL'));
-		this.props.closeModal();
-	},
-
-	// handleNewAnswerOptionChange: function(e) {
-	// 	var new_answer_option = e.target.value;
-	// 	this.setState({new_answer_option: e.target.value, form_feedback: null});
-	// },
-
 
 
 	render: function() {
@@ -132,12 +64,6 @@ var FullPoll = React.createClass({
 		// var individual_poll_url = '/this.props.location.pathname';
 		var currentUserIsPollOwner = (this.props.currentUser == null || this.props.currentUser.username == null) ? false : (this.props.currentUser.id == this.props.poll.owner);
 		// console.log('\n\n\ncurrentUserIsPollOwner is', currentUserIsPollOwner);
-		var host = window.location;
-		// var poll_url = host.protocol + '//' + host.hostname + ':' + host.port + individual_poll_url;
-		var poll_url = host.href;
-		var individual_poll_url = host.href;
-		// console.log('host in fullpoll is:', host);
-		var sharePollModalBody = <div>URL for Poll: <a href={individual_poll_url} id='poll-URL'>{poll_url}</a></div>;
 
 		var backToPollListButton = (
 			<Button
@@ -188,87 +114,9 @@ var FullPoll = React.createClass({
 
 		// {this.props.modalMessage.length > 0 ? this.props.modalMessage : 'Do you wish to delete the current poll?' }
 
-		var deletePollModal = (
-			<Modal show={this.props.modalToShow == 'deletepoll'} onHide={this.props.closeModal}>
-				<Modal.Header closeButton>
-					<Modal.Title>Delete Confirmation</Modal.Title>
-				</Modal.Header>
-				<Modal.Body>
-					{this.props.modalMessage}
-					{/*this.props.modalMessage.length > 0 ? this.props.modalMessage : 'Do you wish to delete the current poll?' */}
-				</Modal.Body>
-				{
-					(this.props.modalMessage != 'Do you wish to delete the current poll?')
-						?
-						<Modal.Footer>
-							<Button
-								bsStyle='default'
-								onClick={this.props.closeModal}
-								>Close</Button>
-						</Modal.Footer>
-						:
-						<Modal.Footer>
-							<Button
-								bsStyle='danger'
-								onClick={this.props.deletePollRequest}
-							>Delete</Button>
-							<Button
-								bsStyle='default'
-								onClick={this.props.closeModal}
-								>Cancel</Button>
-						</Modal.Footer>
-				}
-			</Modal>
-		);
-
-
-		var sharePollModal = (
-			<Modal show={this.props.modalToShow == 'sharepoll'} onHide={this.props.closeModal}>
-				<Modal.Header closeButton>
-					<Modal.Title>Share Poll</Modal.Title>
-				</Modal.Header>
-				<Modal.Body>
-					{sharePollModalBody}
-				</Modal.Body>
-				<Modal.Footer>
-					<Button
-						bsStyle='primary'
-						title='Copy URL to clipboard (not supported on all browsers)'
-						onClick={this.copyPollURLToClipboard}
-					>Copy to clipboard</Button>
-					<Button
-						bsStyle='default'
-						title='Close this window'
-						onClick={this.props.closeModal}
-					>Close</Button>
-				</Modal.Footer>
-			</Modal>
-		);
-
-		var dialogModal = (
-			<Modal show={this.props.modalToShow == 'dialog'} onHide={this.props.closeModal}>
-				<Modal.Header closeButton>
-					<Modal.Title>FCC Voting App</Modal.Title>
-				</Modal.Header>
-				<Modal.Body>
-					{this.props.modalMessage}
-				</Modal.Body>
-				<Modal.Footer>
-					<Button
-						bsStyle='default'
-						title='Close this window'
-						onClick={this.props.closeModal}
-					>Close</Button>
-				</Modal.Footer>
-			</Modal>
-		);
 
 		return (
 			<div className={'full-poll-listing'}>
-				{deletePollModal}
-				{sharePollModal}
-				{dialogModal}
-
 
 				<Grid>
 					<Row >

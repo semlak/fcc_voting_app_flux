@@ -45,11 +45,13 @@ export default React.createClass({
 	getInitialState: function() {
 		// console.log('in 'getInitialState' for <NewPollForm /> ');
 		// this just sets a default author value, but the user can change it (it does not have to match account data)
-		var currentUser = UserStore.getAuthenticatedUser();
+		var userStoreState = UserStore.getState();
+
+		var currentUser = userStoreState.authenticatedUser;
 		var author = currentUser.fullname || currentUser.username || '';
 		// console.log('author is ', author);
 		return {
-			userStoreState: UserStore.getState(),
+			userStoreState: userStoreState,
 			author: author,
 			question: '',
 			answer_options: [],
@@ -61,14 +63,17 @@ export default React.createClass({
 			initial_new_answer_option: ''
 		};
 	},
+
 	handleAuthorChange: function(e) {
 		var newAuthorField = {validationState: null, validationMessage: null};
 		this.setState({author: e.target.value, authorField: newAuthorField});
 	},
+
 	handleQuestionChange: function(e) {
 		var newQuestionField = {validationState: null, validationMessage: null};
 		this.setState({question: e.target.value, questionField: newQuestionField});
 	},
+
 	handleAddAnswerOption: function(new_answer_option_from_answer_option_box) {
 		// console.log('in 'handleAddAnswerOption' of pollForm, e.target.value is', e.target.value);
 		// e.preventDefault();
@@ -96,10 +101,6 @@ export default React.createClass({
 		updated_answer_options[index] = option;
 		this.setState({answer_options: updated_answer_options});
 	},
-
-	// componentWillReceiveProps: function(nextProps) {
-	// 	// console.log('in 'componentWillReceiveProps' of PollForm');
-	// },
 
 	handleSubmit: function() {
 	// handleSubmit: function(e) {
@@ -237,32 +238,9 @@ export default React.createClass({
 		);
 	},
 
-	getCurrentUser: function() {
-		return UserStore.getAuthenticatedUser();
-	},
 
 
 
-
-	// _onAuthenticationChange: function() {
-	// 	// console.log('in _onAuthenticationChange of NewPollForm component');
-	// 	// var location = this.props.location.toLowerCase();
-	// 	// console.log('location: ', location);
-	// 	var currentUser = UserStore.getAuthenticatedUser();
-	// 	if (currentUser.username == null && this.state.userStoreState.authenticatedUser.username != null) {
-	// 		//this means a user was logged in and now has logged out.
-	// 		browserHistory.push('/');
-	// 	}
-	// 	else if (currentUser.username != this.state.userStoreState.authenticatedUser.username) {
-	// 		//user has changed. Likely gone from unauthenticated to authenticated
-	// 		var newState = {currentUser: currentUser};
-	// 		if (this.state.author == '') {
-	// 			newState.author = currentUser.fullname || currentUser.username || '';
-	// 		}
-	// 		// console.log('setting the following variables in setState:', newState);
-	// 		this.setState(newState);
-	// 	}
-	// },
 
 	_onUserChange: function() {
 		var newUserState = UserStore.getState();

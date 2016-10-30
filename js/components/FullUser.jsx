@@ -21,18 +21,18 @@ import UserActionCreators from '../actions/UserActionCreators';
 export default React.createClass({
 	getInitialState: function() {
 		// console.log('in 'getInitialState' of <FullUser />');
+		var userStoreState = UserStore.getState();
 		var username = this.props.params.username;
 		var user = UserStore.getUserByUsername(username) || {};
-		var currentUser = this.getCurrentUser();
 		return {
 			user: user,
-			showUserAsEditable: (currentUser.role == 'admin'),
+			showUserAsEditable: (userStoreState.authenticatedUser.role == 'admin'),
 			//the following are only used if updating the user.
 			username: user.username || '',
 			fullname: user.fullname || '',
 			role: user.role || '',
 			message_obj: null,
-			userStoreState: UserStore.getState()
+			userStoreState: userStoreState
 		};
 		//'user' is the user being displayed in this item. currentUser is the authenticated user (if authenticated, {} otherwise).
 	},
@@ -41,11 +41,6 @@ export default React.createClass({
 		browserHistory.push('/users');
 
 	},
-
-	getCurrentUser: function() {
-		return UserStore.getAuthenticatedUser();
-	},
-
 
 	componentDidMount: function() {
 		UserStore.addChangeListener(this._onUserChange);
@@ -83,9 +78,10 @@ export default React.createClass({
 
 		// console.log('in 'componentWillReceiveProps' of <FullUser />. nextProps:', nextProps);
 		if (nextProps.params != null && this.state.user != null && nextProps.params.username != this.state.user.username) {
+			var userStoreState = UserStore.getState();
 			var username = nextProps.params.username;
 			var user = UserStore.getUserByUsername(username) || {};
-			var currentUser = this.getCurrentUser();
+			var currentUser = userStoreState.authenticatedUser;
 			this.setState ({
 				user: user,
 				showUserAsEditable: (currentUser.role == 'admin'),
@@ -258,18 +254,5 @@ export default React.createClass({
 			this.setState(this.getInitialState());
 		}
 
-	},
-
-
-
-	// _onAuthenticationChange: function(message_obj) {
-	// _onAuthenticationChange: function() {
-	// 	// console.log('in _onAuthenticationChange of <FullUser />');
-	// 	// console.log('message_obj:', message_obj, ', message_obj == null', message_obj == null);
-	// 	var currentUser = this.getCurrentUser();
-	// 	this.setState({
-	// 		currentUser: currentUser,
-	// 		showUserAsEditable: this.state.showUserAsEditable && (currentUser.username == this.state.user.username || currentUser.role == 'admin')
-	// 	});
-	// }
+	}
 });

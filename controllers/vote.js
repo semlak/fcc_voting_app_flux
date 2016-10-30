@@ -116,7 +116,7 @@ router.post('/votes', function(req, res) {
 							else {
 								var updatedPoll = cleansePoll(poll);
 								// console.log('updatedPoll:', updatedPoll)
-								res.json({message: 'Vote was successful', poll: updatedPoll, votes: updatedPoll.votes, authorizedUser: reqUserInfo(req.user)});
+								res.json({message: 'Vote was successful', poll: updatedPoll, votes: updatedPoll.votes});
 							}
 						});
 					}

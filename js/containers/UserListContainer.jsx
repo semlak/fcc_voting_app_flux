@@ -10,11 +10,11 @@ import UserList from '../components/UserList';
 import UserStore from '../stores/UserStore';
 
 /**
- * Retrieve the current USER data from the UserStore
+ * Retrieve the current User Store state from the UserStore
  */
-function getUserState() {
+function getUserStoreState() {
 	return {
-		allUsers: UserStore.getAll()
+		userStoreState: UserStore.getState()
 		// areAllComplete: UserStore.areAllComplete()
 	};
 }
@@ -22,7 +22,7 @@ function getUserState() {
 export default React.createClass({
 
 	getInitialState: function() {
-		return getUserState();
+		return getUserStoreState();
 	},
 
 	componentDidMount: function() {
@@ -42,7 +42,7 @@ export default React.createClass({
 		// console.log("Rendering <UserListContainer />");
 		return (
 				<div id='userapp'  className='user-list-container'>
-					<UserList allUsers={this.state.allUsers} />
+					<UserList allUsers={this.state.userStoreState.users} />
 				</div>
 		);
 	},
@@ -56,7 +56,7 @@ export default React.createClass({
 		// if (message != null) {
 		//   console.log("Message:", message)
 		// }
-		this.setState(getUserState());
+		this.setState(getUserStoreState());
 	}
 
 });

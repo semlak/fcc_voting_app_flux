@@ -312,16 +312,6 @@ var UserStore = assign({}, EventEmitter.prototype, {
 	},
 
 
-	/**
-	 * Get the initialization status: true is user store has been populated, false otherwise.
-	 * @return {object}
-	 */
-	getUserStoreIsInitializedState: function() {
-
-		return _UserStoreIsInitialized;
-	},
-
-
 /**
  * Broadcast that _users has changed or was attempted to be changed.
  * @param  {object} message_obj containing an 'error' (boolean) and message_text (string)

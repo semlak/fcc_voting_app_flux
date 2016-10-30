@@ -52,10 +52,7 @@ function getPollState() {
 export default React.createClass({
 
 	getInitialState: function() {
-		// var currentUser = UserStore.getAuthenticatedUser();
-		// var modalToShow = PollStore.getModalToShow();
 		var modalToShow = ModalStore.getModalToShow();
-		// other options: 'dialog', 'sharepoll', 'deletepoll'
 		var modalMessage = ModalStore.getModalMessage();
 		var new_answer_option = '';
 
@@ -63,9 +60,8 @@ export default React.createClass({
 			allPolls: PollStore.getAll(),
 			modalToShow: modalToShow,
 			modalMessage: modalMessage,
-			// currentUser: currentUser,
 			new_answer_option: new_answer_option,
-			UserStoreState: UserStore.getState()
+			userStoreState: UserStore.getState()
 		};
 	},
 
@@ -76,7 +72,7 @@ export default React.createClass({
 		PollStore.addChangeListener(this._onPollChange);
 		PollStore.addDestroyListener(this._onPollDestroy);
 		// PollStore.addVoteCreatedListener(this._onVoteCreate);
-		ModalStore.addChangeListener(this._onModalChange);
+		// ModalStore.addChangeListener(this._onModalChange);
 	},
 
 	componentWillUnmount: function() {
@@ -85,7 +81,7 @@ export default React.createClass({
 		PollStore.removeChangeListener(this._onPollChange);
 		PollStore.removeDestroyListener(this._onPollDestroy);
 		// PollStore.removeVoteCreatedListener(this._onVoteCreate);
-		ModalStore.removeChangeListener(this._onModalChange);
+		// ModalStore.removeChangeListener(this._onModalChange);
 	},
 
 	handlePollSelect: function(poll_id) {
@@ -102,7 +98,7 @@ export default React.createClass({
 		var poll_id = this.props.params.poll_id;
 		var new_answer_option = new_answer_option_from_answer_option_box.trim();
 		var poll = PollStore.getPollById(this.props.params.poll_id);
-		var currentUser = UserStore.getAuthenticatedUser();
+		var currentUser = this.state.userStoreState.authenticatedUser;
 		// console.log('\n\n\n\ncurrentUser is ', currentUser);
 		if (currentUser == null || currentUser == undefined || currentUser.username == null) {
 			// console.log('User must be authenticated in order to add answer option.');
@@ -196,7 +192,7 @@ export default React.createClass({
 
 		//var poll_id = this.props.params.poll_id;
 		var poll = PollStore.getPollById(this.props.params.poll_id) || {};
-		var currentUser = this.state.UserStoreState.authenticatedUser;
+		var currentUser = this.state.userStoreState.authenticatedUser;
 		var modalToShow = this.state.modalToShow;
 		var modalMessage = this.state.modalMessage;
 		var new_answer_option = this.state.new_answer_option;
@@ -232,16 +228,11 @@ export default React.createClass({
 		}
 	},
 
-	getCurrentUser: function() {
-		return UserStore.getAuthenticatedUser();
-	},
-
-
 	/**
 	 * Event handler for 'change' events coming from the UserStore
 	 */
 	_onUserChange: function() {
-		this.setState({UserStoreState: UserStore.getState()});
+		this.setState({userStoreState: UserStore.getState()});
 	},
 
 
@@ -262,13 +253,13 @@ export default React.createClass({
 	/**
 	 * Event handler for 'change' events coming from the ModalStore
 	 */
-	_onModalChange: function() {
-		// console.log('received CHANGE signal for poll in PollContainer. Updating state with allPolls.');
-		var modalToShow = ModalStore.getModalToShow();
-		var modalMessage = ModalStore.getModalMessage();
-		this.setState({modalToShow: modalToShow, modalMessage: modalMessage});
-		//should also update modal states, unless I handle those with a separate event
-	},
+	// _onModalChange: function() {
+	// 	// console.log('received CHANGE signal for poll in PollContainer. Updating state with allPolls.');
+	// 	var modalToShow = ModalStore.getModalToShow();
+	// 	var modalMessage = ModalStore.getModalMessage();
+	// 	this.setState({modalToShow: modalToShow, modalMessage: modalMessage});
+	// 	//should also update modal states, unless I handle those with a separate event
+	// },
 
 	// _onPollChange: function() {
 	// 	/*
@@ -297,11 +288,15 @@ export default React.createClass({
 	_onPollDestroy: function(poll_id, success) {
 		// console.log('received notification of possible poll destroy from  PollStore');
 		var currentPollId = this.props.params != null ? this.props.params.poll_id : null;
+		var modalStoreState = ModalStore.getState();
 		if (currentPollId ==  poll_id) {
 			// console.log('poll_id == this.state.poll.id: ', poll_id == this.state.poll.id);
 			if (success) {
 				//the poll was just deleted. redirect to /polls
 				//in future, would like to add notification or popup showing poll was deleted succesfully before redirect.
+				if (modalStoreState.modalToShow == 'deletepoll') {
+					ModalActionCreators.open('deletepoll', 'Poll successfully deleted!');
+				}
 				this.backToPollList();
 			}
 			else {
