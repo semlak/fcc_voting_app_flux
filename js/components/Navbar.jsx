@@ -49,10 +49,9 @@ export default function (props) {
 		}
 	}.bind(this);
 
-
 	const mainNavBar = (
 		<div>
-			<Navbar inverse onToggle={props.onToggle} expanded={props.expanded} >
+			<Navbar inverse onToggle={props.onToggle} expanded={props.navbarIsExpanded} >
 				<Navbar.Header>
 					<Navbar.Brand>
 						<IndexLink to='/' >Voting App</IndexLink>
@@ -74,10 +73,6 @@ export default function (props) {
 			</Navbar>
 		</div>
 	);
-	// console.log('mainNavBar:', mainNavBar);
 	return mainNavBar;
-
-
 }
 
-// module.exports = Navbar;

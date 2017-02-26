@@ -1,12 +1,12 @@
 'use strict';
 
 /*
- * ModalStore
+ * UIStore
  */
 
 import AppDispatcher from '../dispatcher/AppDispatcher';
 import {EventEmitter} from 'events';
-import ModalConstants from '../constants/ModalConstants';
+import UIConstants from '../constants/UIConstants';
 import assign from 'object-assign';
 
 const CHANGE_EVENT = 'change';
@@ -19,6 +19,18 @@ var _modalToShow = 'none';
 //I plan to add changepassword and login.
 const _modalToShowOptions = ['dialog', 'sharepoll', 'deletepoll', 'changepassword', 'login', 'register', 'none'];
 
+
+var _navbarIsExpanded = false;
+
+var _registrationFormState =  {
+	username: '',
+	password: '',
+	password_confirm: '',
+	fullname: '',
+	errorStatus: false,
+	message: ''
+};
+
 var _modalMessage = '';
 var _dialogModalMessage = '';
 var _sharepollModalMessage = '';
@@ -27,7 +39,21 @@ var _changepasswordModalMessage = '';
 var _loginModalMessage = '';
 var _registerModalMessage = '';
 
-var ModalStore = assign({}, EventEmitter.prototype, {
+
+// var _loginErrorStatus = false;
+// var _loginMessage = '';
+
+// var _registerErrorStatus = false;
+// var _registerMessage = '';
+
+// var _changePasswordErrorStatus = false;
+// var _changePasswordMessage = '';
+
+// var _userUpdateErrorStatus = false;
+// var _userUpdateMessage = '';
+
+
+var UIStore = assign({}, EventEmitter.prototype, {
 	getModalToShow: function() {
 		return _modalToShow;
 	},
@@ -49,7 +75,9 @@ var ModalStore = assign({}, EventEmitter.prototype, {
 			deletepollModalMessage: _deletepollModalMessage,
 			changepasswordModalMessage: _changepasswordModalMessage,
 			loginModalMessage: _loginModalMessage,
-			registerModalMessage: _registerModalMessage
+			registerModalMessage: _registerModalMessage,
+			navbarIsExpanded: _navbarIsExpanded,
+			registrationFormState: _registrationFormState
 		};
 	},
 
@@ -77,16 +105,16 @@ var ModalStore = assign({}, EventEmitter.prototype, {
 });
 
 // Register callback to handle all updates
-ModalStore.dispatchToken = AppDispatcher.register(function(action) {
-	// console.log('received dispatch signal in ModalStore. action is:', action);
+UIStore.dispatchToken = AppDispatcher.register(function(action) {
+	// console.log('received dispatch signal in UIStore. action is:', action);
 
 	switch(action.actionType) {
 
-	case ModalConstants.MODAL_SHOW:
-		// console.log('triggered MODAL_SHOW case in ModalStore dispatch receiving. action is ', action);
+	case UIConstants.MODAL_SHOW:
+		console.log('triggered MODAL_SHOW case in UIStore dispatch receiving. action is ', action);
 		// check that action.modalToShow is in the list of valid options (_modalToShowOptions array)
 		if (_modalToShowOptions.indexOf(action.modalToShow) < 0) {
-			// console.error('\'modalToShow\' variable dispatched to ModalStore is not a valid option');
+			// console.error('\'modalToShow\' variable dispatched to UIStore is not a valid option');
 		}
 
 		var modalToShow = action.modalToShow;
@@ -103,24 +131,24 @@ ModalStore.dispatchToken = AppDispatcher.register(function(action) {
 
 		_modalMessage = modalMessage;
 
-		ModalStore.emitChange();
+		UIStore.emitChange();
 		// if (_modalToShow != modalToShow || modalMessage != _modalMessage) {
 		// 	_modalToShow = modalToShow;
 		// 	_modalMessage = modalMessage;
-		// 	ModalStore.emitChange();
+		// 	UIStore.emitChange();
 		// }
 		// else {
 		// 	// console.log('Received Modal dispatch, but no change detected. action is ', action);
 		// }
 		break;
 
-	// case ModalConstants.MODAL_SHOW_DIALOG:
+	// case UIConstants.MODAL_SHOW_DIALOG:
 	// 	var modalToShow = action.modalToShow;
 	// 	var modalMessage = action.modalMessage;
 	// 	if (_modalToShow != modalToShow || modalMessage != _modalMessage) {
 	// 		_modalToShow = modalToShow;
 	// 		_modalMessage = modalMessage;
-	// 		ModalStore.emitChange();
+	// 		UIStore.emitChange();
 	// 	}
 	// 	else {
 	// 		console.log("Received Modal dispatch, but no change detected. action is ", action)
@@ -128,13 +156,10 @@ ModalStore.dispatchToken = AppDispatcher.register(function(action) {
 	// 	break;
 
 
-	case ModalConstants.MODAL_SHOW_NONE:
-		// console.log("in ModalStore, received MODAL_SHOW_NONE dispatch signal");
-		if (modalToShow != 'none') {
-			_modalToShow = 'none';
-			_modalMessage = null;
-			ModalStore.emitChange();
-		}
+	case UIConstants.UI_TOGGLE_NAVBAR:
+		console.log('in UIStore, received UI_TOGGLE_NAVBAR dispatch signal');
+		_navbarIsExpanded = !_navbarIsExpanded;
+		UIStore.emitChange();
 		break;
 
 	default:
@@ -142,4 +167,4 @@ ModalStore.dispatchToken = AppDispatcher.register(function(action) {
 	}
 });
 
-module.exports = ModalStore;
+module.exports = UIStore;
