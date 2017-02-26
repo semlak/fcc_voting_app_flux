@@ -34,7 +34,7 @@ var path = require('path');
 /* GET home page. The globbering is because react-router handles most routes as a single-page-app on the client side*/
 // router.get('/*', function(req, res, next) {
 router.get('/*', function(req, res) {
-	console.log('Received get request for homepage ('/') in index.js. Rendering homepage');
+	console.log('Received get request for homepage (\'/\') in index.js. Rendering homepage');
 	res.sendFile(path.join(__dirname, '../public', 'index.html'));
 });
 
