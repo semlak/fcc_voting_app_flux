@@ -71,7 +71,7 @@ var cleansePoll = function (poll) {
 
 /*
 	GET all polls, via a GET request to /polls/
-	This does not require an authenticated user.
+	This does not require an auhentticated user.
 
 	Issues:
 		Sensitive data:
@@ -231,7 +231,7 @@ router.post('/polls/:poll_id/new_answer_option', function(req, res) {
 				res.json(err);
 			}
 			else if (poll == null) {
-				res.json({error: true, message: 'Poll with id \'' + poll_id + '\' unable to be found', authorizedUser: reqUserInfo(req.user)});
+				res.json({error: true, message: 'Poll with id \'' + poll_id + '\' unable to be fo	und', authorizedUser: reqUserInfo(req.user)});
 			}
 			else {
 				var answer_options = poll.answer_options;
