@@ -44,6 +44,20 @@ var cleansePoll = function (poll) {
 	};
 }
 
+var reqUserInfo = function(account) {
+	if (account == undefined || account == null || account.username == null) {
+		return null;
+	}
+	else {
+		return {
+			username: account.username,
+			fullname: account.fullname,
+			role: account.role,
+			id: account._id
+		};
+	}
+};
+
 // this does not require an authenticated user.
 // router.get('/votes/', function(req, res, next) {
 router.get('/votes/', function(req, res) {
