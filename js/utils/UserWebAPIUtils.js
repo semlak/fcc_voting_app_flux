@@ -61,7 +61,7 @@ module.exports = {
 
 		xhr.onload = function() {
 			if (xhr.status === 200) {
-				const response = JSON.parse(xhr.responseText);
+				let response = JSON.parse(xhr.responseText);
 				// console.log('Submitted Registration ajax xhr! xhr.responseText is', response);
 				// should receive the new user object as 'authoriedUser' (includes id, username, fullname, and role)
 				UserServerActionCreators.receiveCreatedUser(response.authorizedUser, null);
@@ -69,8 +69,10 @@ module.exports = {
 			}
 			else {
 				// console.log('Registration xrh request failed.  Returned status is ' + xhr.status);
-				// UserServerActionCreators.receiveCreatedUser(null, 'Failed to register new user.');
-				UserServerActionCreators.setUserErrorStatusAndMessage(true, 'Failed to register new user.', '');
+				let response = JSON.parse(xhr.responseText);
+				let error_message = response.message || 'Failed to register new user.';
+				UserServerActionCreators.receiveCreatedUser(null, error_message);
+				UserServerActionCreators.setUserErrorStatusAndMessage(true, error_message, '');
 			}
 		}.bind(this);
 

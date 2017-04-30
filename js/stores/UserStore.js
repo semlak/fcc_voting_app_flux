@@ -402,15 +402,17 @@ UserStore.dispatchToken = AppDispatcher.register(function(action) {
 				// UserStore.emitAuthenticationChange({error: false, message_text: 'New User created.'});
 				// console.log('user set (_users in UserStore) is now', _users);
 			}
+			else {
+				// I feel like if might be possible to encounter this branch. Not sure what to do.
+				console.log('Did not expect to get here. Error when creating user.');
+			}
 		}
 		else {
 			_error = true;
-			_errorMessage = action.message || 'Unable to create new user.';
+			_errorMessage = action.message || action.errorMessage || 'Unable to create new user.';
 			_successMessage = '';
-			// UserStore.emitUserCreate({error: true, message_text: _errorMessage});
-
-			//eventually want to change to:
-			UserStore.emitChange({error: true, message_text: _errorMessage});
+			UserStore.emitUserCreate({error: true, message_text: _errorMessage});
+			//UserStore.emitChange({error: true, message_text: _errorMessage});
 		}
 		break;
 
@@ -483,7 +485,8 @@ UserStore.dispatchToken = AppDispatcher.register(function(action) {
 
 			_authenticatedUserId = currentUser.id;
 			_errorMessage = '';
-			UserStore.emitChange({error: false, message_text: _successMessage});
+			_error = false;
+			UserStore.emitChange({error: _error, message_text: _successMessage});
 		}
 		else {
 			// no op.

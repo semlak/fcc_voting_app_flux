@@ -122,8 +122,19 @@ export default React.createClass({
 	_onUserCreate: function(message_obj) {
 		// console.log('received _onUserCreate event in <RegistrationForm />');
 		if (message_obj != null && message_obj.error) {
-			// console.log('Message:', message);
 			this.setState({message_obj: message_obj});
+		}
+		else {
+			let newState = UserStore.getState();
+			if (newState.error) {
+				this.setState({message_obj: {error: true, message_text: newState.errorMessage}});
+			}
+			else if (newState.authenticatedUser.id != null) {
+				this.setState({
+					message_obj: {error: false, message_text: newState.successMessage},
+					username: '', password: '', password_confirm: '', fullname: ''
+				});
+			}
 		}
 	}
 

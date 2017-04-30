@@ -71,9 +71,7 @@ router.post('/users/login', function(req, res, next) {
 			return next(err);
 		}
 		if (!user) {
-			return res.status(401).json( {
-				message: 'Invalid username or password.'
-			});
+			return res.status(400).json({error: true, message: 'Invalid username or password.' });
 		}
 
 		//manualy establish session
@@ -82,7 +80,7 @@ router.post('/users/login', function(req, res, next) {
 				return next(err);
 			}
 			else {
-				return res.json({ message: 'Login successful.', authorizedUser: reqUserInfo(req.user)});
+				return res.json({error: false, message: 'Login successful.', authorizedUser: reqUserInfo(req.user)});
 			}
 		});
 	})(req, res, next);
@@ -111,7 +109,14 @@ router.post('/users/register', function(req, res, next) {
 				role: role
 			}), req.body.password, function(err) {
 				if (err) {
-					res.json(err);
+					if (err.name === 'UserExistsError') {
+						// The client app should catch this type of error and not even submit request. However. server should handle too.
+						return res.status(400).json({error: true, message: err.message});
+					}
+					else {
+						// some other error.
+						res.json(err);
+					}
 				}
 				else {
 					passport.authenticate('local') (req, res, function () {
