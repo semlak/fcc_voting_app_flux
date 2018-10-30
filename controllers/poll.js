@@ -29,13 +29,13 @@ var cleanseVote = function (vote) {
 		A vote object has an _id, owner, poll (a poll_id), answer_option , and ip_address.
 			-answer_option is an index referring to position in answer_options array of poll
 		Only the vote's answer_option and poll need to be sent to the client.
-	*/
+		*/
 	return {
 		answer_option: vote.answer_option,
 		poll: vote.poll
 	};
 
-}
+};
 
 var cleansePoll = function (poll) {
 	return {
@@ -47,7 +47,7 @@ var cleansePoll = function (poll) {
 		answer_options: poll.answer_options,
 		votes: poll.votes.map(vote => cleanseVote(vote))
 	};
-}
+};
 
 
 /*
@@ -81,13 +81,14 @@ var cleansePoll = function (poll) {
 		I would like to adjust to just include the vote counts for each answer option and a boolean for each poll as to whether the client
 			has already voted for the particular poll. Right now, if the user attempts to vote for a particular poll, the server determines
 			if the user has already voted. It would be nice for the client to proactively tell the user. (a user can only vote for each poll once).
-	*/
+			*/
 
 // router.get('/polls/', function(req, res, next) {
 router.get('/polls/', function(req, res) {
 	console.log('Received GET request for all polls listing.');
 	Poll.find().sort({'_id': -1}).populate('votes').exec(function(err, polls) {
 		if (err) {
+			console.error('Error retrieving polls');
 			res.json(err);
 		}
 		else {
@@ -104,25 +105,25 @@ router.get('/polls/', function(req, res) {
 // // Instead, the webapp retrieve all polls regardless of the initial URL, and react-router tells the app to render the individual poll if that is the intial route.
 // // I could be added back if I ever implement server-side rendering.
 // router.get('/polls/:poll_id', function(req, res, next) {
-// 	console.log('Received GET request for single poll listing.')
-// 	var isAjaxRequest = req.xhr || req.headers.accept.indexOf('json') > -1 || req.headers['x-requested-with'] == 'XMLHttpRequest';
-// 	if (isAjaxRequest) {
-// 		// console.log('poll_id is ', poll_id)
-// 		var poll_id = req.params.poll_id
-// 		Poll.findById(poll_id).populate('votes').exec(function(err, poll) {
-// 			if (err) {
-// 				res.json(err)
-// 			}
-// 			else {
-// 				var message = polls.length < 0 ? 'No poll found with id of '' + poll_id + ''.' : 'Poll retrieved succesfully.';
-// 				res.json({error: (polls.length < 0), poll: poll, message: message, initialSinglePollId: poll_id, authorizedUser: reqUserInfo(req.user)});
-// 			}
-// 		});
-// 	}
-// 	else {
-// 		//res.sendFile(path.join(__dirname, '..' ,'public', 'index.html'))
-// 		res.render('index', { authorizedUser: reqUserInfo(req.user), title: 'Single Poll'})
-// 	}
+//	console.log('Received GET request for single poll listing.')
+//	var isAjaxRequest = req.xhr || req.headers.accept.indexOf('json') > -1 || req.headers['x-requested-with'] == 'XMLHttpRequest';
+//	if (isAjaxRequest) {
+//		// console.log('poll_id is ', poll_id)
+//		var poll_id = req.params.poll_id
+//		Poll.findById(poll_id).populate('votes').exec(function(err, poll) {
+//			if (err) {
+//				res.json(err)
+//			}
+//			else {
+//				var message = polls.length < 0 ? 'No poll found with id of '' + poll_id + ''.' : 'Poll retrieved succesfully.';
+//				res.json({error: (polls.length < 0), poll: poll, message: message, initialSinglePollId: poll_id, authorizedUser: reqUserInfo(req.user)});
+//			}
+//		});
+//	}
+//	else {
+//		//res.sendFile(path.join(__dirname, '..' ,'public', 'index.html'))
+//		res.render('index', { authorizedUser: reqUserInfo(req.user), title: 'Single Poll'})
+//	}
 // })
 
 
@@ -147,7 +148,7 @@ router.get('/polls/', function(req, res) {
 		I would like to modify so that poll creation/update/delete automatically checks for authentication. Right now I have to explicitly do it, but I'm
 			thinking passport and mongoose might offer a way of building this concept into a model/schema's functionality.
 		I should make sure to cleanse the data strings provided by the user; shouldn't trust user.
-*/
+		*/
 
 // router.post('/polls/', function(req, res, next) {
 router.post('/polls/', function(req, res) {
@@ -160,7 +161,7 @@ router.post('/polls/', function(req, res) {
 	poll.owner = req.user._id;
 
 	// for (var key in req.body) {
-	// 	console.log('key is ', key, 'val is ', req.body[key])
+	//	console.log('key is ', key, 'val is ', req.body[key])
 	// }
 
 	if (!req.isAuthenticated()) {
@@ -207,7 +208,7 @@ router.post('/polls/', function(req, res) {
 		I should make sure to cleanse the new_answer_option string provided (and all data); shouldn't trust user.
 		I would like to change this to a PUT request to /polls/:poll_id/new_answer_option or maybe a PUT or POST request /polls/:poll_id.
 			Not sure, but I would like poll_id to be in the URL rather than the request body; seems more inline with typical REST app.
-*/
+			*/
 
 
 // router.post('/polls/:poll_id/new_answer_option', function(req, res, next) {
@@ -270,10 +271,10 @@ router.post('/polls/:poll_id/new_answer_option', function(req, res) {
 		I'm wondering if there is a way for the user to add a req.user parameter to the request to fake a real user.
 		I would like to modify so that poll deletion automatically checks for authentication. Right now I have to explicitly do it, but I'm
 			thinking passport might offer a way of building this concept into a model/schema's functionality.
-*/
+			*/
 
 // router.delete('/polls/:poll_id',  function(req, res, next) {
-router.delete('/polls/:poll_id',  function(req, res) {
+router.delete('/polls/:poll_id',	function(req, res) {
 	console.log('Received request to delete poll! poll_id is ', req.params.poll_id);
 	var poll_id = req.params.poll_id;
 	Poll.findById(poll_id, function(err, poll) {
@@ -314,28 +315,28 @@ router.delete('/polls/:poll_id',  function(req, res) {
 	deleteAllPolls(): Deletes all polls.
 	Note, the Poll schema is defined such that all associated votes will be automatically deleted before removing the poll,
 	meaning that explicitly deleting the votes separately is not necessary.
-*/
+	*/
 // var deleteAllPolls = function() {
-// 	Poll.find(function(err, polls) {
-// 		if (err) {
-// 			console.log (err);
-// 		}
-// 		else {
-// 			polls.forEach(function(poll) {
-// 				Poll.remove({
-// 					_id: poll._id
-// 				}, function(err) {
-// 					if (err) {
-// 						console.log( err);
-// 					}
-// 					else {
-// 						console.log('deleted Poll with id ', poll._id);
-// 					}
+//	Poll.find(function(err, polls) {
+//		if (err) {
+//			console.log (err);
+//		}
+//		else {
+//			polls.forEach(function(poll) {
+//				Poll.remove({
+//					_id: poll._id
+//				}, function(err) {
+//					if (err) {
+//						console.log( err);
+//					}
+//					else {
+//						console.log('deleted Poll with id ', poll._id);
+//					}
 
-// 				});
-// 			});
-// 		}
-// 	});
+//				});
+//			});
+//		}
+//	});
 // };
 
 
@@ -344,12 +345,12 @@ router.delete('/polls/:poll_id',  function(req, res) {
 	The following path (/polls/delete), if enabled,  should only be enabled during development or testing.
 	I wanted to make it easy to delete poll database. All it takes is a get request to that URL.
 	This makes it incredibly easy for anyone to delete all polls! YOU ARE WARNED.
-*/
+	*/
 
 // router.get('/polls/delete', function(req, res, next) {
-// 	//However, only
-// 	deletePolls();
-// 	res.json({})
+//	//However, only
+//	deletePolls();
+//	res.json({})
 
 // });
 
@@ -357,7 +358,7 @@ router.delete('/polls/:poll_id',  function(req, res) {
 
 // //This gets the new poll form. This is not actually used with the single page app.
 // router.get('/polls/new', function(req, res, next) {
-// 	res.render('create_poll', { authorizedUser: reqUserInfo(req.user), title: 'Create New Poll'})
+//	res.render('create_poll', { authorizedUser: reqUserInfo(req.user), title: 'Create New Poll'})
 
 // })
 
