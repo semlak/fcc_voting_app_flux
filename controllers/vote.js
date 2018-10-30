@@ -67,7 +67,8 @@ router.get('/votes/', function(req, res) {
 		}
 		else {
 			var cleansedVotes = votes.map(vote => cleanseVote(vote));
-			res.json(votes);
+			// res.json(votes);
+      res.json(cleansedVotes);
 		}
 	});
 });
