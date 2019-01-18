@@ -43,7 +43,7 @@
     "keymirror": "^0.1.1",
     "mongodb": "^2.2.0",
     "mongoose": "^5.0.11",
-    "morgan": "~1.7.0",
+    "morgan": "^1.9.1",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^4.0.0",
@@ -54,7 +54,7 @@
     "react-dom": "^15.3.2",
     "react-router": "^2.7.0",
     "react-router-bootstrap": "^0.23.1",
-    "recharts": "^0.15.1",
+    "recharts": "^1.4.2",
     "serve-favicon": "^2.3.0",
     "should": "^9.0.2",
     "webpack": "^1.12.13"
@@ -72,12 +72,12 @@
     "eslint-plugin-promise": "^3.3.0",
     "eslint-plugin-react": "^6.4.1",
     "eslint-plugin-standard": "^2.0.1",
-    "http-server": "^0.8.5",
+    "http-server": "^0.11.1",
     "jest": "^15.1.1",
     "react-addons-test-utils": "^15.3.2",
     "react-test-renderer": "^15.3.2",
     "sinon": "^1.17.6",
     "webpack": "^1.12.13",
-    "webpack-dev-server": "^1.14.1"
+    "webpack-dev-server": "^3.1.14"
   }
 }
