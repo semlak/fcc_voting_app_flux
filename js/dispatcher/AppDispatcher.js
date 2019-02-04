@@ -1,8 +1,8 @@
 'use strict';
 
 /*
-	I've taken this file almost directly from Facebook's examples on github, so I'm leaving their copyright info.
-	https://github.com/facebook/flux/tree/master/examples/flux-todomvc/js/dispatcher
+  I've taken this file almost directly from Facebook's examples on github, so I'm leaving their copyright info.
+  https://github.com/facebook/flux/tree/master/examples/flux-todomvc/js/dispatcher
 */
 
 /*

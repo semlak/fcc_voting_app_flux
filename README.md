@@ -1,7 +1,7 @@
 # A Simple Voting App
 
 ## Very basic overview
-I created this app to fulfill requirements for the freecodecamp.com coding curriculum. I added a some of my own requirements.
+I created this app to fulfill requirements for the freecodecamp.com coding curriculum, and I added some of my own requirements.
 It is the voting app, an app that one can create and vote on polls, described at [https://www.freecodecamp.com/challenges/build-a-voting-app](https://www.freecodecamp.com/challenges/build-a-voting-app).
 
 The basics are this: This web app allows users to create polls, vote on them, share them, etc. It uses React.js + Flux Architecture.
@@ -23,7 +23,7 @@ You can view and interact with a running example on Heroku: [https://fcc-voting-
 **Please do not provide any sensitive data.** The security of the app is untested.
 On this deployment, you can:
 * Create your own user account on the app.
-	* Password must be at least 1 character long (this is not meant to be very secure)
+  * Password must be at least 1 character long (this is not meant to be very secure)
 * Create polls (while logged in).
 * Add answer options to existing polls (while logged in).
 * Vote on any poll (whether or not your are logged in).
@@ -35,7 +35,7 @@ Please Note:
 * Only a hash of your password will be stored on the server (this is handled by the Passport.js module), but it is still possible that your data would be exposed, and your un-hashed password is sent from the client to the server.
 * Your user data, any polls you create, votes you make, etc, are stored on the server database (mongodb).
 * **When you vote, your IP address is stored, even if you don't create an account.** If this concerns you, please do not vote.
-		Your IP address is used to prevent the same user from voting for the same poll multiple times (a functional requirement for the application) while still allowing users to vote without creating an account.
+    Your IP address is used to prevent the same user from voting for the same poll multiple times (a functional requirement for the application) while still allowing users to vote without creating an account.
 
 
 
@@ -53,12 +53,9 @@ Once you've got that working, head to the command line to set up the project.
 git clone https://github.com/semlak/fcc_voting_app_flux
 cd fcc_voting_app_flux
 npm install
-webpack
-#make sure you have an instance of mongodb running
-node server.js
-
-#While developing, I typically invoke with "webpack && node server.js".
-#I don't currently have things configured correctly to watch for updates.
+# that installs required modules and through the postinstall scripts also builds the app.
+# Now, to run, make sure you have an instance of mongodb running, then start the application server
+npm start
 
 ```
 
@@ -66,11 +63,17 @@ Now open up [http://localhost:8080](http://localhost:8080), or whatever port and
 
 You should be able to create a new account
 * The first account you create in the app is automatically an 'admin' account. Right now, the 'admin' account can vote unlimited times for a poll and delete any poll, update any user's profile data, and possibly other things.
-	* Other app management features would be added, presumably, if I were to continue development.
+  * Other app management features would be added, presumably, if I were to continue development.
 * I still haven't added OAuth support, but you can just provide simple username and password.
-* Please note that username/password info is not encrypted (not SSL). The Heroku deployment uses Heroku's SSL certificate (Heroku describes this a bit on their web site).
-* The server only stores hashes of passwords, but it is still not safe due to the lack of SSL (even with SSL added, a review of code for security flaws would be necessary).
-* Obviously, this app is not ready for deployment in any non-testing setting.
+* The Heroku deployment uses Heroku's SSL certificate (Heroku describes this a bit on their web site).
+* The full security of the app has not been tested, and so it is not ready for deployment in any non-testing setting.
+
+
+After editing any of the React application components, you need to run the build script (which runs webpack)
+```
+npm run build
+```
+I don't currently have things configured correctly to watch for updates.
 
 
 
@@ -86,14 +89,14 @@ The tests I have created barely test any of the features and are fairly insuffic
 
 
 ## Issues:
-There are many things that don't really work right, such as most of the npm scripts
+There are many things that don't really work right, such as some of the npm scripts
 It also is possible that my packages.json file has requirements that aren't actually used. Things like that.
 
 I have no idea if my license info is correct. It is listed in LICENSE.md
 
 I still have some components setting their own states too much. Also, I would like to create Containers for the components, and put all the state setting in the container. I don't think I understood that concept very well when I created the app.
 
-Several of my problems for components are the result of trying to display error messages when failing to login, register, update user or poll information. I haven't figured the best way to get this information from the ajax call result to the component renderings.
+Several of my problems for components are the result of trying to display error messages when failing to login, register, update user or poll information. I haven't figured the best way to get this information from the ajax call result to the stores to the component renderings.
 
 I still have lots of imperative-type code that updates UI components.
 
@@ -114,10 +117,10 @@ I tried to model my application communication based on the diagram Facebook prov
 
 
 ### react-router
-I didn't find a good boilerplate structure for react/flux. After completing the the react-router-tutorial ([https://github.com/reactjs/react-router-tutorial](https://github.com/reactjs/react-router-tutorial)), I decided to use what I created with the react-router-tutorial as a base (it does not include flux, though). The tutorial got me going with a single-page web-app with a few dummy react components, and I replaced the dummy components with my app's components as I developed them. Since this did not provide any of the flux architecture, I grabbed that from Facebook's examples as I developed my components.
+When I created this app, I didn't find a good boilerplate structure for react/flux. After completing the the react-router-tutorial ([https://github.com/reactjs/react-router-tutorial](https://github.com/reactjs/react-router-tutorial)), I decided to use what I created with the react-router-tutorial as a base (it does not include flux, though). The tutorial got me going with a single-page web-app with a few dummy react components, and I replaced the dummy components with my app's components as I developed them. Since this did not provide any of the flux architecture, I grabbed that from Facebook's examples as I developed my components.
 
 ### react-bootstrap
-I use react-bootstrap ([https://react-bootstrap.github.io/](https://react-bootstrap.github.io/)) rather than jQuery and bootstrap-javascript ([https://getbootstrap.com/2.0.4/javascript.html](https://getbootstrap.com/2.0.4/javascript.html)). react-bootstrap still uses the regular bootstrap CSS file, but react-bootstrap provides you with almost all of the regular bootstrap elements as react components instead of HTML with a bunch of defined classes, and it does not depend on jQuery, as bootstrap-javascript does.
+I use react-bootstrap ([https://react-bootstrap.github.io/](https://react-bootstrap.github.io/)) rather than jQuery and bootstrap-javascript ([https://getbootstrap.com/2.0.4/javascript.html](https://getbootstrap.com/2.0.4/javascript.html)). react-bootstrap still uses the regular bootstrap CSS file, but react-bootstrap provides you with almost all of the regular bootstrap elements as react components instead of HTML with a bunch of defined components, and it does not depend on jQuery, as bootstrap-javascript does.
 
 ### jQuery
 I'm not using jQuery. I have nothing against jQuery, but I found it difficult to use when combined with React.js, and I found several forums and blogs suggesting to avoid combining them. A core issue is that React.js keeps its own virtual DOM and decides when to update the actual DOM based on its virtual DOM. However, jQuery frequently makes changes to the DOM that React doesn't know about, and so this interaction can cause issues. Since I stopped using jQuery for DOM manipulation for this project, I decided to not use it for AJAX calls (my other common use for jQuery), so I re-wrote my AJAX calls using XMLHTTPRequest() (part of standard JavaScript).

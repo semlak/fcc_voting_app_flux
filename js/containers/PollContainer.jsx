@@ -27,306 +27,306 @@ import ModalActionCreators from '../actions/ModalActionCreators';
 
 
 function filterPollsByOwner(polls, owner_username) {
-	var owner = UserStore.getUserByUsername(owner_username);
-	var owner_id = typeof owner == 'object' ? owner.id : '';
+  var owner = UserStore.getUserByUsername(owner_username);
+  var owner_id = typeof owner == 'object' ? owner.id : '';
 
-	var filteredPolls = {};
-	Object.keys(polls).forEach(function(poll_id) {
-		if (polls[poll_id].owner.toString() == owner_id.toString()) {
-			filteredPolls[poll_id] = polls[poll_id];
-		}
-	});
-	return filteredPolls;
+  var filteredPolls = {};
+  Object.keys(polls).forEach(function(poll_id) {
+    if (polls[poll_id].owner.toString() == owner_id.toString()) {
+      filteredPolls[poll_id] = polls[poll_id];
+    }
+  });
+  return filteredPolls;
 }
 
 /**
  * Retrieve the current POLL data from the PollStore
  */
 function getPollState() {
-	return {
-		allPolls: PollStore.getAll()
-		// areAllComplete: PollStore.areAllComplete()
-	};
+  return {
+    allPolls: PollStore.getAll()
+    // areAllComplete: PollStore.areAllComplete()
+  };
 }
 
 export default React.createClass({
 
-	getInitialState: function() {
-		var modalToShow = ModalStore.getModalToShow();
-		var modalMessage = ModalStore.getModalMessage();
-		var new_answer_option = '';
+  getInitialState: function() {
+    var modalToShow = ModalStore.getModalToShow();
+    var modalMessage = ModalStore.getModalMessage();
+    var new_answer_option = '';
 
-		return {
-			allPolls: PollStore.getAll(),
-			modalToShow: modalToShow,
-			modalMessage: modalMessage,
-			new_answer_option: new_answer_option,
-			userStoreState: UserStore.getState()
-		};
-	},
-
-
-	componentDidMount: function() {
-		// PollStore.addChangeListener(this._onChange);
-		UserStore.addChangeListener(this._onUserChange);
-		PollStore.addChangeListener(this._onPollChange);
-		PollStore.addDestroyListener(this._onPollDestroy);
-		// PollStore.addVoteCreatedListener(this._onVoteCreate);
-		// ModalStore.addChangeListener(this._onModalChange);
-	},
-
-	componentWillUnmount: function() {
-		// PollStore.removeChangeListener(this._onChange);
-		UserStore.removeChangeListener(this._onUserChange);
-		PollStore.removeChangeListener(this._onPollChange);
-		PollStore.removeDestroyListener(this._onPollDestroy);
-		// PollStore.removeVoteCreatedListener(this._onVoteCreate);
-		// ModalStore.removeChangeListener(this._onModalChange);
-	},
-
-	handlePollSelect: function(poll_id) {
-		browserHistory.push('/polls/' + poll_id);
-	},
-
-	backToPollList: function() {
-		browserHistory.push('/polls');
-
-	},
-
-	handleAddAnswerOption: function(new_answer_option_from_answer_option_box) {
-		// console.log('in fullpoll 'handleAddAnswerOption'');
-		var poll_id = this.props.params.poll_id;
-		var new_answer_option = new_answer_option_from_answer_option_box.trim();
-		var poll = PollStore.getPollById(this.props.params.poll_id);
-		var currentUser = this.state.userStoreState.authenticatedUser;
-		// console.log('\n\n\n\ncurrentUser is ', currentUser);
-		if (currentUser == null || currentUser == undefined || currentUser.username == null) {
-			// console.log('User must be authenticated in order to add answer option.');
-			this.setState({form_feedback: {message: 'User must be authenticated in order to add answer option.'}});
-
-		}
-		else if (new_answer_option == '' || new_answer_option == null) {
-			// console.log('Error. A new answer option should not be blank in an existing poll.');
-			this.setState({form_feedback: {message: 'A new answer option should not be blank in an existing poll.'}});
-
-		}
-		else if (poll.answer_options.filter(option => option == new_answer_option).length > 0 ) {
-			// console.log('Error. The new answer option should not match any existing answer option.');
-			// this.setState({form_feedback: {message: 'The new answer option should not match any existing answer options.'}});
-			this.setState({form_feedback: {message: 'Answer Option already exists!'}});
-		}
-		else {
-			//fire action
-			PollActionCreators.addAnswerOption(poll_id, new_answer_option);
-			//would like to user listener or something to handle feedback here. Client attemps to validate the input, but server might reject for some reason.
-			this.setState({form_feedback: null});
-		}
-	},
-
-	deletePollRequest: function() {
-		// console.log('in deletePollRequest of FullPoll');
-		var poll_id = this.props.params != null ? this.props.params.poll_id : null;
-		if (poll_id != null) {
-			PollActionCreators.destroy(poll_id);
-		}
-	},
-
-	closeModal: function() {
-	//Closed all modals.
-		ModalActionCreators.close();
-	},
+    return {
+      allPolls: PollStore.getAll(),
+      modalToShow: modalToShow,
+      modalMessage: modalMessage,
+      new_answer_option: new_answer_option,
+      userStoreState: UserStore.getState()
+    };
+  },
 
 
-	// closeSharePollModal: function() {
-	// 	ModalActionCreators.close();
-	// 	// console.log('closing sharePollModal');
-	// },
-	// closeDialogModal: function() {
-	// 	ModalActionCreators.close();
-	// 	// console.log('closing dialogModal');
-	// },
-	// closeDeletePollModal: function() {
-	// 	ModalActionCreators.close();
-	// 	// console.log('closing deletePollModal');
-	// },
+  componentDidMount: function() {
+    // PollStore.addChangeListener(this._onChange);
+    UserStore.addChangeListener(this._onUserChange);
+    PollStore.addChangeListener(this._onPollChange);
+    PollStore.addDestroyListener(this._onPollDestroy);
+    // PollStore.addVoteCreatedListener(this._onVoteCreate);
+    // ModalStore.addChangeListener(this._onModalChange);
+  },
+
+  componentWillUnmount: function() {
+    // PollStore.removeChangeListener(this._onChange);
+    UserStore.removeChangeListener(this._onUserChange);
+    PollStore.removeChangeListener(this._onPollChange);
+    PollStore.removeDestroyListener(this._onPollDestroy);
+    // PollStore.removeVoteCreatedListener(this._onVoteCreate);
+    // ModalStore.removeChangeListener(this._onModalChange);
+  },
+
+  handlePollSelect: function(poll_id) {
+    browserHistory.push('/polls/' + poll_id);
+  },
+
+  backToPollList: function() {
+    browserHistory.push('/polls');
+
+  },
+
+  handleAddAnswerOption: function(new_answer_option_from_answer_option_box) {
+    // console.log('in fullpoll 'handleAddAnswerOption'');
+    var poll_id = this.props.params.poll_id;
+    var new_answer_option = new_answer_option_from_answer_option_box.trim();
+    var poll = PollStore.getPollById(this.props.params.poll_id);
+    var currentUser = this.state.userStoreState.authenticatedUser;
+    // console.log('\n\n\n\ncurrentUser is ', currentUser);
+    if (currentUser == null || currentUser == undefined || currentUser.username == null) {
+      // console.log('User must be authenticated in order to add answer option.');
+      this.setState({form_feedback: {message: 'User must be authenticated in order to add answer option.'}});
+
+    }
+    else if (new_answer_option == '' || new_answer_option == null) {
+      // console.log('Error. A new answer option should not be blank in an existing poll.');
+      this.setState({form_feedback: {message: 'A new answer option should not be blank in an existing poll.'}});
+
+    }
+    else if (poll.answer_options.filter(option => option == new_answer_option).length > 0 ) {
+      // console.log('Error. The new answer option should not match any existing answer option.');
+      // this.setState({form_feedback: {message: 'The new answer option should not match any existing answer options.'}});
+      this.setState({form_feedback: {message: 'Answer Option already exists!'}});
+    }
+    else {
+      //fire action
+      PollActionCreators.addAnswerOption(poll_id, new_answer_option);
+      //would like to user listener or something to handle feedback here. Client attemps to validate the input, but server might reject for some reason.
+      this.setState({form_feedback: null});
+    }
+  },
+
+  deletePollRequest: function() {
+    // console.log('in deletePollRequest of FullPoll');
+    var poll_id = this.props.params != null ? this.props.params.poll_id : null;
+    if (poll_id != null) {
+      PollActionCreators.destroy(poll_id);
+    }
+  },
+
+  closeModal: function() {
+  //Closed all modals.
+    ModalActionCreators.close();
+  },
 
 
-
-	openDeletePollModal:function() {
-		// console.log('firing action to open deletePollModal');
-		ModalActionCreators.open('deletepoll', 'Do you wish to delete the current poll?');
-	},
-
-
-	openSharePollModal:function() {
-		// console.log('firing action to open sharePollModal');
-		ModalActionCreators.open('sharepoll', 'URL for poll: blah');
-	},
-
-
-	openDialogModal:function() {
-		// console.log('firiing action to open dialogModal');
-		ModalActionCreators.open('dialog', 'Vote failed?  NEED TO FIX THIS');
-	},
-
-	renderPollList: function() {
-		var pollsToRender;
-		var pollListHeader;
-		if (this.props.params && this.props.params.userPollsToRender && this.props.params.userPollsToRender != null) {
-			pollsToRender = filterPollsByOwner(this.state.allPolls, this.props.params.userPollsToRender);
-			pollListHeader = 'Listing of ' + this.props.params.userPollsToRender + '\'s Polls:';
-		}
-		else {
-			pollsToRender = this.state.allPolls;
-			pollListHeader = 'Listing of All Polls:';
-		}
-		// console.log('polls to render are ', pollsToRender);
-		return (
-				<div id='pollapp'  className='poll-container'>
-					<PollList allPolls={pollsToRender} header={pollListHeader} handlePollSelect={this.handlePollSelect} />
-				</div>
-		);
-	},
-
-	renderSingleFullPoll: function() {
-
-		//var poll_id = this.props.params.poll_id;
-		var poll = PollStore.getPollById(this.props.params.poll_id) || {};
-		var currentUser = this.state.userStoreState.authenticatedUser;
-		var modalToShow = this.state.modalToShow;
-		var modalMessage = this.state.modalMessage;
-		var new_answer_option = this.state.new_answer_option;
-
-		return (
-			<FullPoll
-				poll={poll}
-				currentUser={currentUser}
-				modalToShow={modalToShow}
-				modalMessage={modalMessage}
-				new_answer_option={new_answer_option}
-				backToPollList={this.backToPollList}
-				handleAddAnswerOption={this.handleAddAnswerOption}
-				openDeletePollModal={this.openDeletePollModal}
-				openSharePollModal={this.openSharePollModal}
-				closeModal={this.closeModal}
-				deletePollRequest={this.deletePollRequest}
-			/>
-		);
-	},
+  // closeSharePollModal: function() {
+  //   ModalActionCreators.close();
+  //   // console.log('closing sharePollModal');
+  // },
+  // closeDialogModal: function() {
+  //   ModalActionCreators.close();
+  //   // console.log('closing dialogModal');
+  // },
+  // closeDeletePollModal: function() {
+  //   ModalActionCreators.close();
+  //   // console.log('closing deletePollModal');
+  // },
 
 
 
+  openDeletePollModal:function() {
+    // console.log('firing action to open deletePollModal');
+    ModalActionCreators.open('deletepoll', 'Do you wish to delete the current poll?');
+  },
 
-	render: function() {
-		// console.log('rendering PollContainer, props are', this.props, ', allPolls are', this.state.allPolls);
-		// console.log('props:', this.props);
-		if (this.props.params != null && this.props.params.poll_id != null) {
-			return this.renderSingleFullPoll();
-		}
-		else {
-			return this.renderPollList();
-		}
-	},
 
-	/**
-	 * Event handler for 'change' events coming from the UserStore
-	 */
-	_onUserChange: function() {
-		this.setState({userStoreState: UserStore.getState()});
-	},
+  openSharePollModal:function() {
+    // console.log('firing action to open sharePollModal');
+    ModalActionCreators.open('sharepoll', 'URL for poll: blah');
+  },
+
+
+  openDialogModal:function() {
+    // console.log('firiing action to open dialogModal');
+    ModalActionCreators.open('dialog', 'Vote failed?  NEED TO FIX THIS');
+  },
+
+  renderPollList: function() {
+    var pollsToRender;
+    var pollListHeader;
+    if (this.props.params && this.props.params.userPollsToRender && this.props.params.userPollsToRender != null) {
+      pollsToRender = filterPollsByOwner(this.state.allPolls, this.props.params.userPollsToRender);
+      pollListHeader = 'Listing of ' + this.props.params.userPollsToRender + '\'s Polls:';
+    }
+    else {
+      pollsToRender = this.state.allPolls;
+      pollListHeader = 'Listing of All Polls:';
+    }
+    // console.log('polls to render are ', pollsToRender);
+    return (
+      <div id='pollapp'  className='poll-container'>
+        <PollList allPolls={pollsToRender} header={pollListHeader} handlePollSelect={this.handlePollSelect} />
+      </div>
+    );
+  },
+
+  renderSingleFullPoll: function() {
+
+    //var poll_id = this.props.params.poll_id;
+    var poll = PollStore.getPollById(this.props.params.poll_id) || {};
+    var currentUser = this.state.userStoreState.authenticatedUser;
+    var modalToShow = this.state.modalToShow;
+    var modalMessage = this.state.modalMessage;
+    var new_answer_option = this.state.new_answer_option;
+
+    return (
+      <FullPoll
+        poll={poll}
+        currentUser={currentUser}
+        modalToShow={modalToShow}
+        modalMessage={modalMessage}
+        new_answer_option={new_answer_option}
+        backToPollList={this.backToPollList}
+        handleAddAnswerOption={this.handleAddAnswerOption}
+        openDeletePollModal={this.openDeletePollModal}
+        openSharePollModal={this.openSharePollModal}
+        closeModal={this.closeModal}
+        deletePollRequest={this.deletePollRequest}
+      />
+    );
+  },
 
 
 
 
+  render: function() {
+    // console.log('rendering PollContainer, props are', this.props, ', allPolls are', this.state.allPolls);
+    // console.log('props:', this.props);
+    if (this.props.params != null && this.props.params.poll_id != null) {
+      return this.renderSingleFullPoll();
+    }
+    else {
+      return this.renderPollList();
+    }
+  },
 
-	/**
-	 * Event handler for 'change' events coming from the PollStore
-	 */
-	_onPollChange: function() {
-		// console.log('received CHANGE signal for poll in PollContainer. Updating state with allPolls.');
-		this.setState(getPollState());
-		//should also update modal states, unless I handle those with a separate event
-	},
-
-
-
-	/**
-	 * Event handler for 'change' events coming from the ModalStore
-	 */
-	// _onModalChange: function() {
-	// 	// console.log('received CHANGE signal for poll in PollContainer. Updating state with allPolls.');
-	// 	var modalToShow = ModalStore.getModalToShow();
-	// 	var modalMessage = ModalStore.getModalMessage();
-	// 	this.setState({modalToShow: modalToShow, modalMessage: modalMessage});
-	// 	//should also update modal states, unless I handle those with a separate event
-	// },
-
-	// _onPollChange: function() {
-	// 	/*
-	// 		As long as the poll is not null, the state is updated with the poll's freshest data.
-	// 		We attempt to verify that the poll's answer_options array now contains the new_answer_option. If so, we reset new_answer_option.
-	// 	*/
-	// 	// console.log('in _onPollChange of FullPoll, received notification of poll update from  PollStore');
-	// 	var poll = PollStore.getPollById(this.props.poll_id);
-	// 	var newState = {};
-	// 	newState.poll = poll;
-	// 	if (poll != null && poll != undefined) {
-	// 		if (poll.answer_options[poll.answer_options.length - 1] == this.state.new_answer_option) {
-	// 			//new_answer_option has been properly added to the poll.
-	// 			newState.new_answer_option = '';
-	// 			newState.form_feedback = null;
-	// 		} else if (poll.answer_options.indexOf(this.state.new_answer_option) >= 0) {
-	// 			//Presumably, the answer option submitted was added to the poll but is just not the last answer_option on the updated poll.
-	// 			//(Possible due to multiple users submitting new answer_options.)
-	// 			newState.new_answer_option = '';
-	// 			newState.form_feedback = null;
-	// 		}
-	// 		this.setState(newState);
-	// 	}
-	// }
-
-	_onPollDestroy: function(poll_id, success) {
-		// console.log('received notification of possible poll destroy from  PollStore');
-		var currentPollId = this.props.params != null ? this.props.params.poll_id : null;
-		var modalStoreState = ModalStore.getState();
-		if (currentPollId ==  poll_id) {
-			// console.log('poll_id == this.state.poll.id: ', poll_id == this.state.poll.id);
-			if (success) {
-				//the poll was just deleted. redirect to /polls
-				//in future, would like to add notification or popup showing poll was deleted succesfully before redirect.
-				if (modalStoreState.modalToShow == 'deletepoll') {
-					ModalActionCreators.open('deletepoll', 'Poll successfully deleted!');
-				}
-				this.backToPollList();
-			}
-			else {
-				//the poll was attempted to be deleted, but this somehow failed. Print message.
-				ModalActionCreators.open('deletepoll', 'Failed to delete poll.');
-			}
-		}
-	},
+  /**
+   * Event handler for 'change' events coming from the UserStore
+   */
+  _onUserChange: function() {
+    this.setState({userStoreState: UserStore.getState()});
+  },
 
 
-	_onVoteCreate: function(poll_id, success, message) {
-		// console.log('received notification of possible vote creation from  PollStore');
-		var currentPollId = this.props.params != null ? this.props.params.poll_id : null;
 
-		if (currentPollId == poll_id) {
-			// console.log('poll_id == this.state.poll.id: ', poll_id == this.state.poll.id);
-			if (success) {
-				//the vote was a success
-				//the store should have updated the polls and _onPollChange will handle updating of poll
-			}
-			else {
-				//the poll was attempted to be deleted, but this somehow failed. Print message.
-				// this.setState({
-				// 	dialogModalMessage: (message.length != null ? message : 'Vote failed.'),
-				// 	modalToShow: 'dialog'
-				// });
-				let action_message = message != null ? message : 'Vote failed.';
-				ModalActionCreators.open('dialog', action_message);
-			}
-		}
-	}
+
+
+  /**
+   * Event handler for 'change' events coming from the PollStore
+   */
+  _onPollChange: function() {
+    // console.log('received CHANGE signal for poll in PollContainer. Updating state with allPolls.');
+    this.setState(getPollState());
+    //should also update modal states, unless I handle those with a separate event
+  },
+
+
+
+  /**
+   * Event handler for 'change' events coming from the ModalStore
+   */
+  // _onModalChange: function() {
+  //   // console.log('received CHANGE signal for poll in PollContainer. Updating state with allPolls.');
+  //   var modalToShow = ModalStore.getModalToShow();
+  //   var modalMessage = ModalStore.getModalMessage();
+  //   this.setState({modalToShow: modalToShow, modalMessage: modalMessage});
+  //   //should also update modal states, unless I handle those with a separate event
+  // },
+
+  // _onPollChange: function() {
+  //   /*
+  //     As long as the poll is not null, the state is updated with the poll's freshest data.
+  //     We attempt to verify that the poll's answer_options array now contains the new_answer_option. If so, we reset new_answer_option.
+  //   */
+  //   // console.log('in _onPollChange of FullPoll, received notification of poll update from  PollStore');
+  //   var poll = PollStore.getPollById(this.props.poll_id);
+  //   var newState = {};
+  //   newState.poll = poll;
+  //   if (poll != null && poll != undefined) {
+  //     if (poll.answer_options[poll.answer_options.length - 1] == this.state.new_answer_option) {
+  //       //new_answer_option has been properly added to the poll.
+  //       newState.new_answer_option = '';
+  //       newState.form_feedback = null;
+  //     } else if (poll.answer_options.indexOf(this.state.new_answer_option) >= 0) {
+  //       //Presumably, the answer option submitted was added to the poll but is just not the last answer_option on the updated poll.
+  //       //(Possible due to multiple users submitting new answer_options.)
+  //       newState.new_answer_option = '';
+  //       newState.form_feedback = null;
+  //     }
+  //     this.setState(newState);
+  //   }
+  // }
+
+  _onPollDestroy: function(poll_id, success) {
+    // console.log('received notification of possible poll destroy from  PollStore');
+    var currentPollId = this.props.params != null ? this.props.params.poll_id : null;
+    var modalStoreState = ModalStore.getState();
+    if (currentPollId ==  poll_id) {
+      // console.log('poll_id == this.state.poll.id: ', poll_id == this.state.poll.id);
+      if (success) {
+        //the poll was just deleted. redirect to /polls
+        //in future, would like to add notification or popup showing poll was deleted succesfully before redirect.
+        if (modalStoreState.modalToShow == 'deletepoll') {
+          ModalActionCreators.open('deletepoll', 'Poll successfully deleted!');
+        }
+        this.backToPollList();
+      }
+      else {
+        //the poll was attempted to be deleted, but this somehow failed. Print message.
+        ModalActionCreators.open('deletepoll', 'Failed to delete poll.');
+      }
+    }
+  },
+
+
+  _onVoteCreate: function(poll_id, success, message) {
+    // console.log('received notification of possible vote creation from  PollStore');
+    var currentPollId = this.props.params != null ? this.props.params.poll_id : null;
+
+    if (currentPollId == poll_id) {
+      // console.log('poll_id == this.state.poll.id: ', poll_id == this.state.poll.id);
+      if (success) {
+        //the vote was a success
+        //the store should have updated the polls and _onPollChange will handle updating of poll
+      }
+      else {
+        //the poll was attempted to be deleted, but this somehow failed. Print message.
+        // this.setState({
+        //   dialogModalMessage: (message.length != null ? message : 'Vote failed.'),
+        //   modalToShow: 'dialog'
+        // });
+        let action_message = message != null ? message : 'Vote failed.';
+        ModalActionCreators.open('dialog', action_message);
+      }
+    }
+  }
 
 });

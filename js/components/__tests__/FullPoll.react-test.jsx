@@ -36,18 +36,18 @@ describe('FullPoll', function() {
     var poll = {author: 'Xena', question: 'How cute is Xena?', answer_options: ["Very cute!"], id: 1, votes: []}
     const component = renderer.create(
       <FullPoll
-      	poll={poll}
-      	openDeletePollModal={openDeletePollModal}
-      	openSharePollModal={openSharePollModal}
-      	backToPollList={backToPollList}
-      	handleAddAnswerOption={handleAddAnswerOption}
-      	closeModal={closeModal}
-      	deletePollRequest={deletePollRequest}
-      	currentUser={currentUser}
-      	modalToShow='none'
-      	modalMessage=''
-      	new_answer_option=''
-			/>
+        poll={poll}
+        openDeletePollModal={openDeletePollModal}
+        openSharePollModal={openSharePollModal}
+        backToPollList={backToPollList}
+        handleAddAnswerOption={handleAddAnswerOption}
+        closeModal={closeModal}
+        deletePollRequest={deletePollRequest}
+        currentUser={currentUser}
+        modalToShow='none'
+        modalMessage=''
+        new_answer_option=''
+      />
     );
 
     let tree = component.toJSON();
@@ -66,18 +66,18 @@ describe('FullPoll', function() {
     var poll = {author: 'Kronos', question: 'What time do you wake up?', answer_options: ["7:00am", '7:30am', "8:00am"], id: 2, votes: []}
     const component = renderer.create(
       <FullPoll
-      	poll={poll}
-      	openDeletePollModal={openDeletePollModal}
-      	openSharePollModal={openSharePollModal}
-      	backToPollList={backToPollList}
-      	handleAddAnswerOption={handleAddAnswerOption}
-      	closeModal={closeModal}
-      	deletePollRequest={deletePollRequest}
-      	currentUser={currentUser}
-      	modalToShow='none'
-      	modalMessage=''
-      	new_answer_option=''
-			/>
+        poll={poll}
+        openDeletePollModal={openDeletePollModal}
+        openSharePollModal={openSharePollModal}
+        backToPollList={backToPollList}
+        handleAddAnswerOption={handleAddAnswerOption}
+        closeModal={closeModal}
+        deletePollRequest={deletePollRequest}
+        currentUser={currentUser}
+        modalToShow='none'
+        modalMessage=''
+        new_answer_option=''
+      />
     );
 
     let tree = component.toJSON();
@@ -109,5 +109,5 @@ describe('FullPoll', function() {
     expect(node1.children[0]).toBe('Poll Author: ');
     expect(node1.children[1].children[0]).toBe('Kronos');
 
-	});
+  });
 });

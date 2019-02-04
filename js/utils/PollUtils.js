@@ -12,27 +12,25 @@
  */
 
 module.exports = {
+  convertRawPoll: function(rawPoll) {
+    return {
+      id: rawPoll.id || rawPoll._id,
+      owner: rawPoll.owner,
+      author: rawPoll.author,
+      question: rawPoll.question,
+      answer_options: rawPoll.answer_options,
+      votes: rawPoll.votes
+    };
+  },
 
-	convertRawPoll: function(rawPoll) {
-		return {
-			id: rawPoll.id || rawPoll._id,
-			owner: rawPoll.owner,
-			author: rawPoll.author,
-			question: rawPoll.question,
-			answer_options: rawPoll.answer_options,
-			votes: rawPoll.votes
-		};
-	},
-
-	getCreatedPollData: function(owner, author, question, answer_options) {
-		var timestamp = Date.now();
-		return {
-			id: 'u_' + timestamp,
-			author: author,
-			question: question,
-			answer_options: answer_options,
-			votes: []
-		};
-	}
-
+  getCreatedPollData: function(owner, author, question, answer_options) {
+    var timestamp = Date.now();
+    return {
+      id: 'u_' + timestamp,
+      author: author,
+      question: question,
+      answer_options: answer_options,
+      votes: []
+    };
+  }
 };

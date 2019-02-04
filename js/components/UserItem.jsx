@@ -13,26 +13,26 @@ import {browserHistory} from 'react-router';
 
 var UserItem = React.createClass({
 
-	propTypes: {
-		user: ReactPropTypes.object.isRequired
-	},
+  propTypes: {
+    user: ReactPropTypes.object.isRequired
+  },
 
 
-	// handleUserSelect: function(e) {
-	handleUserSelect: function() {
-		// console.log('running handleUserSelect.');
-		browserHistory.push('/users/' + this.props.user.username);
-	},
+  // handleUserSelect: function(e) {
+  handleUserSelect: function() {
+    // console.log('running handleUserSelect.');
+    browserHistory.push('/users/' + this.props.user.username);
+  },
 
 
-	render: function() {
-		var user = this.props.user;
-		return (
-			<div className='poll well poll-label' onClick={this.handleUserSelect}>
-					{'Username: ' + user.username}
-			</div>
-		);
-	}
+  render: function() {
+    var user = this.props.user;
+    return (
+      <div className='poll well poll-label' onClick={this.handleUserSelect}>
+        {'Username: ' + user.username}
+      </div>
+    );
+  }
 });
 
 module.exports = UserItem;

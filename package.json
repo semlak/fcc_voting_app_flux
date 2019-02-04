@@ -8,6 +8,7 @@
     "start": "node server.js",
     "start:dev": "webpack-dev-server --inline --content-base public  --history-api-fallback",
     "start:production": "node server.js",
+    "build": "webpack",
     "test": "jest"
   },
   "jest": {

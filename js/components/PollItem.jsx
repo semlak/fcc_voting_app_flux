@@ -15,31 +15,31 @@ import ReactPropTypes from 'react/lib/ReactPropTypes';
 
 
 var PollItem = function(props) {
-	var poll = props.poll;
-	var author_label = 'Poll Author: ';
-	var question_label = 'Poll Question: ';
-	return (
-		<div className='poll well' id={'poll-' + poll.id} onClick={props.handlePollSelect.bind(null, poll.id)}>
-			<div className='poll-author poll-label'>
-				{author_label}
-				<span>
-					{poll.author}
-				</span>
-			</div>
-			<div className='poll-question poll-label'>
-				{question_label}
-				<span>
-					{poll.question}
-				</span>
-			</div>
-		</div>
-	);
+  var poll = props.poll;
+  var author_label = 'Poll Author: ';
+  var question_label = 'Poll Question: ';
+  return (
+    <div className='poll well' id={'poll-' + poll.id} onClick={props.handlePollSelect.bind(null, poll.id)}>
+      <div className='poll-author poll-label'>
+        {author_label}
+        <span>
+          {poll.author}
+        </span>
+      </div>
+      <div className='poll-question poll-label'>
+        {question_label}
+        <span>
+          {poll.question}
+        </span>
+      </div>
+    </div>
+  );
 };
 
 
 PollItem.propTypes = {
-	poll: ReactPropTypes.object.isRequired,
-	handlePollSelect: React.PropTypes.func.isRequired
+  poll: ReactPropTypes.object.isRequired,
+  handlePollSelect: React.PropTypes.func.isRequired
 };
 
 
@@ -51,32 +51,32 @@ module.exports = PollItem;
 
 // var PollItem = React.createClass({
 
-// 	propTypes: {
-// 		poll: ReactPropTypes.object.isRequired,
-// 		handlePollSelect: React.PropTypes.func.isRequired
-// 	},
+//   propTypes: {
+//     poll: ReactPropTypes.object.isRequired,
+//     handlePollSelect: React.PropTypes.func.isRequired
+//   },
 
-// 	render: function() {
-// 		var poll = this.props.poll;
-// 		var author_label = 'Poll Author: ';
-// 		var question_label = 'Poll Question: ';
-// 		return (
-// 			<div className='poll well' id={'poll-' + poll.id} onClick={this.props.handlePollSelect.bind(null, poll.id)}>
-// 				<div className='poll-author poll-label'>
-// 					{author_label}
-// 					<span>
-// 						{poll.author}
-// 					</span>
-// 				</div>
-// 				<div className='poll-question poll-label'>
-// 					{question_label}
-// 					<span>
-// 						{poll.question}
-// 					</span>
-// 				</div>
-// 			</div>
-// 		);
-// 	}
+//   render: function() {
+//     var poll = this.props.poll;
+//     var author_label = 'Poll Author: ';
+//     var question_label = 'Poll Question: ';
+//     return (
+//       <div className='poll well' id={'poll-' + poll.id} onClick={this.props.handlePollSelect.bind(null, poll.id)}>
+//         <div className='poll-author poll-label'>
+//           {author_label}
+//           <span>
+//             {poll.author}
+//           </span>
+//         </div>
+//         <div className='poll-question poll-label'>
+//           {question_label}
+//           <span>
+//             {poll.question}
+//           </span>
+//         </div>
+//       </div>
+//     );
+//   }
 // });
 
 // module.exports = PollItem;

@@ -13,14 +13,14 @@ exports[`LoginForm displays error message to user when no password is provided o
           className="form-group">
           <label
             className="col-sm-2 col-sm-offset-0 control-label"
-            htmlFor="formHorizontalUsername">
+            htmlFor="loginFormHorizontalUsername">
             Username:
           </label>
           <div
             className="col-sm-10">
             <input
               className="form-control"
-              id="formHorizontalUsername"
+              id="loginFormHorizontalUsername"
               name="username"
               onChange={[Function bound handleFieldChange]}
               placeholder="Enter Username"
@@ -32,14 +32,14 @@ exports[`LoginForm displays error message to user when no password is provided o
           className="form-group">
           <label
             className="col-sm-2 col-sm-offset-0 control-label"
-            htmlFor="formHorizontalPassword">
+            htmlFor="loginFormHorizontalPassword">
             Password:
           </label>
           <div
             className="col-sm-10">
             <input
               className="form-control"
-              id="formHorizontalPassword"
+              id="loginFormHorizontalPassword"
               name="password"
               onChange={[Function bound handleFieldChange]}
               placeholder="Enter Password"
@@ -94,14 +94,14 @@ exports[`LoginForm displays error message to user when no username is provided o
           className="form-group">
           <label
             className="col-sm-2 col-sm-offset-0 control-label"
-            htmlFor="formHorizontalUsername">
+            htmlFor="loginFormHorizontalUsername">
             Username:
           </label>
           <div
             className="col-sm-10">
             <input
               className="form-control"
-              id="formHorizontalUsername"
+              id="loginFormHorizontalUsername"
               name="username"
               onChange={[Function bound handleFieldChange]}
               placeholder="Enter Username"
@@ -113,14 +113,14 @@ exports[`LoginForm displays error message to user when no username is provided o
           className="form-group">
           <label
             className="col-sm-2 col-sm-offset-0 control-label"
-            htmlFor="formHorizontalPassword">
+            htmlFor="loginFormHorizontalPassword">
             Password:
           </label>
           <div
             className="col-sm-10">
             <input
               className="form-control"
-              id="formHorizontalPassword"
+              id="loginFormHorizontalPassword"
               name="password"
               onChange={[Function bound handleFieldChange]}
               placeholder="Enter Password"
@@ -175,14 +175,14 @@ exports[`LoginForm has has username and password input fields 1`] = `
           className="form-group">
           <label
             className="col-sm-2 col-sm-offset-0 control-label"
-            htmlFor="formHorizontalUsername">
+            htmlFor="loginFormHorizontalUsername">
             Username:
           </label>
           <div
             className="col-sm-10">
             <input
               className="form-control"
-              id="formHorizontalUsername"
+              id="loginFormHorizontalUsername"
               name="username"
               onChange={[Function bound handleFieldChange]}
               placeholder="Enter Username"
@@ -194,14 +194,14 @@ exports[`LoginForm has has username and password input fields 1`] = `
           className="form-group">
           <label
             className="col-sm-2 col-sm-offset-0 control-label"
-            htmlFor="formHorizontalPassword">
+            htmlFor="loginFormHorizontalPassword">
             Password:
           </label>
           <div
             className="col-sm-10">
             <input
               className="form-control"
-              id="formHorizontalPassword"
+              id="loginFormHorizontalPassword"
               name="password"
               onChange={[Function bound handleFieldChange]}
               placeholder="Enter Password"
@@ -256,14 +256,14 @@ exports[`LoginForm responds to changes in username and password fields 1`] = `
           className="form-group">
           <label
             className="col-sm-2 col-sm-offset-0 control-label"
-            htmlFor="formHorizontalUsername">
+            htmlFor="loginFormHorizontalUsername">
             Username:
           </label>
           <div
             className="col-sm-10">
             <input
               className="form-control"
-              id="formHorizontalUsername"
+              id="loginFormHorizontalUsername"
               name="username"
               onChange={[Function bound handleFieldChange]}
               placeholder="Enter Username"
@@ -275,14 +275,14 @@ exports[`LoginForm responds to changes in username and password fields 1`] = `
           className="form-group">
           <label
             className="col-sm-2 col-sm-offset-0 control-label"
-            htmlFor="formHorizontalPassword">
+            htmlFor="loginFormHorizontalPassword">
             Password:
           </label>
           <div
             className="col-sm-10">
             <input
               className="form-control"
-              id="formHorizontalPassword"
+              id="loginFormHorizontalPassword"
               name="password"
               onChange={[Function bound handleFieldChange]}
               placeholder="Enter Password"
