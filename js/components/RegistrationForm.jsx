@@ -26,8 +26,8 @@ export default React.createClass({
     if (this.state.password_confirm != this.state.password) {
       this.setState({message_obj: {error: true, message_text: 'Password and Password Confirmation must match.'}});
     }
-    else if (this.state.password.length < 1) {
-      this.setState({message_obj: {error: true, message_text: 'Password must have at least 1 character.'}});
+    else if (this.state.password.length < 8) {
+      this.setState({message_obj: {error: true, message_text: 'Password must have at least 8 characters.'}});
     }
     else if (this.state.username.length < 1) {
       this.setState({message_obj: {error: true, message_text: 'Username must have at least 1 character.'}});

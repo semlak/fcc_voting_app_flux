@@ -34,8 +34,8 @@ export default React.createClass({
     else if (this.state.new_password != this.state.new_password_confirm) {
       this.setState({message_obj: {error: true, message_text: 'Your new password and password confirmation do not match'}});
     }
-    else if (this.state.new_password == null || this.state.new_password.length < 1) {
-      this.setState({message_obj: {error: true, message_text: 'Your new password must be at least 1 character long.'}});
+    else if (this.state.new_password == null || this.state.new_password.length < 8) {
+      this.setState({message_obj: {error: true, message_text: 'Your new password must be at least 8 characters long.'}});
     }
     else {
       //right now, I don't know how to check that current password is accurate. I'm thinking I will send current and new password to server

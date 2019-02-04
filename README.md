@@ -23,14 +23,14 @@ You can view and interact with a running example on Heroku: [https://fcc-voting-
 **Please do not provide any sensitive data.** The security of the app is untested.
 On this deployment, you can:
 * Create your own user account on the app.
-  * Password must be at least 1 character long (this is not meant to be very secure)
+  * Password must be at least 8 characters long (this is not meant to be very secure)
 * Create polls (while logged in).
 * Add answer options to existing polls (while logged in).
 * Vote on any poll (whether or not your are logged in).
 * Possibly other things, such as updating your profile's username or password, deleting your own polls.
 
 Please Note:
-* This deployment via Heroku uses Heroku's SSL connection, by my app is not currently configured to do so on its own. It is unclear to me how secure your data is in Heroku. The app itself likely has flaws that could be exposed whether or not the connection is encrypted.
+* This deployment via Heroku uses Heroku's SSL connection, but the app itself is not currently configured to do so on its own (when running on your own server). It is unclear to me how secure your data is in Heroku. The app itself likely has flaws that could be exposed whether or not the connection is encrypted.
 * Your username does not need to be an email address, and your password has minimal requirements (described above).
 * Only a hash of your password will be stored on the server (this is handled by the Passport.js module), but it is still possible that your data would be exposed, and your un-hashed password is sent from the client to the server.
 * Your user data, any polls you create, votes you make, etc, are stored on the server database (mongodb).
@@ -41,7 +41,7 @@ Please Note:
 
 ## Setting up the Project on your own
 First you'll need [Node.js](https://nodejs.org) and the package manager
-that comes with it: [npm](https://www.npmjs.com/).
+that comes with it ([npm](https://www.npmjs.com/)).
 
 You'll also need mongodb installed and running.
 
@@ -53,8 +53,8 @@ Once you've got that working, head to the command line to set up the project.
 git clone https://github.com/semlak/fcc_voting_app_flux
 cd fcc_voting_app_flux
 npm install
-# that installs required modules and through the postinstall scripts also builds the app.
-# Now, to run, make sure you have an instance of mongodb running, then start the application server
+# that installs the required modules and also builds the app. It also builds the application (through the postInstall script).
+# to run, make sure you have an instance of mongodb running, then start the application server
 npm start
 
 ```

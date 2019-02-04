@@ -32,6 +32,7 @@ export default React.createClass({
       fullname: user.fullname || '',
       role: user.role || '',
       message_obj: null,
+      new_password: '',
       userStoreState: userStoreState
     };
     //'user' is the user being displayed in this item. currentUser is the authenticated user (if authenticated, {} otherwise).
@@ -51,7 +52,7 @@ export default React.createClass({
   },
 
   updateUser: function(e) {
-    // console.log('in updateUser of <FullUser/>, target.name: ', e.target.name);
+    console.log('in updateUser of <FullUser/>, target.name: ', e.target.name);
     var key = e.target.name.toString();
     var data = {};
     data[key] = this.state[key];
@@ -89,6 +90,7 @@ export default React.createClass({
         username: user.username || '',
         fullname: user.fullname || '',
         role: user.role || '',
+        new_password: '',
         message_obj: null
       });
       // this.setState(this.getInitialState());
@@ -204,6 +206,19 @@ export default React.createClass({
                     <Button name='role' onClick={this.updateUser}>Update</Button>
                   </Col>
                 </FormGroup>
+                { user && user.username !== this.state.userStoreState.authenticatedUser.username && this.state.userStoreState.authenticatedUser.role === 'admin' ?
+                  <FormGroup controlId='formHorizontalPassword'>
+                    <Col componentClass={ControlLabel} sm={2}>
+                      Password:
+                    </Col>
+                    <Col sm={8}>
+                      <FormControl type='password' name='new_password' value={this.state.new_password} onChange={this.handleFieldChange}/>
+                    </Col>
+                    <Col sm={2}>
+                      <Button name='new_password' onClick={this.updateUser}>Update</Button>
+                    </Col>
+                  </FormGroup> : ''
+                }
                 <Col smOffset={2} sm={10}>
                   {validationState == null ? null : <HelpBlock>{validationMessage}</HelpBlock> }
                 </Col>
