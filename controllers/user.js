@@ -23,9 +23,7 @@ var Account = require('../models/account');
     This controller only expects to handles AJAX requests. All responses are via json.
     I do have some old routes commented out that include non-json responses (I initially created this app as a non-single-page-app)
 
-    THIS APPLICATION MIGHT SEND SENSTIVE USER DATA TO CLIENT. This should be cleaned up before production use. The main examples are in the polls controller.
-
-
+    THIS APPLICATION MIGHT SEND SENSTIVE USER DATA TO CLIENT. This should be cleaned up before production use.
 */
 
 var reqUserInfo = function(account) {
@@ -276,11 +274,6 @@ var updateUser = function(user_id, attributes, cb) {
     }
   });
 };
-
-
-
-
-
 
 
 module.exports = router;
