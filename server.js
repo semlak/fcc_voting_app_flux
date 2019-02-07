@@ -1,13 +1,13 @@
-var express = require('express')
-var path = require('path')
-var compression = require('compression')
+var express = require('express');
+var path = require('path');
+var compression = require('compression');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var https = require('https');
-var fs = require('fs')
+var fs = require('fs');
 
 var mongoose = require('mongoose');
 var passport = require('passport');
@@ -19,8 +19,8 @@ var polls = require('./controllers/poll', passport);
 var votes = require('./controllers/vote', passport);
 
 
-var app = express()
-app.use(compression())
+var app = express();
+app.use(compression());
 
 
 // var options = {
@@ -35,12 +35,7 @@ app.use(compression())
 
 
 //serve static stuff like index.css
-app.use(express.static(path.join(__dirname, 'public')))
-
-// view engine setup
-// app.set('views', path.join(__dirname, './views'));
-// app.set('view engine', 'pug');
-
+app.use(express.static(path.join(__dirname, 'public')));
 
 // uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, '/public', 'favicon.ico')));
@@ -72,7 +67,7 @@ passport.deserializeUser(Account.deserializeUser());
 
 //mongoose
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI || process.env.MONGO_URI || 'mongodb://localhost/voting-app')
+mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI || process.env.MONGO_URI || 'mongodb://localhost/voting-app');
 
 
 // catch 404 and forward to error handler
@@ -87,7 +82,8 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
+  // app.use(function(err, req, res, next) {
+  app.use(function(err, req, res) {
     // res.status(err.status || 500);
     // res.render('error', {
     res.status(err.status || 500).json({
@@ -99,7 +95,8 @@ if (app.get('env') === 'development') {
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
+// app.use(function(err, req, res, next) {
+app.use(function(err, req, res) {
   // res.status(err.status || 500);
   // res.render('error', {
   res.status(err.status || 500).json({
@@ -107,10 +104,6 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
-
-
-
 
 var debug = require('debug')('fcc-voting-flux-app-jms');
 var http = require('http');
