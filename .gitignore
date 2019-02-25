@@ -7,3 +7,4 @@ key.pem
 cert.pem
 .env
 npm-debug.log
+public/javascripts

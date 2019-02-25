@@ -31,7 +31,6 @@ module.exports = {
     })
   ],
 
-
   output: {
     // path: 'public/javascripts',
     path: path.resolve(__dirname, 'public', 'javascripts'),
