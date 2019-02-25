@@ -18,11 +18,13 @@ export default React.createClass({
         <p>
           It is the voting app, an app that one can create and vote on polls, described at <a href="https://www.freecodecamp.com/challenges/build-a-voting-app" target="_blank" rel="noopener noreferrer">https://www.freecodecamp.com/challenges/build-a-voting-app</a>.
           <br />
+          <br />
           The project is hosted on github at <a href="https://github.com/semlak/fcc_voting_app_flux" target="_blank" rel="noopener noreferrer">https://github.com/semlak/fcc_voting_app_flux</a>.
           <br />
-          The basics are this: This web app allows users to create polls, vote on them, share them, etc. It uses React.js + Flux Architecture.
+          <br />
+          This web app allows users to create polls, vote on them, share them, etc. It uses React.js + Flux Architecture.
 
-          Slightly more info:
+          <p>Slightly more info:</p>
           <ul>
             <li>You can create a poll (if logged in).</li>
             <li>You can add an answer option to an existing poll (if logged in).</li>
