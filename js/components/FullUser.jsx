@@ -52,7 +52,7 @@ export default React.createClass({
   },
 
   updateUser: function(e) {
-    console.log('in updateUser of <FullUser/>, target.name: ', e.target.name);
+    // console.log('in updateUser of <FullUser/>, target.name: ', e.target.name);
     var key = e.target.name.toString();
     var data = {};
     data[key] = this.state[key];

@@ -18,7 +18,7 @@ module.exports = {
     // simulate retrieving data from a database
     axios.get(usersURL)
       .then(response => {
-        console.log('Successfully received server response for getAllUsers request.\nxhr.responseText:', response);
+        // console.log('Successfully received server response for getAllUsers request.\nxhr.responseText:', response);
         var rawUsers = response.data.users;
         var currentUser = response.data.authorizedUser;
         // console.log('req.user is ', currentUser);
@@ -34,8 +34,8 @@ module.exports = {
       })
       .catch((err) => {
         // let message = 'Request for all users failed.  Returned status of ' + xhr.status;
-        let message = 'Request for all users failed.';
-        console.error(message, err);
+        // console.error(message, err);
+        let message = (err && err.response && err.response.message) || 'Request for all users failed.';
         UserServerActionCreators.setUserErrorStatusAndMessage(true, message, '');
       });
   },
@@ -55,7 +55,8 @@ module.exports = {
         UserServerActionCreators.receiveCreatedUser(response.data.authorizedUser, null);
       })
       .catch(err => {
-        // console.log('Registration xrh request failed.  Returned status is ' + xhr.status);
+        // console.log('Registration xrh request failed.  Returned status is ');
+        // console.log(err.response);
         let error_message = (err && err.response && err.response.data && err.response.data.message) || 'Failed to register new user.';
         UserServerActionCreators.receiveCreatedUser(null, error_message);
         UserServerActionCreators.setUserErrorStatusAndMessage(true, error_message, '');
@@ -71,7 +72,7 @@ module.exports = {
       })
       .catch(err => {
         // console.log('Request failed.  Returned status of ' + (err));
-        console.log(err.response);
+        // console.log(err.response);
         let message_obj = { error: true, message_text: (err && err.response && err.response.data && err.response.data.message) || 'Login Request failed.' };
         // UserServerActionCreators.setAuthenticatedUserState(null, message_obj);
         UserServerActionCreators.setUserErrorStatusAndMessage(true, message_obj.message_text, '');
@@ -91,12 +92,12 @@ module.exports = {
   update: function(id, userUpdates) {
     var data = {};
     if (id == null) {
-      console.log('No id passed to update function in UserWebAPIUtils.');
+      // console.log('No id passed to update function in UserWebAPIUtils.');
       return;
     }
-    console.log('id and userUpdates in UserWebAPIUtils update function:', id, ', ', userUpdates);
+    // console.log('id and userUpdates in UserWebAPIUtils update function:', id, ', ', userUpdates);
     for (var key in userUpdates) {
-      console.log('key is ', key);
+      // console.log('key is ', key);
       switch(key) {
       case 'role':
         data.new_role = userUpdates[key];
@@ -122,7 +123,7 @@ module.exports = {
 
     axios.post(usersURL + '/' + id, data)
       .then(response => {
-        console.log('Submitted user update ajax xhr! xhr.responseText is', response.data || response);
+        // console.log('Submitted user update ajax xhr! xhr.responseText is', response.data || response);
         // should receive the updated user object as response.user (includes id, username, fullname, and role)
         let message_obj = { error: false, message_text: response.data.message};
         UserServerActionCreators.receiveUpdatedUser(response.data.user, message_obj);
@@ -134,63 +135,5 @@ module.exports = {
         UserServerActionCreators.setUserErrorStatusAndMessage(true, message_obj.message_text, '');
       });
   },
-
-  update1: function(id, userUpdates) {
-    var data = {};
-    if (id == null) {
-      console.log('No id passed to update function in UserWebAPIUtils.');
-      return;
-    }
-    console.log('id and userUpdates in UserWebAPIUtils update function:', id, ', ', userUpdates);
-    for (var key in userUpdates) {
-      console.log('key is ', key);
-      switch(key) {
-      case 'role':
-        data.new_role = userUpdates[key];
-        break;
-      case 'new_password':
-        data.new_password = userUpdates[key];
-        break;
-      case 'fullname':
-        data.new_fullname = userUpdates[key];
-        break;
-      case 'username':
-        data.new_username = userUpdates[key];
-        break;
-      case 'current_password':
-        data.current_password = userUpdates[key];
-        //don\'t change this. Just send with data.
-        break;
-      default:
-        console.log('in UserWebAPIUtils. Unknown userUpdate field passed to user update function.');
-        return ;
-      }
-    }
-
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', usersURL + '/' + id);
-    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-
-    xhr.onload = function() {
-      if (xhr.status === 200) {
-        let response = JSON.parse(xhr.responseText);
-        console.log('Submitted user update ajax xhr! xhr.responseText is', response);
-        // should receive the updated user object as response.user (includes id, username, fullname, and role)
-        let message_obj = { error: false, message_text: response.message};
-        UserServerActionCreators.receiveUpdatedUser(response.user, message_obj);
-      }
-      else {
-        // console.log('Registration xrh request failed.  Returned status is ' + xhr.status);
-        let response = JSON.parse(xhr.responseText);
-        let message_obj = {error: true, message_text: response.message || 'Failed to update user.'};
-        // UserServerActionCreators.receiveUpdatedUser(null, message_obj);
-        UserServerActionCreators.setUserErrorStatusAndMessage(true, message_obj.message_text, '');
-      }
-    }.bind(this);
-    console.log('data:', data);
-
-    xhr.send(JSON.stringify(data));
-  }
 
 };

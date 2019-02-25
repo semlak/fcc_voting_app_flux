@@ -111,7 +111,7 @@ UIStore.dispatchToken = AppDispatcher.register(function(action) {
   switch(action.actionType) {
 
   case UIConstants.MODAL_SHOW:
-    console.log('triggered MODAL_SHOW case in UIStore dispatch receiving. action is ', action);
+    // console.log('triggered MODAL_SHOW case in UIStore dispatch receiving. action is ', action);
     // check that action.modalToShow is in the list of valid options (_modalToShowOptions array)
     if (_modalToShowOptions.indexOf(action.modalToShow) < 0) {
       // console.error('\'modalToShow\' variable dispatched to UIStore is not a valid option');
@@ -157,7 +157,7 @@ UIStore.dispatchToken = AppDispatcher.register(function(action) {
 
 
   case UIConstants.UI_TOGGLE_NAVBAR:
-    console.log('in UIStore, received UI_TOGGLE_NAVBAR dispatch signal');
+    // console.log('in UIStore, received UI_TOGGLE_NAVBAR dispatch signal');
     _navbarIsExpanded = !_navbarIsExpanded;
     UIStore.emitChange();
     break;

@@ -245,7 +245,7 @@ var AnswerOptionsBox = React.createClass({
     // However, I am relying on the server to handle that, and the user sees (or should see) a modal box if that is the case
     let data = {index: index, answer_option_text: this.props.answer_options[index], poll_id: this.props.poll_id};
     if (Object.keys(data).filter(key => data[key] == null).length > 0) {
-      console.error('bad data for vote. data is :', data);
+      // console.error('bad data for vote. data is :', data);
     }
     else {
       //fire vote action

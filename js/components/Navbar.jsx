@@ -25,7 +25,7 @@ import { LinkContainer, IndexLinkContainer } from 'react-router-bootstrap';
 export default function (props) {
   // console.log('props:', props)
   // var usermenu = <UserMenu user={props.user} />
-  console.log('rendering <NavBar />, props are ', props);
+  // console.log('rendering <NavBar />, props are ', props);
   // var rightNavbarListItems = function() {[<div/>]}
   var rightNavbarListItems = function() {
     if (props.userStoreState.authenticatedUser == null || props.userStoreState.authenticatedUser.username == null) {

@@ -33,7 +33,7 @@ export default React.createClass({
   },
 
   openModalToLogin: function() {
-    console.log('in openModalToLoginof <Navbar>');
+    // console.log('in openModalToLoginof <Navbar>');
     ModalActionCreators.open('login', '');
   },
 
@@ -46,7 +46,7 @@ export default React.createClass({
   },
 
   onToggle: function() {
-    console.log('in onToggle of NavbarContainer');
+    // console.log('in onToggle of NavbarContainer');
     // this.setState({navbarIsExpanded: !this.state.navbarIsExpanded});
     UIActionCreators.toggleNavbar();
   },

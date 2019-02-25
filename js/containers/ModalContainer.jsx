@@ -67,11 +67,11 @@ export default React.createClass({
   },
 
   deletePollRequest: function() {
-    console.log('in deletePollRequest of FullPoll');
+    // console.log('in deletePollRequest of FullPoll');
     // var poll_id = this.props.params != null ? this.props.params.poll_id : null;
     var poll_id = this.props.poll_id;
-    console.log('poll_id is ', poll_id);
-    console.log('props: ', this.props);
+    // console.log('poll_id is ', poll_id);
+    // console.log('props: ', this.props);
     if (poll_id != null) {
       PollActionCreators.destroy(poll_id);
     }
@@ -97,7 +97,7 @@ export default React.createClass({
   renderChangePasswordModal:function() {
     let showModal = this.state.modalStoreState.modalToShow == 'changepassword';
     let userToChange = this.state.userStoreState.authenticatedUser;
-    console.log('for renderChangePasswordModal, showModal is', showModal, ' userToChange is:', userToChange);
+    // console.log('for renderChangePasswordModal, showModal is', showModal, ' userToChange is:', userToChange);
     //passing the same
     return (
       <Modal show={showModal} onHide={this.closeModal}>
@@ -229,7 +229,7 @@ export default React.createClass({
 
 
   render: function() {
-    console.log('this.state.modalStoreState: ', this.state.modalStoreState);
+    // console.log('this.state.modalStoreState: ', this.state.modalStoreState);
     // return (
     //   <div className='modal-container'>
     //     {this.renderDialogModal()}
@@ -279,7 +279,7 @@ export default React.createClass({
    * Event handler for 'change' events coming from the ModalStore
    */
   _onModalChange: function() {
-    console.log('received CHANGE signal <ModalContainer/>. Updating modal state.');
+    // console.log('received CHANGE signal <ModalContainer/>. Updating modal state.');
     this.setState({modalStoreState: ModalStore.getState()});
     //should also update modal states, unless I handle those with a separate event
   },

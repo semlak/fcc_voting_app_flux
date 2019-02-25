@@ -56,7 +56,7 @@ export default React.createClass({
 
   render: function() {
     var userToChange = this.props.userToChange;
-    console.log('in render function for ChangePaswwordForm. userToChange:', userToChange);
+    // console.log('in render function for ChangePaswwordForm. userToChange:', userToChange);
     if (userToChange == null || userToChange.username == null) {
       return (
         <div>Currently loading data</div>

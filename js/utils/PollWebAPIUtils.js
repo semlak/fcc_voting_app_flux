@@ -20,7 +20,7 @@ module.exports = {
           PollServerActionCreators.receiveAll(res.data.polls);
         }
         else {
-          console.error('Request for all polls failed.  Returned status of ' + res.status);
+          // console.error('Request for all polls failed.  Returned status of ' + res.status);
         }
       })
       .catch(err => console.error('Request for all polls failed. err:', err));
@@ -32,7 +32,7 @@ module.exports = {
       .then(res => {
         if (res.status === 200) {
           if (res.data.error) {
-            console.error('Error occurred sumbiting a poll. response is', res);
+            // console.error('Error occurred sumbiting a poll. response is', res);
           }
           else {
             PollServerActionCreators.receiveCreatedPoll(res.data.poll);
@@ -45,7 +45,7 @@ module.exports = {
   addAnswerOption: function(data) {
     axios.post(pollsURL + '/' + data.poll_id + '/new_answer_option', data)
       .then(res => {
-        console.log('axios response', res);
+        // console.log('axios response', res);
         if (res.data.error) {
           ModalActionCreators.open('dialog', res.data.message || 'Failed to add new answer option to poll.');
         }
@@ -69,7 +69,7 @@ module.exports = {
       .then(res => {
         if (res.status === 200) {
           if (res.data.error) {
-            console.error('Error occurred deleting a poll. response is', res.data);
+            // console.error('Error occurred deleting a poll. response is', res.data);
             //ideally, launch modal with responseJSON.message as text. The below action at least notifies that the delete request fails.
             PollServerActionCreators.handleDeletedPollFail(poll_id);
           }
